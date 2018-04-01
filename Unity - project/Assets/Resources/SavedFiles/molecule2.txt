@@ -1,0 +1,24 @@
+children: 6
+N atom: Oxygen_2 _(0.1, 1.9, 0.4)
+    _1
+    _2
+
+N atom: Hydrogen_1 _(0.1, 2.0, 0.2)
+    _1
+
+N atom: Hydrogen_1 _(-0.1, 2.0, 0.3)
+    _2
+
+
+children: 6
+N atom: Oxygen_2 _(0.1, 1.9, 0.4)
+    _1
+    _2
+
+N atom: Hydrogen_1 _(0.0, 2.0, 0.3)
+    _1
+
+N atom: Hydrogen_1 _(-0.1, 2.0, 0.3)
+    _2
+
+

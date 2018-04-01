@@ -1,0 +1,16 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\Scripts\HandController.cs">
+    <Files>
+      <File FileName="Assets\Resources\Scripts\Atom.cs" Line="33" Column="9" />
+      <File FileName="Assets\Resources\Scripts\Molecule.cs" Line="91" Column="32" />
+      <File FileName="Assets\Resources\Scripts\HandController.cs" Line="190" Column="56" />
+      <File FileName="Assets\Resources\Scripts\PivotController.cs" Line="19" Column="26" />
+      <File FileName="Assets\Resources\Scripts\BondController.cs" Line="32" Column="11" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
