@@ -6,13 +6,20 @@ using UnityEngine.UI;
 
 public class SaveButton : MonoBehaviour {
 
+  public GameObject manager;
+  
+  private bool VR;
   GameObject inputField;
   GameObject molecule;
+  int moleculeID;
 
 	// Use this for initialization
 	void Start () {
-    inputField = GameObject.FindGameObjectWithTag("FileNameInput");
-    inputField.SetActive(false);
+    inputField = transform.parent.GetComponent<InterfaceManager>().GetInputField();
+    VR = transform.parent.GetComponent<InterfaceManager>().VR;
+    if(VR){
+      moleculeID = 1;
+    }
 	}
 	
 	// Update is called once per frame
@@ -25,18 +32,22 @@ public class SaveButton : MonoBehaviour {
 
   private void SubmitName(string arg0)
   {
-    Manager.SaveMolecule(molecule,arg0);
+    manager.GetComponent<Manager>().SaveMolecule(molecule,arg0);
     inputField.SetActive(false);
   }
 
-  void OnTriggerEnter(Collider col)
+  void OnTriggerEnter (Collider col)
   {
-    string[] name = col.transform.name.Split(' ');
-    if (col.CompareTag("Interactable"))//name[0] == "Contact" && col.GetComponent<HandController>().IsPointing())
-    {
+    string[] name = col.transform.name.Split (' ');
+    if (col.CompareTag ("Interactable") && !VR) {//name[0] == "Contact" && col.GetComponent<HandController>().IsPointing())
       //Manager.SaveMolecule(col.transform.parent.gameObject);
-      inputField.SetActive(true);
+      inputField.SetActive (true);
       molecule = col.gameObject;
+    } 
+    else if (col.CompareTag ("Interactable") && VR) {
+      manager.GetComponent<Manager>().SaveMolecule(col.transform.parent.gameObject,"saved_" + moleculeID.ToString());
+      moleculeID++;
     }
+    Destroy(col.transform.parent.transform.gameObject);
   }
 }

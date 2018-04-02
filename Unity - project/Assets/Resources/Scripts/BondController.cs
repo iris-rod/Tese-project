@@ -51,11 +51,12 @@ public class BondController : MonoBehaviour
   }
 
   //Set the atoms connected by this bond
-  public void SetAtoms(GameObject atom1, GameObject atom2)
+  public void SetAtoms(GameObject atom1, GameObject atom2, int bType)
   {
     ballA = atom1.transform;
     ballB = atom2.transform;
-    DefineBondType();
+    //DefineBondType();
+    bondType = bType;
     ballA.GetComponent<Atom>().AddBond(bondType,bondId);
     ballB.GetComponent<Atom>().AddBond(bondType,bondId);
   }

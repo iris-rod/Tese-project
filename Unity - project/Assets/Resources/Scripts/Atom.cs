@@ -197,17 +197,13 @@ public class Atom : MonoBehaviour {
   public void AddBond(int type, int bondId)
   {
     bondIDs.Add(bondId);
-    numberOfBonds+=type;
+    numberOfBonds += type;
   }
 
   public void RemoveBond(int type, int bondId)
   {
     bondIDs.Remove(bondId);
-    numberOfBonds-=type;
+    numberOfBonds -= type;
     toDetach = false;
   }
-
-
-
-
 }

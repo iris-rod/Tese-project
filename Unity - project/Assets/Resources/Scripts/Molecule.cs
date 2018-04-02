@@ -27,6 +27,7 @@ public class Molecule : MonoBehaviour
   private GameObject pivot;
   private GameObject handController;
 
+private int bondType;
   public bool freeHand;
 
   // Use this for initialization
@@ -80,7 +81,7 @@ public class Molecule : MonoBehaviour
     if (translate)
     {
       Vector3 v = handController.GetComponent<HandController>().GetHandMovement();
-      transform.position = new Vector3(v.x-.01f,v.y+0.1f,v.z+.02f);
+      transform.position = new Vector3(v.x,v.y,v.z);//(v.x-.01f,v.y+0.1f,v.z+.02f);
       
     }
   }
@@ -210,7 +211,7 @@ public class Molecule : MonoBehaviour
   {
     int a = Properties.BONDS[atomA.GetComponent<Atom>().GetAtomType()];
     int b = Properties.BONDS[atomB.GetComponent<Atom>().GetAtomType()];
-    int bondType = 0;
+    bondType = 0;
     if (a < b) bondType = a;
     else bondType = b;
     if (MultipleLines)
@@ -243,7 +244,7 @@ public class Molecule : MonoBehaviour
     DefineBondType(atomA, atomB);
     GameObject newBond = Instantiate(bond, transform.position, transform.rotation);
     AddBond(newBond);
-    newBond.GetComponent<BondController>().SetAtoms(atomA, atomB);
+    newBond.GetComponent<BondController>().SetAtoms(atomA, atomB, bondType);
     newBond.transform.localScale += new Vector3(bondScale,bondScale,0);
     newBond.transform.parent = transform;
   }
@@ -326,7 +327,6 @@ public class Molecule : MonoBehaviour
 
   public void Rotate()
   {
-    //Debug.Log("rotate");
     rotate = true;
   }
 

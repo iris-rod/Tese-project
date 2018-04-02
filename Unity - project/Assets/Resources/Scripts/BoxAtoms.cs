@@ -67,7 +67,6 @@ public class BoxAtoms : MonoBehaviour {
       Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.01f);
       if (hitColliders.Length < 1)
         spawnNewAtom = true;
-
       if (spawnNewAtom)
       {
         GetMaterial();

@@ -46,7 +46,6 @@ public class HandController : MonoBehaviour
 
   public void updateCurrentHand(Hand leapHand)
   {
-    //Debug.Log(leapHand.PalmNormal);
     CheckFingersPosition(leapHand);
     if (rotating)
       Rotate(leapHand);
@@ -166,17 +165,19 @@ public class HandController : MonoBehaviour
         }
       }else
       {
-        if(hand.PalmNormal.x >= interval && hand.PalmNormal.x <= 1)
+      //Debug.Log(hand.PalmNormal);
+        if(hand.PalmNormal.x >= interval && hand.PalmNormal.x <= 1 && hand.PalmNormal.y >= -.2f && hand.PalmNormal.y <= .15f) //x 1 y 0.1
         {
+        Debug.Log("here");
           Z = true;
           X = false;
         }
-        else if (hand.PalmNormal.z <= -interval && hand.PalmNormal.z >= -1)
+        else if (hand.PalmNormal.z <= -interval && hand.PalmNormal.z >= -1) //x 0 y 0.1
         {
+        Debug.Log("here2");
           Z = false;
           X = true;
         }
-
       }
     }
     else
