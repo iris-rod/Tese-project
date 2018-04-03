@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class SaveButton : MonoBehaviour {
-
-  public GameObject manager;
   
   private bool VR;
   GameObject inputField;
@@ -32,7 +30,7 @@ public class SaveButton : MonoBehaviour {
 
   private void SubmitName(string arg0)
   {
-    manager.GetComponent<Manager>().SaveMolecule(molecule,arg0);
+    transform.parent.GetComponent<InterfaceManager>().Save(molecule,arg0);
     inputField.SetActive(false);
   }
 
@@ -40,12 +38,11 @@ public class SaveButton : MonoBehaviour {
   {
     string[] name = col.transform.name.Split (' ');
     if (col.CompareTag ("Interactable") && !VR) {//name[0] == "Contact" && col.GetComponent<HandController>().IsPointing())
-      //Manager.SaveMolecule(col.transform.parent.gameObject);
       inputField.SetActive (true);
       molecule = col.gameObject;
     } 
     else if (col.CompareTag ("Interactable") && VR) {
-      manager.GetComponent<Manager>().SaveMolecule(col.transform.parent.gameObject,"saved_" + moleculeID.ToString());
+      transform.parent.GetComponent<InterfaceManager>().Save(col.transform.parent.gameObject,"saved_" + moleculeID.ToString());
       moleculeID++;
     }
     Destroy(col.transform.parent.transform.gameObject);

@@ -1,11 +1,8 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\Scripts\BondController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\Scripts\HandController.cs">
     <Files>
-      <File FileName="Assets\Resources\Scripts\Atom.cs" Line="197" Column="20" />
-      <File FileName="Assets\Resources\Scripts\Molecule.cs" Line="247" Column="49" />
-      <File FileName="Assets\Resources\Scripts\HandController.cs" Line="175" Column="72" />
-      <File FileName="Assets\Resources\Scripts\BondController.cs" Line="59" Column="13" />
+      <File FileName="Assets\Resources\Scripts\HandController.cs" Line="246" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

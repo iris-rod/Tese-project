@@ -1,16 +1,8 @@
 children: 4
-N atom: Oxygen_2 _(-0.4, 2.2, 0.3)
+N atom: Carbon_3 _(-0.6, 2.3, 0.3)
     _1
 
-N atom: Carbon_2 _(-0.3, 2.1, 0.3)
-    _1
-
-
-children: 4
-N atom: Carbon_2 _(-0.3, 2.0, 0.3)
-    _1
-
-N atom: Oxygen_2 _(-0.4, 2.1, 0.3)
+N atom: Carbon_3 _(-0.5, 2.2, 0.3)
     _1
 
 

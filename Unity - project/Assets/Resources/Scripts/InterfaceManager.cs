@@ -5,6 +5,7 @@ using UnityEngine;
 public class InterfaceManager : MonoBehaviour {
 
   public bool VR;
+  public GameObject manager;
   GameObject inputField;
 
 	// Use this for initialization
@@ -13,14 +14,19 @@ public class InterfaceManager : MonoBehaviour {
     inputField = GameObject.FindGameObjectWithTag ("FileNameInput");
     inputField.SetActive (false);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-  
+
   public GameObject GetInputField ()
   {
     return inputField;
+  }
+  
+  public void Save (GameObject mol, string name)
+  {
+    manager.GetComponent<Manager>().SaveMolecule(mol,name);
+  }
+
+  public void Load (GameObject mol)
+  {
+    manager.GetComponent<Manager>().LoadMolecule(mol.GetComponent<SavedMolecule>().GetFileName());
   }
 }

@@ -36,4 +36,9 @@ public class HandleTextFile
     return text;
   }
 
+  public static void ClearFile(string name)
+  {
+    File.WriteAllText(path+name,"");
+  }
+
 }

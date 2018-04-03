@@ -22,13 +22,13 @@ public class Manager : MonoBehaviour
   private List<List<int>> allBondsFormed = new List<List<int>> ();
   private List<int> numberOfBonds = new List<int> ();
   private Dictionary<int, GameObject[]> bonds = new Dictionary<int, GameObject[]> ();
-  private static List<GameObject> moleculesSaved = new List<GameObject> ();
 
   private int maxNumberChild = 5;
   private bool canLoad = true;
 
   public void SaveMolecule (GameObject molecule, string name)
   {
+    HandleTextFile.ClearFile(name + ".txt");
     string text = "children: " + molecule.transform.childCount + "\n";
     for (int i = 0; i < molecule.transform.childCount; i++) {
       Transform child = molecule.transform.GetChild (i);
@@ -51,11 +51,23 @@ public class Manager : MonoBehaviour
 
   public void LoadMolecule (string name)
   {
+    Debug.Log("enter load");
+    numberOfBonds = new List<int> ();
+    atoms = new List<GameObject> ();
+    atomsPositions = new List<Vector3> ();
+    allBondsFormed = new List<List<int>> ();
     GameObject molecule = Instantiate (moleculePrefab, platform.transform.position, platform.transform.rotation);
     molecule.GetComponent<Molecule> ().SetHandController (handController);
     string text = "";
     try {
       text = HandleTextFile.ReadString (name);
+    } 
+    catch (Exception e) {
+      Debug.Log(name);
+      info.text = "File does not exist.";
+      text = "";
+      Invoke ("ResetInfo", 3);
+    }
       string[] split = text.Split ('N');
 
       for (int j = 1; j < split.Length; j++) {
@@ -88,10 +100,6 @@ public class Manager : MonoBehaviour
         AddBondDictionary (loadedAtom, i - 1);
       }
       BondAtoms (molecule);
-    } catch (Exception e) {
-      info.text = "File does not exist.";
-      Invoke ("ResetInfo", 3);
-    }
 
   }
 
@@ -126,7 +134,10 @@ public class Manager : MonoBehaviour
         atoms [j].transform.position = atomsPositions [j];
       }
     }
+    Vector3 posMol = new Vector3(platform.transform.position.x,platform.transform.position.y+.2f,platform.transform.position.z);
+    molecule.transform.position = posMol;
   }
+  
 
   void AddBondDictionary (GameObject atom, int ind)
   {
@@ -142,6 +153,7 @@ public class Manager : MonoBehaviour
 
   void InitBondDictionary ()
   {
+    bonds = new Dictionary<int, GameObject[]> ();
     for (int i = 0; i < numberOfBonds.Count; i++) {
       GameObject[] objs = new GameObject[2];
       bonds.Add (numberOfBonds [i], objs);
@@ -171,10 +183,12 @@ public class Manager : MonoBehaviour
     if (Input.GetKeyDown ("space")) {
       LoadMolecule ("molec.txt");
     }
-    CheckLoad ();
+    if(touchOtherToSwitch)
+      CheckLoadDoubleTouch();
+    else CheckLoadOneTouch();
   }
 
-  void CheckLoad ()
+  void CheckLoadDoubleTouch ()
   {
     bool check = true;
     int selectedID = -1;
@@ -185,7 +199,6 @@ public class Manager : MonoBehaviour
       if (child.GetComponent<SavedMolecule> ().IsSelected ()) {
         check = false;        
         selectedID = i;
-        //child.GetComponent<SavedMolecule> ().SetOneSelected (true);
       }
     }
     canLoad = check;
@@ -198,8 +211,26 @@ public class Manager : MonoBehaviour
       for (int i = 0; i < transform.childCount; i++) {
         if (i != selectedID) {
           Transform child = transform.GetChild (i);
-          child.GetComponent<SavedMolecule> ().SetOneSelected (false);
+          child.GetComponent<SavedMolecule> ().SetOneSelected (true);
         }
+      }
+    }
+  }
+  
+  void CheckLoadOneTouch ()
+  {
+    for (int i = 0; i < transform.childCount; i++) {
+      Transform child = transform.GetChild(i);
+      
+    }
+  }
+  
+  public void CheckSelectedItems (GameObject newSelected)
+  {
+    for (int i = 0; i < transform.childCount; i++) {
+      Transform child = transform.GetChild(i);
+      if(!GameObject.ReferenceEquals( child, newSelected) && child.GetComponent<SavedMolecule> ().IsSelected ()){
+        child.GetComponent<SavedMolecule> ().SetSelected (false);
       }
     }
   }

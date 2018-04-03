@@ -27,7 +27,7 @@ public class Molecule : MonoBehaviour
   private GameObject pivot;
   private GameObject handController;
 
-private int bondType;
+  private int bondType;
   public bool freeHand;
 
   // Use this for initialization
@@ -81,7 +81,7 @@ private int bondType;
     if (translate)
     {
       Vector3 v = handController.GetComponent<HandController>().GetHandMovement();
-      transform.position = new Vector3(v.x,v.y,v.z);//(v.x-.01f,v.y+0.1f,v.z+.02f);
+      transform.position = new Vector3(v.x-.01f,v.y+0.1f,v.z+.02f);//(v.x,v.y,v.z);
       
     }
   }

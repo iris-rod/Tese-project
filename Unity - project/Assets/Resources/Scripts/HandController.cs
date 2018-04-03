@@ -25,7 +25,7 @@ public class HandController : MonoBehaviour
   private bool pointing;
 
   //testing variables
-  private bool UpDown = true;
+  private bool UpDown = false;
 
   // Use this for initialization
   void Start()
@@ -149,7 +149,7 @@ public class HandController : MonoBehaviour
   //Check hand position to determine which axis the molecule rotates
   void CheckAxis(Hand hand)
   {
-    if (fingerStreched)
+    if (fingerStreched) // left hand is open
     {
       if (UpDown)
       {
@@ -168,13 +168,11 @@ public class HandController : MonoBehaviour
       //Debug.Log(hand.PalmNormal);
         if(hand.PalmNormal.x >= interval && hand.PalmNormal.x <= 1 && hand.PalmNormal.y >= -.2f && hand.PalmNormal.y <= .15f) //x 1 y 0.1
         {
-        Debug.Log("here");
           Z = true;
           X = false;
         }
         else if (hand.PalmNormal.z <= -interval && hand.PalmNormal.z >= -1) //x 0 y 0.1
         {
-        Debug.Log("here2");
           Z = false;
           X = true;
         }
