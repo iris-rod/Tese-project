@@ -39,10 +39,10 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
-      <HintPath>C:/Program Files/Unity5/Editor/Data/Managed/UnityEngine.dll</HintPath>
+      <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/Managed/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
-      <HintPath>C:/Program Files/Unity5/Editor/Data/Managed/UnityEditor.dll</HintPath>
+      <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -294,31 +294,31 @@
      <None Include="Assets\LeapMotion\Core\Resources\VertexOffsetShader.shader" />
      <None Include="Assets\Resources\SavedFiles\saved_1.txt" />
  <Reference Include="UnityEngine.UI">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Networking">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.TestRunner">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="nunit.framework">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Analytics">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="LeapCSharp.NET3.5">
- <HintPath>C:/Users/Iris Rodrigues/Documents/GitHub/Tese-project/Unity - project/Assets/LeapMotion/Core/Plugins/LeapCSharp.NET3.5.dll</HintPath>
+ <HintPath>C:/Users/gabri/Documents/Mestrado/TESE/Tese-project/Unity - project/Assets/LeapMotion/Core/Plugins/LeapCSharp.NET3.5.dll</HintPath>
  </Reference>
  <Reference Include="InteractionEngineUtility">
- <HintPath>C:/Users/Iris Rodrigues/Documents/GitHub/Tese-project/Unity - project/Assets/LeapMotion/Modules/InteractionEngine/Plugins/InteractionEngineUtility.dll</HintPath>
+ <HintPath>C:/Users/gabri/Documents/Mestrado/TESE/Tese-project/Unity - project/Assets/LeapMotion/Modules/InteractionEngine/Plugins/InteractionEngineUtility.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -333,6 +333,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ProjectExtensions xmlns="http://schemas.microsoft.com/developer/msbuild/2003"><MonoDevelop><Properties><Policies><TextStylePolicy inheritsSet="Mono" inheritsScope="text/plain" scope="text/plain" /><VersionControlPolicy inheritsSet="Mono" /><XmlFormattingPolicy inheritsSet="Mono" inheritsScope="application/xml" scope="application/xml" /><CSharpFormattingPolicy inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" /><NameConventionPolicy><Rules><NamingRule Name="Namespaces" AffectedEntity="Namespace" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" /><NamingRule Name="Types" AffectedEntity="Class, Struct, Enum, Delegate" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" /><NamingRule Name="Interfaces" AffectedEntity="Interface" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True"><RequiredPrefixes><String>I</String></RequiredPrefixes></NamingRule><NamingRule Name="Attributes" AffectedEntity="CustomAttributes" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True"><RequiredSuffixes><String>Attribute</String></RequiredSuffixes></NamingRule><NamingRule Name="Event Arguments" AffectedEntity="CustomEventArgs" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True"><RequiredSuffixes><String>EventArgs</String></RequiredSuffixes></NamingRule><NamingRule Name="Exceptions" AffectedEntity="CustomExceptions" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True"><RequiredSuffixes><String>Exception</String></RequiredSuffixes></NamingRule><NamingRule Name="Methods" AffectedEntity="Methods" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" /><NamingRule Name="Static Readonly Fields" AffectedEntity="ReadonlyField" VisibilityMask="Internal, Protected, Public" NamingStyle="PascalCase" IncludeInstanceMembers="False" IncludeStaticEntities="True" /><NamingRule Name="Fields (Non Private)" AffectedEntity="Field" VisibilityMask="Internal, Protected, Public" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" /><NamingRule Name="ReadOnly Fields (Non Private)" AffectedEntity="ReadonlyField" VisibilityMask="Internal, Protected, Public" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="False" /><NamingRule Name="Fields (Private)" AffectedEntity="Field, ReadonlyField" VisibilityMask="Private" NamingStyle="CamelCase" IncludeInstanceMembers="True" IncludeStaticEntities="False"><AllowedPrefixes><String>_</String><String>m_</String></AllowedPrefixes></NamingRule><NamingRule Name="Static Fields (Private)" AffectedEntity="Field" VisibilityMask="Private" NamingStyle="CamelCase" IncludeInstanceMembers="False" IncludeStaticEntities="True" /><NamingRule Name="ReadOnly Fields (Private)" AffectedEntity="ReadonlyField" VisibilityMask="Private" NamingStyle="CamelCase" IncludeInstanceMembers="True" IncludeStaticEntities="False"><AllowedPrefixes><String>_</String><String>m_</String></AllowedPrefixes></NamingRule><NamingRule Name="Constant Fields" AffectedEntity="ConstantField" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" /><NamingRule Name="Properties" AffectedEntity="Property" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" /><NamingRule Name="Events" AffectedEntity="Event" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" /><NamingRule Name="Enum Members" AffectedEntity="EnumMember" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" /><NamingRule Name="Parameters" AffectedEntity="Parameter" VisibilityMask="VisibilityMask" NamingStyle="CamelCase" IncludeInstanceMembers="True" IncludeStaticEntities="True" /><NamingRule Name="Type Parameters" AffectedEntity="TypeParameter" VisibilityMask="VisibilityMask" NamingStyle="PascalCase" IncludeInstanceMembers="True" IncludeStaticEntities="True"><RequiredPrefixes><String>T</String></RequiredPrefixes></NamingRule></Rules></NameConventionPolicy><TextStylePolicy TabWidth="2" IndentWidth="2" RemoveTrailingWhitespace="False" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" /></Policies></Properties></MonoDevelop></ProjectExtensions>
-
+  
 </Project>

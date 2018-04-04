@@ -206,4 +206,9 @@ public class Atom : MonoBehaviour {
     numberOfBonds -= type;
     toDetach = false;
   }
+
+  public int GetAvailableBonds()
+  {
+    return numberOfBondsAllowed - numberOfBonds;
+  }
 }

@@ -6,28 +6,39 @@ public class CameraController : MonoBehaviour {
 
   private float speed;
 
-	// Use this for initialization
-	void Start () {
-    speed = 5f;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-    if (Input.GetKey(KeyCode.RightArrow))
-    {
-      transform.Rotate(new Vector3(0, speed * Time.deltaTime, 0));
-    }
+  void Start()
+  {
+    speed = 50f;
+  }
+
+  // Update is called once per frame
+  void Update()
+  {
+    CheckKeyboardInput();
+  }
+
+  void CheckKeyboardInput()
+  {
+    int dir = -1;
     if (Input.GetKey(KeyCode.LeftArrow))
     {
-      transform.Rotate(new Vector3(0, -speed * Time.deltaTime, 0));
+      dir = 0;
     }
-    if (Input.GetKey(KeyCode.DownArrow))
+    if (Input.GetKey(KeyCode.RightArrow))
     {
-      transform.Translate(new Vector3(0, 0, -speed * Time.deltaTime));
+      dir = 1;
     }
-    if (Input.GetKey(KeyCode.UpArrow))
+
+    Rotate(dir);
+  }
+
+  void Rotate(int dir)
+  {
+    if (dir != -1)
     {
-      transform.Translate(new Vector3(0, 0, speed * Time.deltaTime));
+      Vector3 rotateValue = new Vector3(0, speed * Time.deltaTime, 0);
+      if (dir == 1) transform.eulerAngles += rotateValue;
+      else transform.eulerAngles -= rotateValue;
     }
   }
 }

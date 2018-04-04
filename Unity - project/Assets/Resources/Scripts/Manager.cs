@@ -25,11 +25,12 @@ public class Manager : MonoBehaviour
 
   private int maxNumberChild = 5;
   private bool canLoad = true;
+  private Vector3 initialPos = new Vector3(0,0,0);
 
   public void SaveMolecule (GameObject molecule, string name)
   {
     HandleTextFile.ClearFile(name + ".txt");
-    string text = "children: " + molecule.transform.childCount + "\n";
+    string text = "M" + molecule.transform.position + "M\n";
     for (int i = 0; i < molecule.transform.childCount; i++) {
       Transform child = molecule.transform.GetChild (i);
       if (child.CompareTag ("Interactable")) {
@@ -51,24 +52,27 @@ public class Manager : MonoBehaviour
 
   public void LoadMolecule (string name)
   {
-    Debug.Log("enter load");
     numberOfBonds = new List<int> ();
     atoms = new List<GameObject> ();
     atomsPositions = new List<Vector3> ();
     allBondsFormed = new List<List<int>> ();
-    GameObject molecule = Instantiate (moleculePrefab, platform.transform.position, platform.transform.rotation);
-    molecule.GetComponent<Molecule> ().SetHandController (handController);
+
     string text = "";
     try {
       text = HandleTextFile.ReadString (name);
     } 
     catch (Exception e) {
-      Debug.Log(name);
       info.text = "File does not exist.";
       text = "";
       Invoke ("ResetInfo", 3);
     }
-      string[] split = text.Split ('N');
+    //molecule position
+    string[] firsSplit = text.Split('M');
+    Vector3 moleculePosition = StringToVector3(firsSplit[1]);
+    GameObject molecule = Instantiate(moleculePrefab, initialPos, Quaternion.identity);
+    molecule.GetComponent<Molecule>().SetHandController(handController);
+    //read atoms
+    string[] split = firsSplit[2].Split ('N');
 
       for (int j = 1; j < split.Length; j++) {
         string[] atom = split [j].Split ('_');
@@ -89,7 +93,7 @@ public class Manager : MonoBehaviour
         int bondsMade = int.Parse (atom [1]);
         Vector3 position = StringToVector3 (atom [2]);
 
-        GameObject loadedAtom = Instantiate (atomPrefab, platform.transform.position, platform.transform.rotation);
+        GameObject loadedAtom = Instantiate (atomPrefab, initialPos, Quaternion.identity);
         loadedAtom.GetComponent<Atom> ().handController = handController;
         loadedAtom.GetComponent<Atom> ().manager = manager;
         Material mat = Resources.Load ("Materials/" + atomType, typeof(Material)) as Material;
@@ -123,19 +127,28 @@ public class Manager : MonoBehaviour
 
     if (atoms.Count == 2) {
       molecule.GetComponent<Molecule> ().CreateBond (atoms [1], atoms [0]);
-      atoms [0].transform.position = atomsPositions [0];
-      atoms [1].transform.position = atomsPositions [1];
+      float xOffset1 = atomsPositions[0].x - platform.transform.position.x;
+      float zOffset1 = atomsPositions[0].z - platform.transform.position.z;
+      float xOffset2 = atomsPositions[1].x - platform.transform.position.x;
+      float zOffset2 = atomsPositions[1].z - platform.transform.position.z;
+      Vector3 offSetPosition1 = new Vector3(atomsPositions[0].x - xOffset1, atomsPositions[0].y, atomsPositions[0].z - zOffset1);
+      Vector3 offSetPosition2 = new Vector3(atomsPositions[1].x - xOffset2, atomsPositions[1].y, atomsPositions[1].z - zOffset2);
+      atoms[0].transform.position = offSetPosition1;//atomsPositions [0];
+      atoms[1].transform.position = offSetPosition2;//atomsPositions [1];
     } else { 
       for (int i = 0; i < numberOfBonds.Count; i++) {
         int bondId = numberOfBonds [i];
         molecule.GetComponent<Molecule> ().CreateBond (bonds [bondId] [0], bonds [bondId] [1]);
       }
       for (int j = 0; j < atoms.Count; j++) {
-        atoms [j].transform.position = atomsPositions [j];
+        float xOffset1 = atomsPositions[j].x - platform.transform.position.x;
+        float zOffset1 = atomsPositions[j].z - platform.transform.position.z;
+        Vector3 offSetPosition = new Vector3(atomsPositions[j].x-xOffset1, atomsPositions[j].y, atomsPositions[j].z-zOffset1);
+        atoms [j].transform.position = offSetPosition;
       }
     }
-    Vector3 posMol = new Vector3(platform.transform.position.x,platform.transform.position.y+.2f,platform.transform.position.z);
-    molecule.transform.position = posMol;
+    //Vector3 posMol = new Vector3(platform.transform.position.x,platform.transform.position.y,platform.transform.position.z);
+    //molecule.transform.position = posMol;
   }
   
 
@@ -181,7 +194,7 @@ public class Manager : MonoBehaviour
   void Update ()
   {
     if (Input.GetKeyDown ("space")) {
-      LoadMolecule ("molec.txt");
+      LoadMolecule ("saved_1.txt");
     }
     if(touchOtherToSwitch)
       CheckLoadDoubleTouch();
@@ -234,4 +247,5 @@ public class Manager : MonoBehaviour
       }
     }
   }
+
 }

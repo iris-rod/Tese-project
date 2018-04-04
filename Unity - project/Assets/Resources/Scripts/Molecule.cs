@@ -209,11 +209,14 @@ public class Molecule : MonoBehaviour
   //Check what type of bond must be created
   void DefineBondType(GameObject atomA, GameObject atomB)
   {
-    int a = Properties.BONDS[atomA.GetComponent<Atom>().GetAtomType()];
-    int b = Properties.BONDS[atomB.GetComponent<Atom>().GetAtomType()];
+    //get available bonds from the atoms
+    int availableBondsA = atomA.GetComponent<Atom>().GetAvailableBonds();
+    int availableBondsB = atomB.GetComponent<Atom>().GetAvailableBonds();
+    if (availableBondsA <= 0 || availableBondsB <= 0) return;
+
     bondType = 0;
-    if (a < b) bondType = a;
-    else bondType = b;
+    if (availableBondsA < availableBondsB) bondType = availableBondsA;
+    else bondType = availableBondsB;
     if (MultipleLines)
     {
       switch (bondType)
