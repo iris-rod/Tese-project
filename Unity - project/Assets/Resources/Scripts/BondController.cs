@@ -31,21 +31,20 @@ public class BondController : MonoBehaviour
     {
       case 1:
         distanceToDetach = 0.3f;
-        distance = 0.15f;
-        factor = 60;
         break;
       case 2:
         distanceToDetach = 0.35f;
-        distance = 0.15f;
-        factor = 60;
         break;
       case 3:
         distanceToDetach = 0.45f;
-        distance = 0.15f;
-        factor = 60;
+        break;
+      case 4:
+        distanceToDetach = 0.55f;
         break;
 
     }
+    distance = 0.15f;
+    factor = 60;
     detaching = false;
     scale0 = transform.localScale;
   }

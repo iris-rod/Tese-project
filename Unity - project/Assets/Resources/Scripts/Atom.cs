@@ -112,7 +112,7 @@ public class Atom : MonoBehaviour {
   {
     transform.parent = null;
     isAttached = false;
-    highlightMat.SetFloat("_Outline", 0f);
+    //highlightMat.SetFloat("_Outline", 0f);
   }
 
   public void Attach()
@@ -169,7 +169,14 @@ public class Atom : MonoBehaviour {
     {
       if(HasFreeBonds() && col.transform.GetComponent<Atom>().HasFreeBonds())
         StickToMolecule(col.gameObject);
+      else
+        highlightMat.SetFloat("_Outline", 0.02f);
     }
+  }
+
+  void OnCollisionExit(Collision col)
+  {
+    highlightMat.SetFloat("_Outline", 0.0f);
   }
 
   void StickToMolecule(GameObject obj)
@@ -190,8 +197,8 @@ public class Atom : MonoBehaviour {
       else if (obj.transform.parent == null ) {  obj.transform.parent = transform.parent; }
       transform.parent.GetComponent<Molecule>().CreateBond(obj,transform.gameObject);
     }
-    
-    highlightMat.SetFloat("_Outline", 0.01f);
+
+    //
   }
 
   public void AddBond(int type, int bondId)

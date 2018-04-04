@@ -19,6 +19,7 @@ public class Molecule : MonoBehaviour
   public GameObject simpleBond;
   public GameObject doubleBond;
   public GameObject tripleBond;
+  public GameObject quadrupleBond;
   public bool MultipleLines;
 
   private Vector3 axis;
@@ -229,6 +230,9 @@ public class Molecule : MonoBehaviour
           break;
         case 3:
           bond = tripleBond;
+          break;
+        case 4:
+          bond = quadrupleBond;
           break;
       }
       bondScale = 0;
