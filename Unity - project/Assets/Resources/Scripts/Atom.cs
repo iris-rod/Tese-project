@@ -50,15 +50,13 @@ public class Atom : MonoBehaviour {
     bondIDs = new List<int>();
     atomType = type;
     transform.GetComponent<MeshRenderer>().material = mat;
-    float size = Properties.SIZES[atomType];
+    float size = Properties.DESKTOP_SIZES[atomType];
     transform.localScale = new Vector3(size,size,size);
   }
 
   // Update is called once per frame
   void Update ()
   {
-    //leftPinch = handController.GetComponent<HandController>().IsLeftPiching();
-    //rightPinch = handController.GetComponent<HandController>().IsRightPiching();
 
     if (GetComponent<InteractionBehaviour>().isGrasped)
     {

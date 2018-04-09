@@ -10,15 +10,17 @@ public class SavedMolecule : MonoBehaviour {
   private bool canSelect;
   private bool oneSelected;
   private GameObject loadButton;
+  private GameObject camera;
   
   private bool TTS;
   
   void Start ()
   {
+    camera = GameObject.FindGameObjectWithTag("MainCamera");
     selected = false;    
     oneSelected = false;
     highlight = transform.GetComponent<MeshRenderer>().materials[1];
-    TTS = transform.parent.GetComponent<Manager>().touchOtherToSwitch;
+    TTS = camera.GetComponent<Manager>().touchOtherToSwitch;
     loadButton =  GameObject.FindGameObjectWithTag("Interface").transform.GetChild(1).gameObject;
   }
   
@@ -57,7 +59,7 @@ public class SavedMolecule : MonoBehaviour {
     string[] name = col.transform.name.Split (' ');
     if (canSelect) {
       if (name [0] == "Contact" && !selected) {
-        transform.parent.GetComponent<Manager>().CheckSelectedItems(transform.gameObject);
+        transform.parent.GetComponent<SavedBarManager>().CheckSelectedItems(transform.gameObject);
         selected = true;
         highlight.SetFloat("_Outline", 0.015f);
         loadButton.GetComponent<LoadButton>().SetSavedSelected(transform.gameObject);

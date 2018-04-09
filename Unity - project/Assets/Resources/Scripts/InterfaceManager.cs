@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InterfaceManager : MonoBehaviour {
-
-  public bool VR;
+  
   public GameObject manager;
   GameObject inputField;
 

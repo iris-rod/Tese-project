@@ -25,9 +25,9 @@ public class BoxAtoms : MonoBehaviour {
 
   private bool resumeUpdate;
   public GameObject atom;
-  public bool setOnHand;
   public GameObject platform;
   private Vector3 platformPosition;
+  private bool setOnHand;
 
 	// Use this for initialization
 	void Start () {
@@ -43,7 +43,7 @@ public class BoxAtoms : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-    CheckKeyboard();
+    CheckManager();
 
     if (!TopOfBox)
     {
@@ -78,8 +78,9 @@ public class BoxAtoms : MonoBehaviour {
     }
   }
 
-  void CheckKeyboard()
+  void CheckManager()
   {
+    setOnHand = handController.transform.parent.GetComponent<Manager>().setOnHand;
     if (Input.GetKeyDown("j"))
     {
       TopOfBox = true;

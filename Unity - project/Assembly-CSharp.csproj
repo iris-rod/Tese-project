@@ -270,9 +270,11 @@
      <Compile Include="Assets\Resources\Scripts\LoadButton.cs" />
      <Compile Include="Assets\Resources\Scripts\Manager.cs" />
      <Compile Include="Assets\Resources\Scripts\Molecule.cs" />
+     <Compile Include="Assets\Resources\Scripts\NotepadController.cs" />
      <Compile Include="Assets\Resources\Scripts\PivotController.cs" />
      <Compile Include="Assets\Resources\Scripts\Platform.cs" />
      <Compile Include="Assets\Resources\Scripts\SaveButton.cs" />
+     <Compile Include="Assets\Resources\Scripts\SavedBarManager.cs" />
      <Compile Include="Assets\Resources\Scripts\SavedMolecule.cs" />
      <Compile Include="Assets\Resources\Scripts\TrashBox.cs" />
      <None Include="Assets\Resources\SavedFiles\molecule2.txt" />

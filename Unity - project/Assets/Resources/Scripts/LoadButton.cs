@@ -18,7 +18,7 @@ public class LoadButton : MonoBehaviour {
   {
     canLoad = true;
     inputField = transform.parent.GetComponent<InterfaceManager>().GetInputField();
-    VR = transform.parent.GetComponent<InterfaceManager>().VR;
+    VR = transform.parent.GetComponent<InterfaceManager>().manager.GetComponent<Manager>().VR;
   }
 
   // Update is called once per frame

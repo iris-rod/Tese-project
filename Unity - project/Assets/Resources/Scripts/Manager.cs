@@ -10,12 +10,13 @@ public class Manager : MonoBehaviour
 
   public GameObject moleculePrefab;
   public GameObject atomPrefab;
-  public GameObject savedMoleculePrefab;
   public GameObject platform;
   public GameObject handController;
   public Text info;
   public Leap.Unity.Interaction.InteractionManager manager;
   public bool touchOtherToSwitch;
+  public bool VR;
+  public bool setOnHand;
 
   private List<GameObject> atoms = new List<GameObject> ();
   private List<Vector3> atomsPositions = new List<Vector3> ();
@@ -23,9 +24,9 @@ public class Manager : MonoBehaviour
   private List<int> numberOfBonds = new List<int> ();
   private Dictionary<int, GameObject[]> bonds = new Dictionary<int, GameObject[]> ();
 
-  private int maxNumberChild = 5;
   private bool canLoad = true;
   private Vector3 initialPos = new Vector3(0,0,0);
+  private GameObject savedBarManager;
 
   public void SaveMolecule (GameObject molecule, string name)
   {
@@ -47,24 +48,26 @@ public class Manager : MonoBehaviour
       }
     }
     HandleTextFile.SaveFile (name + ".txt", text);
-    SetMoleculeOnChild (name + ".txt");
+    savedBarManager.GetComponent<SavedBarManager>().SetMoleculeOnChild (name + ".txt");
   }
 
-  public void LoadMolecule (string name)
+  public void LoadMolecule(string name)
   {
-    numberOfBonds = new List<int> ();
-    atoms = new List<GameObject> ();
-    atomsPositions = new List<Vector3> ();
-    allBondsFormed = new List<List<int>> ();
+    numberOfBonds = new List<int>();
+    atoms = new List<GameObject>();
+    atomsPositions = new List<Vector3>();
+    allBondsFormed = new List<List<int>>();
 
     string text = "";
-    try {
-      text = HandleTextFile.ReadString (name);
-    } 
-    catch (Exception e) {
+    try
+    {
+      text = HandleTextFile.ReadString(name);
+    }
+    catch (Exception e)
+    {
       info.text = "File does not exist.";
       text = "";
-      Invoke ("ResetInfo", 3);
+      Invoke("ResetInfo", 3);
     }
     //molecule position
     string[] firsSplit = text.Split('M');
@@ -72,49 +75,42 @@ public class Manager : MonoBehaviour
     GameObject molecule = Instantiate(moleculePrefab, initialPos, Quaternion.identity);
     molecule.GetComponent<Molecule>().SetHandController(handController);
     //read atoms
-    string[] split = firsSplit[2].Split ('N');
+    string[] split = firsSplit[2].Split('N');
 
-      for (int j = 1; j < split.Length; j++) {
-        string[] atom = split [j].Split ('_');
-        List<int> bondsFormed = new List<int> ();
-        for (int k = 3; k < atom.Length; k++) {
-          int value = int.Parse (atom [k]);
-          bondsFormed.Add (value);
-          if (!numberOfBonds.Contains (value))
-            numberOfBonds.Add (value);
-        }
-        allBondsFormed.Add (bondsFormed);
+    for (int j = 1; j < split.Length; j++)
+    {
+      string[] atom = split[j].Split('_');
+      List<int> bondsFormed = new List<int>();
+      for (int k = 3; k < atom.Length; k++)
+      {
+        int value = int.Parse(atom[k]);
+        bondsFormed.Add(value);
+        if (!numberOfBonds.Contains(value))
+          numberOfBonds.Add(value);
       }
-      InitBondDictionary ();
-      for (int i = 1; i < split.Length; i++) {
-        string[] atom = split [i].Split ('_');
-        string atomType = atom [0].Substring (7);
-        int allowedBonds = Properties.BONDS [atomType];
-        int bondsMade = int.Parse (atom [1]);
-        Vector3 position = StringToVector3 (atom [2]);
-
-        GameObject loadedAtom = Instantiate (atomPrefab, initialPos, Quaternion.identity);
-        loadedAtom.GetComponent<Atom> ().handController = handController;
-        loadedAtom.GetComponent<Atom> ().manager = manager;
-        Material mat = Resources.Load ("Materials/" + atomType, typeof(Material)) as Material;
-        loadedAtom.GetComponent<Atom> ().SetProperties (atomType, mat, allowedBonds);
-        loadedAtom.transform.parent = molecule.transform;
-        atoms.Add (loadedAtom);
-        atomsPositions.Add (position);
-        AddBondDictionary (loadedAtom, i - 1);
-      }
-      BondAtoms (molecule);
-
-  }
-
-  void SetMoleculeOnChild (string fileName)
-  {
-    if (transform.childCount < maxNumberChild) {
-      Vector3 pos = new Vector3 (transform.position.x + (transform.childCount * 0.2f + 0.1f), transform.position.y, transform.position.z);
-      GameObject saved = Instantiate (savedMoleculePrefab, pos, transform.rotation);
-      saved.transform.parent = transform;
-      saved.GetComponent<SavedMolecule> ().SetFileName (fileName);      
+      allBondsFormed.Add(bondsFormed);
     }
+    InitBondDictionary();
+    for (int i = 1; i < split.Length; i++)
+    {
+      string[] atom = split[i].Split('_');
+      string atomType = atom[0].Substring(7);
+      int allowedBonds = Properties.BONDS[atomType];
+      int bondsMade = int.Parse(atom[1]);
+      Vector3 position = StringToVector3(atom[2]);
+
+      GameObject loadedAtom = Instantiate(atomPrefab, initialPos, Quaternion.identity);
+      loadedAtom.GetComponent<Atom>().handController = handController;
+      loadedAtom.GetComponent<Atom>().manager = manager;
+      Material mat = Resources.Load("Materials/" + atomType, typeof(Material)) as Material;
+      loadedAtom.GetComponent<Atom>().SetProperties(atomType, mat, allowedBonds);
+      loadedAtom.transform.parent = molecule.transform;
+      atoms.Add(loadedAtom);
+      atomsPositions.Add(position);
+      AddBondDictionary(loadedAtom, i - 1);
+    }
+    BondAtoms(molecule);
+
   }
 
   void ResetInfo ()
@@ -196,56 +192,14 @@ public class Manager : MonoBehaviour
     if (Input.GetKeyDown ("space")) {
       LoadMolecule ("saved_1.txt");
     }
-    if(touchOtherToSwitch)
-      CheckLoadDoubleTouch();
-    else CheckLoadOneTouch();
   }
 
-  void CheckLoadDoubleTouch ()
+  public void SetCanLoad(bool val)
   {
-    bool check = true;
-    int selectedID = -1;
-    for (int i = 0; i < transform.childCount; i++) {
-      Transform child = transform.GetChild (i);
-      if (!check)
-        child.GetComponent<SavedMolecule> ().SetOneSelected (true);
-      if (child.GetComponent<SavedMolecule> ().IsSelected ()) {
-        check = false;        
-        selectedID = i;
-      }
-    }
-    canLoad = check;
-    if (check) {
-      for (int i = 0; i < transform.childCount; i++) {
-        Transform child = transform.GetChild (i);
-        child.GetComponent<SavedMolecule> ().SetOneSelected (false);
-      }
-    } else {
-      for (int i = 0; i < transform.childCount; i++) {
-        if (i != selectedID) {
-          Transform child = transform.GetChild (i);
-          child.GetComponent<SavedMolecule> ().SetOneSelected (true);
-        }
-      }
-    }
+    canLoad = val;
   }
-  
-  void CheckLoadOneTouch ()
-  {
-    for (int i = 0; i < transform.childCount; i++) {
-      Transform child = transform.GetChild(i);
-      
-    }
-  }
-  
-  public void CheckSelectedItems (GameObject newSelected)
-  {
-    for (int i = 0; i < transform.childCount; i++) {
-      Transform child = transform.GetChild(i);
-      if(!GameObject.ReferenceEquals( child, newSelected) && child.GetComponent<SavedMolecule> ().IsSelected ()){
-        child.GetComponent<SavedMolecule> ().SetSelected (false);
-      }
-    }
-  }
+
+
+
 
 }

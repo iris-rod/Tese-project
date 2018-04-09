@@ -14,7 +14,7 @@ public class SaveButton : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
     inputField = transform.parent.GetComponent<InterfaceManager>().GetInputField();
-    VR = transform.parent.GetComponent<InterfaceManager>().VR;
+    VR = transform.parent.GetComponent<InterfaceManager>().manager.GetComponent<Manager>().VR;
     if(VR){
       moleculeID = 1;
     }
