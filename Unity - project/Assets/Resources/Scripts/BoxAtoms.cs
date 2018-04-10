@@ -9,6 +9,7 @@ public class BoxAtoms : MonoBehaviour {
 
   public string atomType;
   public Leap.Unity.Interaction.InteractionManager manager;
+  public GameObject camera;
   private GameObject handController;
   private Vector3 handPosition;
   private bool canPickNewAtom;
@@ -80,7 +81,7 @@ public class BoxAtoms : MonoBehaviour {
 
   void CheckManager()
   {
-    setOnHand = handController.transform.parent.GetComponent<Manager>().setOnHand;
+    setOnHand = camera.GetComponent<Manager>().setOnHand;
     if (Input.GetKeyDown("j"))
     {
       TopOfBox = true;

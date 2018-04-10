@@ -17,16 +17,19 @@ public class LoadButton : MonoBehaviour {
   void Start()
   {
     canLoad = true;
-    inputField = transform.parent.GetComponent<InterfaceManager>().GetInputField();
-    VR = transform.parent.GetComponent<InterfaceManager>().manager.GetComponent<Manager>().VR;
+    //inputField = transform.parent.GetComponent<InterfaceManager>().GetInputField();
+    if(transform.parent.name == "Interface")
+      VR = transform.parent.GetComponent<InterfaceManager>().camera.GetComponent<Manager>().VR;
+    else if(transform.parent.name == "notepad")
+      VR = transform.parent.GetComponent<NotepadController>().GetVR();
   }
 
   // Update is called once per frame
   void Update()
   {
-    var se = new InputField.SubmitEvent();
+    /*var se = new InputField.SubmitEvent();
     se.AddListener(SubmitName);
-    inputField.GetComponent<InputField>().onEndEdit = se;
+    inputField.GetComponent<InputField>().onEndEdit = se;*/
     CheckCollision();
   }
 
@@ -49,7 +52,7 @@ public class LoadButton : MonoBehaviour {
   {
     string[] name = col.transform.name.Split (' ');
     if (name [0] == "Contact" && !VR) {//name[0] == "Contact" && col.GetComponent<HandController>().IsPointing())
-      inputField.SetActive (true);
+//      inputField.SetActive (true);
     } else if (name [0] == "Contact" && VR && canLoad) {
       if (savedMolecule != null){
         transform.parent.GetComponent<InterfaceManager> ().Load (savedMolecule);

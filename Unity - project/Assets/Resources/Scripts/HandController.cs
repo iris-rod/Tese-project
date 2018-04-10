@@ -23,6 +23,13 @@ public class HandController : MonoBehaviour
   private float interval;
   private bool Z, X, fingerStreched;
   private bool pointing;
+  
+  //detect hand movement
+  private Vector3 lastHandPosition, lastHandNormal;
+  private Vector3 positionMovement;
+  private Vector3 lastMovementNorm, lastNormalNorm;
+  private bool flipping, movementFinished;
+  private bool canDetect;
 
   //testing variables
   private bool UpDown = false;
@@ -30,7 +37,10 @@ public class HandController : MonoBehaviour
   // Use this for initialization
   void Start()
   {
+    movementFinished = false;
+    flipping = false;
     pointing = false;
+    canDetect = true;
     interval = 0.90f;
     handRotation = 0;
     atomsGrabbed = 0;
@@ -46,7 +56,9 @@ public class HandController : MonoBehaviour
 
   public void updateCurrentHand(Hand leapHand)
   {
+
     CheckFingersPosition(leapHand);
+    CheckHandMovement(leapHand);
     if (rotating)
       Rotate(leapHand);
     if (translate)
@@ -204,9 +216,45 @@ public class HandController : MonoBehaviour
   }
   
 
+  void CheckHandMovement (Hand hand)
+  {
+    movementFinished = false;
+    if (!hand.IsLeft) {
+      Vector3 movementNorm = (lastHandPosition - hand.PalmPosition.ToVector3 ()).normalized;
+      if (canDetect) {
+        if (flipping) {
+          if (!(movementNorm.x >= lastMovementNorm.x) || !(movementNorm.z <= lastMovementNorm.z))
+            flipping = false;
+          else if (movementNorm.x >= -.1f && movementNorm.z <= -0.6f)
+            movementFinished = true;
+        } else if (movementNorm.x <= -0.4f && movementNorm.z >= -0.1f) {
+          flipping = true;
+        }
+      }
+      
+      if (movementFinished) {
+        Debug.Log("finished");
+        GameObject notepad = GameObject.FindGameObjectWithTag("Interface");
+        if(notepad.GetComponent<NotepadController>().IsPicked())
+          notepad.GetComponent<NotepadController>().Open();
+        flipping = false;
+        canDetect = false;
+        Invoke("ResetDetect",1.5f);
+      }
+      lastHandPosition = hand.PalmPosition.ToVector3();
+      lastMovementNorm = movementNorm;      
+    }  
+  }
+  
+  void ResetDetect ()
+  {
+    canDetect = true;
+  }
+
   //Verify the fingers position to determine what action to do (rotate or translate)
   void CheckFingersPosition(Hand hand)
   {
+
     if (!hand.IsLeft)
     {
       if (!rotating && !hand.Fingers[4].IsExtended && !hand.Fingers[3].IsExtended)
@@ -324,7 +372,6 @@ public class HandController : MonoBehaviour
   {
     return rightHand;
   }
-
 
   public bool IsLeftPiching()
   {

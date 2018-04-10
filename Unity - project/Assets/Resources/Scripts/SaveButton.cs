@@ -13,8 +13,11 @@ public class SaveButton : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-    inputField = transform.parent.GetComponent<InterfaceManager>().GetInputField();
-    VR = transform.parent.GetComponent<InterfaceManager>().manager.GetComponent<Manager>().VR;
+    //inputField = transform.parent.GetComponent<InterfaceManager>().GetInputField();
+    if(transform.parent.name == "Interface")
+      VR = transform.parent.GetComponent<InterfaceManager>().camera.GetComponent<Manager>().VR;
+    else if(transform.parent.name == "notepad")
+      VR = transform.parent.GetComponent<NotepadController>().GetVR();
     if(VR){
       moleculeID = 1;
     }
@@ -23,9 +26,9 @@ public class SaveButton : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-    var se = new InputField.SubmitEvent();
+    /*var se = new InputField.SubmitEvent();
     se.AddListener(SubmitName);
-    inputField.GetComponent<InputField>().onEndEdit = se;
+    inputField.GetComponent<InputField>().onEndEdit = se;*/
   }
 
   private void SubmitName(string arg0)
@@ -37,14 +40,16 @@ public class SaveButton : MonoBehaviour {
   void OnTriggerEnter (Collider col)
   {
     string[] name = col.transform.name.Split (' ');
+    
     if (col.CompareTag ("Interactable") && !VR) {//name[0] == "Contact" && col.GetComponent<HandController>().IsPointing())
-      inputField.SetActive (true);
+      //inputField.SetActive (true);
       molecule = col.gameObject;
     } 
     else if (col.CompareTag ("Interactable") && VR) {
       transform.parent.GetComponent<InterfaceManager>().Save(col.transform.parent.gameObject,"saved_" + moleculeID.ToString());
       moleculeID++;
     }
-    Destroy(col.transform.parent.transform.gameObject);
+    if(col.CompareTag("Interactable"))
+      Destroy(col.transform.parent.transform.gameObject);
   }
 }
