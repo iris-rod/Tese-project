@@ -110,7 +110,6 @@ public class Atom : MonoBehaviour {
   {
     transform.parent = null;
     isAttached = false;
-    //highlightMat.SetFloat("_Outline", 0f);
   }
 
   public void Attach()

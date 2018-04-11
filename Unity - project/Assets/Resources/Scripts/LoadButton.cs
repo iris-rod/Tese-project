@@ -10,14 +10,15 @@ public class LoadButton : MonoBehaviour {
   private bool VR;
   private bool canLoad;
   private GameObject savedMolecule;
-  GameObject inputField;
-  
+  private GameObject platform;
+  GameObject inputField;  
   
   // Use this for initialization
   void Start()
   {
     canLoad = true;
     //inputField = transform.parent.GetComponent<InterfaceManager>().GetInputField();
+    platform = GameObject.FindGameObjectWithTag("Platform");
     if(transform.parent.name == "Interface")
       VR = transform.parent.GetComponent<InterfaceManager>().camera.GetComponent<Manager>().VR;
     else if(transform.parent.name == "notepad")
@@ -54,7 +55,7 @@ public class LoadButton : MonoBehaviour {
     if (name [0] == "Contact" && !VR) {//name[0] == "Contact" && col.GetComponent<HandController>().IsPointing())
 //      inputField.SetActive (true);
     } else if (name [0] == "Contact" && VR && canLoad) {
-      if (savedMolecule != null){
+      if (savedMolecule != null && platform.GetComponent<Platform>().IsFree()){        
         transform.parent.GetComponent<InterfaceManager> ().Load (savedMolecule);
         canLoad = false;
       }

@@ -27,6 +27,7 @@ public class Molecule : MonoBehaviour
   public GameObject rotationToogle;
   private GameObject pivot;
   private GameObject handController;
+  private Vector3 initpos;
 
   private int bondType;
   public bool freeHand;
@@ -77,13 +78,11 @@ public class Molecule : MonoBehaviour
     CheckTranslate();
   }
 
-  void CheckTranslate()
+  void CheckTranslate ()
   {
-    if (translate)
-    {
-      Vector3 v = handController.GetComponent<HandController>().GetHandMovement();
-      transform.position = new Vector3(v.x-.01f,v.y+0.1f,v.z+.02f);//(v.x,v.y,v.z);
-      
+    if (translate) {
+      Vector3 v = handController.GetComponent<HandController> ().GetHandMovement ();
+      transform.position -= v; 
     }
   }
 
@@ -279,29 +278,13 @@ public class Molecule : MonoBehaviour
         {
           count++;
           center += (child.transform.position);
-          //lastPosition = child.transform.position;
-          //lastRadius = child.GetComponent<Renderer>().bounds.extents.magnitude;
-          //pivotDistance = Properties.PIVOTDIST[child.transform.GetComponent<Atom>().GetAtomType()];
         }
       }
-
-      //if it only has two atoms, take the radius into consideration
-      /*if (count == 2)
-      {
-        center -= lastPosition;
-        Vector3 CL = center - lastPosition;
-        CL = CL.normalized;
-        pivotPosition = lastPosition + (pivotDistance * CL.normalized);
-      }
-      else {
-        pivotPosition = 
-      }*/
 
       Vector3 pivotPosition = center / count;
       pivotPosition.y -= pivotOffset;
       pivot.transform.position = pivotPosition;
 
-      //one type of rotation (rotate the pivot, rotates the molecule)
     }
   }
 

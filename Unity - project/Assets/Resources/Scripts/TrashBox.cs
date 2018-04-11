@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Leap.Unity.Interaction;
 
 public class TrashBox : MonoBehaviour {
 
@@ -16,9 +17,8 @@ public class TrashBox : MonoBehaviour {
 
   void OnTriggerEnter(Collider col)
   {
-    if (col.CompareTag("Interactable"))
+    if (col.CompareTag("Interactable") && col.transform.GetComponent<InteractionBehaviour>().isGrasped)
     {
-      //
       if (col.transform.parent == null)
         Destroy(col.transform.gameObject);
       else

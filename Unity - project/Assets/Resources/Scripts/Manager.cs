@@ -12,6 +12,7 @@ public class Manager : MonoBehaviour
   public GameObject atomPrefab;
   public GameObject platform;
   public GameObject handController;
+  public GameObject savedBarManager;
   public Text info;
   public Leap.Unity.Interaction.InteractionManager manager;
   public bool touchOtherToSwitch;
@@ -26,7 +27,7 @@ public class Manager : MonoBehaviour
 
   private bool canLoad = true;
   private Vector3 initialPos = new Vector3(0,0,0);
-  private GameObject savedBarManager;
+
 
   public void SaveMolecule (GameObject molecule, string name)
   {
@@ -74,6 +75,7 @@ public class Manager : MonoBehaviour
     Vector3 moleculePosition = StringToVector3(firsSplit[1]);
     GameObject molecule = Instantiate(moleculePrefab, initialPos, Quaternion.identity);
     molecule.GetComponent<Molecule>().SetHandController(handController);
+    
     //read atoms
     string[] split = firsSplit[2].Split('N');
 
@@ -183,15 +185,15 @@ public class Manager : MonoBehaviour
                        float.Parse (sArray [0]),
                        float.Parse (sArray [1]),
                        float.Parse (sArray [2]));
-
     return result;
   }
 
   void Update ()
   {
-    if (Input.GetKeyDown ("space")) {
-      LoadMolecule ("saved_1.txt");
-    }
+    if (Input.GetKeyDown ("1")) 
+      LoadMolecule ("partial mol.txt");
+    else if(Input.GetKeyDown("2"))
+      LoadMolecule("CO2.txt");
   }
 
   public void SetCanLoad(bool val)

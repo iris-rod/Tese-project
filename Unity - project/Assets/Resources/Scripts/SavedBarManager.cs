@@ -80,11 +80,11 @@ public class SavedBarManager : MonoBehaviour {
       GameObject saved = Instantiate(savedMoleculePrefab, pos, transform.rotation);
       saved.transform.parent = transform;
       saved.GetComponent<SavedMolecule>().SetFileName(fileName);
-      if(transform.parent.transform.parent != null) //if it is the notebook
+      /*if(transform.parent.transform.parent != null) //if it is the notebook
       {
         saved.transform.localScale = new Vector3(.5f, .2f, .2f);
         saved.transform.position = new Vector3(-0.53f,-0.03f -(transform.childCount*.2f + .1f) ,-.8f);
-      }
+      }*/
     }
   }
 }

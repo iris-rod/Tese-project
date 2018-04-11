@@ -58,7 +58,7 @@ public class HandController : MonoBehaviour
   {
 
     CheckFingersPosition(leapHand);
-    CheckHandMovement(leapHand);
+    //CheckHandMovement(leapHand); //use with notepad only
     if (rotating)
       Rotate(leapHand);
     if (translate)
@@ -69,10 +69,11 @@ public class HandController : MonoBehaviour
 
     if (!leapHand.IsLeft && leapHand.IsPinching()) rightHandPiching = true;
     else if (!leapHand.IsLeft && !leapHand.IsPinching()) rightHandPiching = false;
-    //Quaternion.Euler(leapHand.Direction.Pitch, leapHand.Direction.Yaw, leapHand.PalmNormal.Roll);
 
     if (leapHand.IsLeft) leftHand = leapHand;
     else rightHand = leapHand;
+    
+    if(leapHand.IsLeft) lastPalmPosition = leapHand.PalmPosition.ToVector3();
   }
 
   void Update()
@@ -128,8 +129,8 @@ public class HandController : MonoBehaviour
   {
     if (hand.IsLeft)
     {
-      movement = hand.PalmPosition.ToVector3();//- lastPalmPosition;
-      lastPalmPosition = hand.PalmPosition.ToVector3();
+      movement = lastPalmPosition - hand.PalmPosition.ToVector3();//- lastPalmPosition;
+      //lastPalmPosition = hand.PalmPosition.ToVector3();
     }
   }
 
@@ -164,7 +165,7 @@ public class HandController : MonoBehaviour
     if (fingerStreched) // left hand is open
     {
       if (UpDown)
-      {
+      { //palma para cima ou para baixo
         if (hand.PalmNormal.y >= interval && hand.PalmNormal.y <= 1)
         {
           Z = true;
@@ -175,9 +176,9 @@ public class HandController : MonoBehaviour
           Z = false;
           X = true;
         }
-      }else
-      {
-      //Debug.Log(hand.PalmNormal);
+      }
+      else 
+      { //palma para o lado e virada para tras
         if(hand.PalmNormal.x >= interval && hand.PalmNormal.x <= 1 && hand.PalmNormal.y >= -.2f && hand.PalmNormal.y <= .15f) //x 1 y 0.1
         {
           Z = true;
@@ -195,6 +196,7 @@ public class HandController : MonoBehaviour
       Z = false;
       X = false;
     }
+    
   }
 
 
@@ -233,7 +235,6 @@ public class HandController : MonoBehaviour
       }
       
       if (movementFinished) {
-        Debug.Log("finished");
         GameObject notepad = GameObject.FindGameObjectWithTag("Interface");
         if(notepad.GetComponent<NotepadController>().IsPicked())
           notepad.GetComponent<NotepadController>().Open();
@@ -254,7 +255,6 @@ public class HandController : MonoBehaviour
   //Verify the fingers position to determine what action to do (rotate or translate)
   void CheckFingersPosition(Hand hand)
   {
-
     if (!hand.IsLeft)
     {
       if (!rotating && !hand.Fingers[4].IsExtended && !hand.Fingers[3].IsExtended)
@@ -291,7 +291,7 @@ public class HandController : MonoBehaviour
     for (int i = 0; i < pivots.Length; i++)
     {
       GameObject obj = pivots[i];
-      if (obj.CompareTag("Pivot") && obj.GetComponent<InteractionBehaviour>().isGrasped)
+      if (obj != null && obj.CompareTag("Pivot") && obj.GetComponent<InteractionBehaviour>().isGrasped)
       {
         obj.transform.parent.GetComponent<Molecule>().Translate();
         translate = true;
@@ -335,7 +335,6 @@ public class HandController : MonoBehaviour
 
   public void StopRotation()
   {
-    //Debug.Log("stop");
     for (int i = 0; i < pivots.Length; i++)
     {
       GameObject obj = pivots[i];
