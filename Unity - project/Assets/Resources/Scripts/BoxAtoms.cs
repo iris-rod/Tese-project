@@ -71,7 +71,7 @@ public class BoxAtoms : MonoBehaviour {
       if (spawnNewAtom)
       {
         GetMaterial();
-        GameObject newAtom = Instantiate(atom, spawnPoint, transform.rotation);
+        GameObject newAtom = Instantiate(atom, spawnPoint, Quaternion.identity);
         newAtom.GetComponent<Atom>().handController = handController;
         newAtom.GetComponent<Atom>().manager = manager;
         newAtom.GetComponent<Atom>().SetProperties(atomType, atomMaterial, atomBondsAllowed);
@@ -140,16 +140,16 @@ public class BoxAtoms : MonoBehaviour {
     switch (atomType)
     {
       case "Oxygen":
-        atomMaterial = Resources.Load("Materials/Oxygen", typeof(Material)) as Material;
+        atomMaterial = Resources.Load("Materials/Oxygen 2", typeof(Material)) as Material;
         break;
       case "Hydrogen":
-        atomMaterial = Resources.Load("Materials/Hydrogen", typeof(Material)) as Material;
+        atomMaterial = Resources.Load("Materials/Hydrogen 2", typeof(Material)) as Material;
         break;
       case "Carbon":
-        atomMaterial = Resources.Load("Materials/Carbon", typeof(Material)) as Material;
+        atomMaterial = Resources.Load("Materials/Carbon 2", typeof(Material)) as Material;
         break;
-      case "Nytrogen":
-        atomMaterial = Resources.Load("Materials/Nytrogen", typeof(Material)) as Material;
+      case "Nitrogen":
+        atomMaterial = Resources.Load("Materials/Nitrogen 2", typeof(Material)) as Material;
         break;
     }
     atomBondsAllowed = Properties.BONDS[atomType];

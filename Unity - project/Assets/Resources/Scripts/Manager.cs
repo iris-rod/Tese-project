@@ -18,6 +18,8 @@ public class Manager : MonoBehaviour
   public bool touchOtherToSwitch;
   public bool VR;
   public bool setOnHand;
+  public bool MultipleLines;
+  public bool freeHand;
 
   private List<GameObject> atoms = new List<GameObject> ();
   private List<Vector3> atomsPositions = new List<Vector3> ();

@@ -54,19 +54,10 @@ public class BondController : MonoBehaviour
   {
     ballA = atom1.transform;
     ballB = atom2.transform;
-    //DefineBondType();
     bondType = bType;
     ballA.GetComponent<Atom>().AddBond(bondType,bondId);
     ballB.GetComponent<Atom>().AddBond(bondType,bondId);
   }
-
-  /*void DefineBondType()
-  {
-    int atomA = Properties.BONDS[ballA.GetComponent<Atom>().GetAtomType()];
-    int atomB = Properties.BONDS[ballB.GetComponent<Atom>().GetAtomType()];
-    if (atomA < atomB) bondType = atomA;
-    else bondType = atomB;
-  }*/
 
   public void SetID(int value)
   {
