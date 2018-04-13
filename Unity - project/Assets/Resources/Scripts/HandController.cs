@@ -23,6 +23,7 @@ public class HandController : MonoBehaviour
   private float interval;
   private bool Z, X, fingerStreched;
   private bool pointing;
+  private int rotationSign;
   
   //detect hand movement
   private Vector3 lastHandPosition, lastHandNormal;
@@ -32,7 +33,7 @@ public class HandController : MonoBehaviour
   private bool canDetect;
 
   //testing variables
-  private bool UpDown = false;
+  private bool UpDown = true;
 
   // Use this for initialization
   void Start()
@@ -74,6 +75,7 @@ public class HandController : MonoBehaviour
     else rightHand = leapHand;
     
     if(leapHand.IsLeft) lastPalmPosition = leapHand.PalmPosition.ToVector3();
+
   }
 
   void Update()
@@ -140,7 +142,8 @@ public class HandController : MonoBehaviour
     if (!hand.IsLeft)
     {
       handRotation = Quaternion.Angle(hand.Rotation.ToQuaternion(), lastRotation.ToQuaternion());
-      if (hand.PalmNormal.x < lastPalmX)
+      
+      if (hand.PalmNormal.x < lastPalmX)// || (hand.PalmNormal.x <0 && lastPalmX <0 && hand.PalmNormal.x > lastPalmX))
         handRotation = -handRotation;
       lastRotation = hand.Rotation;
       lastPalmX = hand.PalmNormal.x;
@@ -151,6 +154,7 @@ public class HandController : MonoBehaviour
         bool endX = pivotRotate.GetComponent<PivotController>().IsEndXGrabbed();
         pivotRotate.transform.parent.GetComponent<Molecule>().SetAxis(endZ, endX);
       }
+
     }
     else if (hand.IsLeft && !pivotRotate.GetComponent<PivotController>().Axis)
     {
@@ -350,6 +354,11 @@ public class HandController : MonoBehaviour
   public void GrabbedAtom()
   {
     atomsGrabbed++;
+  }
+
+  public int GetRotationSign()
+  {
+    return rotationSign;
   }
 
   public Vector3 GetHandMovement()

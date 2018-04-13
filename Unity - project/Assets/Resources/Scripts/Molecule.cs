@@ -20,17 +20,18 @@ public class Molecule : MonoBehaviour
   public GameObject doubleBond;
   public GameObject tripleBond;
   public GameObject quadrupleBond;
-  public bool MultipleLines;
 
   private Vector3 axis;
 
   public GameObject rotationToogle;
   private GameObject pivot;
   private GameObject handController;
+  private GameObject camera;
   private Vector3 initpos;
 
   private int bondType;
-  public bool freeHand;
+  private bool freeHand;
+  private bool MultipleLines;
 
   // Use this for initialization
   void Start()
@@ -42,6 +43,9 @@ public class Molecule : MonoBehaviour
     pivotGrabbed = false;
     isRotating = false;
     rotate = false;
+    camera = GameObject.FindGameObjectWithTag("MainCamera");
+    freeHand = camera.GetComponent<Manager>().freeHand;
+    MultipleLines = camera.GetComponent<Manager>().MultipleLines;
     pivot = Instantiate(rotationToogle, transform.position, transform.rotation);
     pivot.transform.parent = transform;
     SetManagerPivot();
@@ -94,7 +98,12 @@ public class Molecule : MonoBehaviour
     {
       Transform child = transform.GetChild(i);
       if (child.CompareTag("Interactable") && rotate)
-        child.RotateAround(pointRotate, axis, 80 * Time.deltaTime);//handController.GetComponent<HandController>().GetHandRotation()
+      {
+        if(!freeHand)
+          child.RotateAround(pointRotate, Vector3.forward, handController.GetComponent<HandController>().GetRotationSign()* 80 * Time.deltaTime);//handController.GetComponent<HandController>().GetHandRotation()
+        else
+          child.RotateAround(pointRotate, Vector3.forward, handController.GetComponent<HandController>().GetHandRotation());
+      } 
       else if (child.CompareTag("Interactable") && !rotate)
         child.RotateAround(pointRotate, axis, 0);
     }
@@ -131,7 +140,7 @@ public class Molecule : MonoBehaviour
       }
     }
     //If one atom and the pivot are grasped, then you start rotating (with free movement)
-    else if (graspedAtoms == 1 && pivotGrabbed && freeHand)
+    /*else if (graspedAtoms == 1 && pivotGrabbed && freeHand)
     {
       for (int i = 0; i < transform.childCount; i++)
       {
@@ -141,13 +150,8 @@ public class Molecule : MonoBehaviour
       }
       isRotating = true;
       LockDistanceToPivot();
-    }
-    //If the pivot is grasped (without free movement) then you start rotating
-    /*else if(pivotGrabbed && !freeHand)
-    {
-      LockDistanceToPivot();
-      isRotating = true;
     }*/
+
     //If only one atom is grasped, then you are just moving it, and stop all other actions
     else if (graspedAtoms <= 1)
     {
