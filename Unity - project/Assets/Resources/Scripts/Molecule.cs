@@ -138,20 +138,34 @@ public class Molecule : MonoBehaviour
     CheckMoleculeState();
   }
 
-  void CheckMoleculeState()
+  void CheckMoleculeState ()
   {
-    //If 2 atoms are grasped, then you start detaching
-    if (graspedAtoms >= 2)
-    {
-      for (int i = 0; i < transform.childCount; i++)
-      {
-        Transform child = transform.GetChild(i);
-        if (child.CompareTag("Bond"))
-        {
-          child.GetComponent<BondController>().CheckDetaching();
+    //If 2 atoms are grasped and are not being bonded, you start detaching
+    if (graspedAtoms >= 2 && !adjustingDistance) {
+      for (int i = 0; i < transform.childCount; i++) {
+        Transform child = transform.GetChild (i);
+        if (child.CompareTag ("Bond")) {
+          child.GetComponent<BondController> ().CheckDetaching ();
         }
       }
+    } else if (graspedAtoms >= 2 && !adjustingDistance) { //If 2 atoms are grasped and are being bonded, check the distance to define the bond type
+      int id1 = -1;
+      int id2 = -1;
+      for (int i = 0; i < transform.childCount; i++) {
+        Transform child = transform.GetChild (i);
+        if (child.CompareTag ("Interactable")&& child.GetComponent<InteractionBehaviour>().isGrasped) {
+          if(id1!=-1)
+            id2 = i;
+          else
+            id1 = i;
+        }
+      }
+      
+      
+      
     }
+    
+    
 
     //If only one atom is grasped, then you are just moving it, and stop all other actions
     else if (graspedAtoms <= 1)
@@ -234,10 +248,9 @@ public class Molecule : MonoBehaviour
     
     
     //get the prefab for the given bond type
-    if (MultipleLines)
-    {
-      switch (bondType)
-      {
+    if (!adjustingDistance) {
+      if (MultipleLines) {
+        switch (bondType) {
         case 1:
           bond = simpleBond;
           break;
@@ -250,26 +263,29 @@ public class Molecule : MonoBehaviour
         case 4:
           bond = quadrupleBond;
           break;
+        }
+        bondScale = 0;
+      } else {
+        bond = simpleBond;
+        if (bondType == 2)
+          bondScale = 0.02f;
+        else if (bondType == 3)
+          bondScale = 0.03f;
       }
-      bondScale = 0;
-    }
-    else
-    {
-      bond = simpleBond;
-      if (bondType == 2) bondScale = 0.02f;
-      else if (bondType == 3) bondScale = 0.03f;
     }
   }
 
   //Create a new bond between the given atoms
-  public void CreateBond(GameObject atomA, GameObject atomB)
+  public void CreateBond (GameObject atomA, GameObject atomB)
   {
-    DefineBondType(atomA, atomB);
-    GameObject newBond = Instantiate(bond, transform.position, transform.rotation);
-    AddBond(newBond);
-    newBond.GetComponent<BondController>().SetAtoms(atomA, atomB, bondType);
-    newBond.transform.localScale += new Vector3(bondScale,bondScale,0);
-    newBond.transform.parent = transform;
+    DefineBondType (atomA, atomB);
+    if (!adjustingDistance) {
+      GameObject newBond = Instantiate (bond, transform.position, transform.rotation);
+      AddBond (newBond);
+      newBond.GetComponent<BondController> ().SetAtoms (atomA, atomB, bondType);
+      newBond.transform.localScale += new Vector3 (bondScale, bondScale, 0);
+      newBond.transform.parent = transform;
+    }
   }
 
 
