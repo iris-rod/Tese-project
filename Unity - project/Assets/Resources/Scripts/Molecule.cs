@@ -15,6 +15,7 @@ public class Molecule : MonoBehaviour
   private GameObject bond;
   private float bondScale;
   private float pivotOffset;
+  private bool distanceToBond;
 
   public GameObject simpleBond;
   public GameObject doubleBond;
@@ -32,6 +33,9 @@ public class Molecule : MonoBehaviour
   private int bondType;
   private bool freeHand;
   private bool MultipleLines;
+  
+  //variables to set atoms bonds with distance
+  private bool adjustingDistance;
 
   // Use this for initialization
   void Start()
@@ -44,8 +48,9 @@ public class Molecule : MonoBehaviour
     isRotating = false;
     rotate = false;
     camera = GameObject.FindGameObjectWithTag("MainCamera");
-    freeHand = camera.GetComponent<Manager>().freeHand;
+    freeHand = camera.GetComponent<Manager>().freeHandRotation;
     MultipleLines = camera.GetComponent<Manager>().MultipleLines;
+    distanceToBond = camera.GetComponent<Manager>().DistanceToBond;
     pivot = Instantiate(rotationToogle, transform.position, transform.rotation);
     pivot.transform.parent = transform;
     SetManagerPivot();
@@ -80,6 +85,9 @@ public class Molecule : MonoBehaviour
     
     CheckRotate();
     CheckTranslate();
+    
+    if(adjustingDistance)
+      CheckDistance();
   }
 
   void CheckTranslate ()
@@ -107,6 +115,11 @@ public class Molecule : MonoBehaviour
       else if (child.CompareTag("Interactable") && !rotate)
         child.RotateAround(pointRotate, axis, 0);
     }
+  }
+  
+  void CheckDistance ()
+  {
+    
   }
 
   //Count atoms touched in order to perform a dettachment
@@ -139,18 +152,6 @@ public class Molecule : MonoBehaviour
         }
       }
     }
-    //If one atom and the pivot are grasped, then you start rotating (with free movement)
-    /*else if (graspedAtoms == 1 && pivotGrabbed && freeHand)
-    {
-      for (int i = 0; i < transform.childCount; i++)
-      {
-        Transform child = transform.GetChild(i);
-        if (child.CompareTag("Interactable"))
-          child.GetComponent<Atom>().SetRotating(true);
-      }
-      isRotating = true;
-      LockDistanceToPivot();
-    }*/
 
     //If only one atom is grasped, then you are just moving it, and stop all other actions
     else if (graspedAtoms <= 1)
@@ -211,16 +212,28 @@ public class Molecule : MonoBehaviour
   }
 
   //Check what type of bond must be created
-  void DefineBondType(GameObject atomA, GameObject atomB)
+  void DefineBondType (GameObject atomA, GameObject atomB)
   {
     //get available bonds from the atoms
-    int availableBondsA = atomA.GetComponent<Atom>().GetAvailableBonds();
-    int availableBondsB = atomB.GetComponent<Atom>().GetAvailableBonds();
-    if (availableBondsA <= 0 || availableBondsB <= 0) return;
+    int availableBondsA = atomA.GetComponent<Atom> ().GetAvailableBonds ();
+    int availableBondsB = atomB.GetComponent<Atom> ().GetAvailableBonds ();
+    if (availableBondsA <= 0 || availableBondsB <= 0)
+      return;
 
     bondType = 0;
-    if (availableBondsA < availableBondsB) bondType = availableBondsA;
-    else bondType = availableBondsB;
+    
+    //get the smallest bond type possible between the two atoms
+    if (!distanceToBond) {
+      if (availableBondsA < availableBondsB)
+        bondType = availableBondsA;
+      else
+        bondType = availableBondsB;    
+    } else {
+      adjustingDistance = true;
+    }
+    
+    
+    //get the prefab for the given bond type
     if (MultipleLines)
     {
       switch (bondType)

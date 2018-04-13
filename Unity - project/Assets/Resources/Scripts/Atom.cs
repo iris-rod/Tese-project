@@ -176,25 +176,24 @@ public class Atom : MonoBehaviour {
     highlightMat.SetFloat("_Outline", 0.0f);
   }
 
-  void StickToMolecule(GameObject obj)
+  void StickToMolecule (GameObject obj)
   {
-
-    if(obj.transform.parent == null && transform.parent == null)
-    {
-      Vector3 platePos = new Vector3(transform.position.x,transform.position.y,transform.position.z);
-      GameObject mole = Instantiate(molecule, platePos,transform.rotation);
-      mole.GetComponent<Molecule>().SetHandController(handController);
-      transform.parent = mole.transform;
-      obj.transform.parent = mole.transform;
-      mole.GetComponent<Molecule>().CreateBond(obj,transform.gameObject);
-    }
-    else if(obj.transform.parent != transform.parent)
-    {
-      if (transform.parent == null ) { transform.parent = obj.transform.parent; }
-      else if (obj.transform.parent == null ) {  obj.transform.parent = transform.parent; }
-      transform.parent.GetComponent<Molecule>().CreateBond(obj,transform.gameObject);
-    }
-
+      if (obj.transform.parent == null && transform.parent == null) {
+        Vector3 platePos = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
+        GameObject mole = Instantiate (molecule, platePos, transform.rotation);
+        mole.GetComponent<Molecule> ().SetHandController (handController);
+        transform.parent = mole.transform;
+        obj.transform.parent = mole.transform;
+        mole.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject);
+      } else if (obj.transform.parent != transform.parent) {
+        if (transform.parent == null) {
+          transform.parent = obj.transform.parent;
+        } else if (obj.transform.parent == null) {
+          obj.transform.parent = transform.parent;
+        }
+        transform.parent.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject);
+      }
+    
     //
   }
 
