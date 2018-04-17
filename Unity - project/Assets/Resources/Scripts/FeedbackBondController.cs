@@ -72,7 +72,6 @@ public class FeedbackBondController : MonoBehaviour {
 
     if ((atomA.transform == ballA && atomB.transform == ballB) || (atomB.transform == ballA && atomB.transform == ballB))
     {
-      Debug.Log("destroy");
       Destroy(transform.gameObject);
     }
   }

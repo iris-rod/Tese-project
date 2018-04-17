@@ -56,7 +56,7 @@ public class LoadButton : MonoBehaviour {
 //      inputField.SetActive (true);
     } else if (name [0] == "Contact" && VR && canLoad) {
       if (savedMolecule != null && platform.GetComponent<Platform>().IsFree()){        
-        transform.parent.GetComponent<InterfaceManager> ().Load (savedMolecule);
+        transform.parent.GetComponent<InterfaceManager> ().Load (savedMolecule,"");
         canLoad = false;
       }
     }

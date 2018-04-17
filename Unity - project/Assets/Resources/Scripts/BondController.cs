@@ -39,12 +39,18 @@ public class BondController : MonoBehaviour
         break;
 
     }
+    string split = transform.parent.name.Split('_')[0];
     distance = 0.15f;
     factor = 60;
+    if (split == "Mini")
+    {
+      factor = 200f;
+    }
     detaching = false;
     scale0 = transform.localScale;
     SetDistance();
   }
+
 
   //Set the atoms connected by this bond
   public void SetAtoms(GameObject atom1, GameObject atom2, int bType)

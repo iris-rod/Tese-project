@@ -59,7 +59,6 @@ public class Atom : MonoBehaviour {
   // Update is called once per frame
   void Update ()
   {
-    Debug.Log(numberOfBonds);
     if (numberOfBonds >= 1 || toBond)
       Attach();
     else Dettach();
@@ -111,7 +110,6 @@ public class Atom : MonoBehaviour {
 
   void Dettach()
   {
-    Debug.Log("dettach");
     transform.parent = null;
     isAttached = false;
   }

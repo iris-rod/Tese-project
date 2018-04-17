@@ -278,6 +278,7 @@
      <Compile Include="Assets\Resources\Scripts\SaveButton.cs" />
      <Compile Include="Assets\Resources\Scripts\SavedBarManager.cs" />
      <Compile Include="Assets\Resources\Scripts\SavedMolecule.cs" />
+     <Compile Include="Assets\Resources\Scripts\ShelfManager.cs" />
      <Compile Include="Assets\Resources\Scripts\TrashBox.cs" />
      <None Include="Assets\Resources\SavedFiles\molecule2.txt" />
      <None Include="Assets\LeapMotion\Core\Resources\LeapCG.cginc" />
@@ -286,7 +287,10 @@
      <None Include="Assets\LeapMotion\Core\readme.txt" />
      <None Include="Assets\LeapMotion\Core\Resources\RuntimeGizmos.shader" />
      <None Include="Assets\LeapMotionModules\DetectionExamples\Shaders\LeapPinchLine.shader" />
+     <None Include="Assets\Resources\SavedFiles\saved_1.txt" />
      <None Include="Assets\LeapMotion\Core\Dependencies.txt" />
+     <None Include="Assets\Resources\SavedFiles\saved_0.txt" />
+     <None Include="Assets\Resources\SavedFiles\saved_4.txt" />
      <None Include="Assets\LeapMotion\Core\Resources\ThresholdOverlay.shader" />
      <None Include="Assets\LeapMotion\Core\Resources\PassthroughForeground.shader" />
      <None Include="Assets\Resources\SavedFiles\molecule.txt" />
@@ -296,6 +300,9 @@
      <None Include="Assets\LeapMotion\Core\Version.txt" />
      <None Include="Assets\LeapMotion\Core\Resources\VertexOffsetShader.shader" />
      <None Include="Assets\Resources\SavedFiles\partial mol.txt" />
+     <None Include="Assets\Resources\SavedFiles\saved_3.txt" />
+     <None Include="Assets\Resources\SavedFiles\saved_2.txt" />
+     <None Include="Assets\Resources\SavedFiles\saved_5.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

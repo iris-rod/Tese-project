@@ -9,7 +9,7 @@ public class SaveButton : MonoBehaviour {
   private bool VR;
   GameObject inputField;
   GameObject molecule;
-  int moleculeID;
+  private int moleculeID;
 
 	// Use this for initialization
 	void Start () {

@@ -52,7 +52,7 @@ public class Manager : MonoBehaviour
       }
     }
     HandleTextFile.SaveFile (name + ".txt", text);
-    savedBarManager.GetComponent<SavedBarManager>().SetMoleculeOnChild (name + ".txt");
+    //savedBarManager.GetComponent<SavedBarManager>().SetMoleculeOnChild (name + ".txt");
   }
 
   public void LoadMolecule(string name)
@@ -61,11 +61,10 @@ public class Manager : MonoBehaviour
     atoms = new List<GameObject>();
     atomsPositions = new List<Vector3>();
     allBondsFormed = new List<List<int>>();
-
     string text = "";
     try
     {
-      text = HandleTextFile.ReadString(name);
+      text = HandleTextFile.ReadString(name + ".txt");
     }
     catch (Exception e)
     {
@@ -114,8 +113,8 @@ public class Manager : MonoBehaviour
       atomsPositions.Add(position);
       AddBondDictionary(loadedAtom, i - 1);
     }
+    molecule.name = "Mini_" + name;
     BondAtoms(molecule);
-
   }
 
   void ResetInfo ()

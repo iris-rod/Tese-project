@@ -108,7 +108,6 @@ public class Molecule : MonoBehaviour
 
   void SetInvisibleBond(float dist)
   {
-    Debug.Log("here");
     bond = simpleBond;
     int bondNumber = 1;
     if (dist <= .2f)
@@ -414,7 +413,6 @@ public class Molecule : MonoBehaviour
   //Destroy the molecule once there is no atoms bonded
   void UpdateStructure()
   {
-    Debug.Log(transform.childCount);
     if (transform.childCount <= 1)
     {
       Destroy(pivot);
