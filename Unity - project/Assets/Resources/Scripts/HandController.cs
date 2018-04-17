@@ -58,29 +58,28 @@ public class HandController : MonoBehaviour
   public void updateCurrentHand(Hand leapHand)
   {
 
-    CheckFingersPosition(leapHand);
-    //CheckHandMovement(leapHand); //use with notepad only
-    if (rotating)
-      Rotate(leapHand);
-    if (translate)
-      Translate(leapHand);
+      CheckFingersPosition(leapHand);
+      //CheckHandMovement(leapHand); //use with notepad only
+      if (rotating)
+        Rotate(leapHand);
+      if (translate)
+        Translate(leapHand);
 
-    if (leapHand.IsLeft && leapHand.IsPinching()) leftHandPiching = true;
-    else if (leapHand.IsLeft && !leapHand.IsPinching()) leftHandPiching = false;
+      if (leapHand.IsLeft && leapHand.IsPinching()) leftHandPiching = true;
+      else if (leapHand.IsLeft && !leapHand.IsPinching()) leftHandPiching = false;
 
-    if (!leapHand.IsLeft && leapHand.IsPinching()) rightHandPiching = true;
-    else if (!leapHand.IsLeft && !leapHand.IsPinching()) rightHandPiching = false;
+      if (!leapHand.IsLeft && leapHand.IsPinching()) rightHandPiching = true;
+      else if (!leapHand.IsLeft && !leapHand.IsPinching()) rightHandPiching = false;
 
-    if (leapHand.IsLeft) leftHand = leapHand;
-    else rightHand = leapHand;
+      if (leapHand.IsLeft) leftHand = leapHand;
+      else rightHand = leapHand;
+
+      if (leapHand.IsLeft) lastPalmPosition = leapHand.PalmPosition.ToVector3();
     
-    if(leapHand.IsLeft) lastPalmPosition = leapHand.PalmPosition.ToVector3();
-
   }
 
   void Update()
   {
-
     //testing 
     CheckKeyboard();
 
@@ -324,7 +323,7 @@ public class HandController : MonoBehaviour
     for (int i = 0; i < pivots.Length; i++)
     {
       GameObject obj = pivots[i];
-      if (obj.CompareTag("Pivot") && obj.GetComponent<InteractionBehaviour>().isGrasped)
+      if (obj != null && obj.CompareTag("Pivot") && obj.GetComponent<InteractionBehaviour>().isGrasped)
       {
         pivotRotate = obj;
         bool endZ = obj.GetComponent<PivotController>().IsEndZGrabbed();

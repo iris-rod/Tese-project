@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class BondController : MonoBehaviour
 {
-  public GameObject extraBond;
-  public bool grossura;
-
   Transform ballA; // drag sphereA here
   Transform ballB; // drag sphereB here
   Vector3 scale0;// initial localScale
@@ -19,7 +16,6 @@ public class BondController : MonoBehaviour
   private float factor;
   private float doubleBond = 0.02f;
   private float tripleBond = 0.03f;
-  private GameObject extra1, extra2;
 
   private int bondType;
   public float distanceToDetach;
@@ -47,6 +43,7 @@ public class BondController : MonoBehaviour
     factor = 60;
     detaching = false;
     scale0 = transform.localScale;
+    SetDistance();
   }
 
   //Set the atoms connected by this bond
@@ -93,6 +90,18 @@ public class BondController : MonoBehaviour
     transform.localScale = scale;
 
     
+  }
+
+  private void SetDistance()
+  {
+    Vector3 pA = ballA.position;
+    Vector3 pB = ballB.position;
+    float dist = Vector3.Distance(pA,pB);
+    if (dist != distance)
+    {
+      ballB.position = (ballB.transform.position - ballA.transform.position).normalized * distance + ballA.transform.position;
+      transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballB, bondId);
+    }
   }
 
   //It is only dettaching if both atoms are grabbed (called by Molecule)

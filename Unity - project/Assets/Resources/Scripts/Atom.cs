@@ -29,6 +29,7 @@ public class Atom : MonoBehaviour {
   private bool isRotating;
   private float distanceToPivot;
   private Vector3 pivotPosition;
+  private bool toBond;
 
   // Use this for initialization
   void Start ()
@@ -37,6 +38,7 @@ public class Atom : MonoBehaviour {
     isRotating = false;
     isAttached = false;
     toDetach = false;
+    toBond = false;
     highlightMat = transform.GetComponent<MeshRenderer>().materials[1];
     highlightGrasp = transform.GetComponent<MeshRenderer>().materials[2];
     handController = GameObject.FindGameObjectWithTag("HandController");
@@ -57,6 +59,10 @@ public class Atom : MonoBehaviour {
   // Update is called once per frame
   void Update ()
   {
+    Debug.Log(numberOfBonds);
+    if (numberOfBonds >= 1 || toBond)
+      Attach();
+    else Dettach();
 
     if (GetComponent<InteractionBehaviour>().isGrasped)
     {
@@ -65,14 +71,11 @@ public class Atom : MonoBehaviour {
     else
     {
       highlightGrasp.SetFloat("_Outline", 0.00f);
+      if (toBond) toBond = false;
     }
 
     if (isRotating)
       Rotate();
-
-    if (numberOfBonds >= 1)
-      Attach();
-    else Dettach();
   }
 
   public void SetDistanceToPivot(Vector3 pivotPos)
@@ -108,6 +111,7 @@ public class Atom : MonoBehaviour {
 
   void Dettach()
   {
+    Debug.Log("dettach");
     transform.parent = null;
     isAttached = false;
   }
@@ -160,6 +164,16 @@ public class Atom : MonoBehaviour {
     return numberOfBonds < numberOfBondsAllowed;
   }
 
+  public void SettingBond()
+  {
+    toBond = true;
+  }
+
+  public bool IsBonding()
+  {
+    return toBond;
+  }
+
   void OnCollisionEnter(Collision col)
   {
     if (col.transform.CompareTag("Interactable") && canBond && col.transform.GetComponent<Atom>().CanBond())
@@ -182,8 +196,6 @@ public class Atom : MonoBehaviour {
         Vector3 platePos = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
         GameObject mole = Instantiate (molecule, platePos, transform.rotation);
         mole.GetComponent<Molecule> ().SetHandController (handController);
-        transform.parent = mole.transform;
-        obj.transform.parent = mole.transform;
         mole.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject);
       } else if (obj.transform.parent != transform.parent) {
         if (transform.parent == null) {
@@ -193,8 +205,6 @@ public class Atom : MonoBehaviour {
         }
         transform.parent.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject);
       }
-    
-    //
   }
 
   public void AddBond(int type, int bondId)
