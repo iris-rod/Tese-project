@@ -7,17 +7,31 @@ public class ShelfManager : MonoBehaviour {
   private int moleculeID;
   private bool canSave;
  
+  private GameObject mini;
+  private bool newMini;
+  private float zOffset, yOffset;
+
   // Use this for initialization
   void Start () {
     moleculeID = 1;
+    newMini = true;
     canSave = true;
 	}
 	
 	// Update is called once per frame
 	void Update ()
-  { 
-
-
+  {
+    if (mini != null && newMini)
+    {
+      mini.transform.position = new Vector3(-0.5f,1.6f,-.2f +((moleculeID-1) * .05f));//0,1.2,.1
+      BoxCollider col = mini.GetComponent<BoxCollider>();
+      col.size = new Vector3(.5f,.5f,.5f);
+      col.center = new Vector3(0,2,.3f);
+      col.isTrigger = true;
+      mini.transform.localScale -= new Vector3(0.8f, 0.8f, 0.8f);
+      mini.transform.parent = transform;
+      newMini = false;
+    }
   }
 
 
@@ -42,12 +56,14 @@ public class ShelfManager : MonoBehaviour {
   private void CreateMiniMolecule(Transform molecule)
   {
     GetComponent<InterfaceManager>().Load(null,"saved_" + moleculeID);
-    GameObject mini = GameObject.Find("Mini_saved_"+(moleculeID).ToString());
-    //mini.transform.localScale -= new Vector3(4f, 4f, 4f);
-    //mini.transform.parent = transform;
-    mini.transform.position = new Vector3(0,1.2f,.1f);
-    mini.transform.localScale -= new Vector3(0.6f, 0.6f, 0.6f);
+    mini = GameObject.Find("Mini_saved_"+(moleculeID).ToString());
     mini.gameObject.AddComponent(typeof(BoxCollider));
+    newMini = true;
+  }
 
+  public void LoadMolecule(GameObject molecule)
+  {
+    string name = molecule.name.Split('_')[1] + "_" + molecule.name.Split('_')[2];
+    GetComponent<InterfaceManager>().Load(null,name);
   }
 }

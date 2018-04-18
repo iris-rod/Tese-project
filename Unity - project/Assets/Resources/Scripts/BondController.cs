@@ -44,7 +44,8 @@ public class BondController : MonoBehaviour
     factor = 60;
     if (split == "Mini")
     {
-      factor = 200f;
+      factor = 300f;
+      distance = 0.05f;
     }
     detaching = false;
     scale0 = transform.localScale;

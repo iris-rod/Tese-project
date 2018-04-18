@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class Molecule : MonoBehaviour
 {
-
-  private int numberOfAtoms;
+  
   private int graspedAtoms;
   private int numberOfBonds;
   private bool pivotGrabbed;
@@ -40,9 +39,12 @@ public class Molecule : MonoBehaviour
   private bool freeHand;
   private bool distanceToBond;
   private bool MultipleLines;
+  private GameObject shelves;
+  private bool isMini;
 
   void Awake()
   {
+    shelves = GameObject.Find("shelves");
     camera = GameObject.FindGameObjectWithTag("MainCamera");
     freeHand = camera.GetComponent<Manager>().freeHandRotation;
     MultipleLines = camera.GetComponent<Manager>().MultipleLines;
@@ -54,7 +56,6 @@ public class Molecule : MonoBehaviour
   {
     pivotOffset = 0.1f;
     numberOfBonds = 1;
-    numberOfAtoms = 2;
     graspedAtoms = 0;
     pivotGrabbed = false;
     isRotating = false;
@@ -63,6 +64,13 @@ public class Molecule : MonoBehaviour
     pivot.transform.parent = transform;
     SetManagerPivot();
     UpdateStructure();
+    isMini = false;
+    string split = transform.name.Split('_')[0];
+    if (split == "Mini")
+    {
+      isMini = true;
+      pivotOffset = 0.04f;
+    }
   }
 
   public void SetHandController(GameObject handCtrl)
@@ -86,16 +94,22 @@ public class Molecule : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-    CheckAtomsGrasped();
-    UpdateStructure();
-    graspedAtoms = 0;
-    pivotGrabbed = false;
+    if (!isMini)
+    {
+      CheckAtomsGrasped();
+      UpdateStructure();
+      graspedAtoms = 0;
+      pivotGrabbed = false;
 
-    CheckRotate();
-    CheckTranslate();
-    if (bondingAtoms)
-      CheckDistance();
-    
+      CheckRotate();
+      CheckTranslate();
+      if (bondingAtoms)
+        CheckDistance();
+    }
+    else
+    {
+      CheckIfSelected();
+    }
   }
 
   void CheckDistance()
@@ -487,6 +501,16 @@ public class Molecule : MonoBehaviour
   public void StopTranslate()
   {
     translate = false;
+  }
+
+  void CheckIfSelected()
+  {
+    Vector3 pos = new Vector3(transform.position.x, transform.position.y+.4f, transform.position.z + .08f);
+    Collider[] hitColliders = Physics.OverlapSphere(pos, 0.01f);
+    Debug.Log(hitColliders.Length);
+    //if (hitColliders.Length < 1)
+      //shelves.GetComponent<ShelfManager>().LoadMolecule(transform.gameObject);
+    
   }
 
 }
