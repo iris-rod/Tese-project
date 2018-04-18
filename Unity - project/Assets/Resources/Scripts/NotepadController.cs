@@ -58,6 +58,6 @@ public class NotepadController : MonoBehaviour {
 
   public void Load(GameObject mol)
   {
-    camera.GetComponent<Manager>().LoadMolecule(mol.GetComponent<SavedMolecule>().GetFileName());
+    camera.GetComponent<Manager>().LoadMolecule(mol.GetComponent<SavedMolecule>().GetFileName(),false);
   }
 }

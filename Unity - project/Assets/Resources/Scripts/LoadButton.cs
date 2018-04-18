@@ -36,7 +36,7 @@ public class LoadButton : MonoBehaviour {
 
   private void SubmitName(string arg0)
   {
-    manager.GetComponent<Manager>().LoadMolecule(arg0);
+    manager.GetComponent<Manager>().LoadMolecule(arg0,false);
     inputField.SetActive(false);
   }
 

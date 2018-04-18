@@ -145,6 +145,11 @@ public class BondController : MonoBehaviour
         ballA.position = (ballA.transform.position - ballB.transform.position).normalized * distance + ballB.transform.position;
         transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballA, bondId);
       }
+      else
+      {
+        ballB.position = (ballB.transform.position - ballA.transform.position).normalized * distance + ballA.transform.position;
+        transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballB, bondId);
+      }
     }
   }
 

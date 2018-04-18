@@ -43,7 +43,7 @@ public class Manager : MonoBehaviour
         int allowedBonds = Properties.BONDS [atomType];
         List<int> bondsFormed = child.GetComponent<Atom> ().GetBonds ();
         int bondsMade = child.GetComponent<Atom> ().GetNumberBondsMade ();
-        Vector3 pos = new Vector3 (child.position.x - 0.2f, child.position.y, child.position.z);
+        Vector3 pos = new Vector3 (child.position.x, child.position.y, child.position.z);
         text += "N atom: " + atomType + "_" + bondsMade + " _" + pos + "\n";        
         for (int j = 0; j < bondsFormed.Count; j++) {
           text += "    _" + bondsFormed [j] + "\n";
@@ -55,7 +55,7 @@ public class Manager : MonoBehaviour
     //savedBarManager.GetComponent<SavedBarManager>().SetMoleculeOnChild (name + ".txt");
   }
 
-  public void LoadMolecule(string name)
+  public void LoadMolecule(string name, bool mini)
   {
     numberOfBonds = new List<int>();
     atoms = new List<GameObject>();
@@ -102,18 +102,18 @@ public class Manager : MonoBehaviour
       int allowedBonds = Properties.BONDS[atomType];
       int bondsMade = int.Parse(atom[1]);
       Vector3 position = StringToVector3(atom[2]);
-
       GameObject loadedAtom = Instantiate(atomPrefab, initialPos, Quaternion.identity);
       loadedAtom.GetComponent<Atom>().handController = handController;
       loadedAtom.GetComponent<Atom>().manager = manager;
-      Material mat = Resources.Load("Materials/" + atomType, typeof(Material)) as Material;
+      Material mat = Resources.Load("Materials/" + atomType + " 2", typeof(Material)) as Material;
       loadedAtom.GetComponent<Atom>().SetProperties(atomType, mat, allowedBonds);
       loadedAtom.transform.parent = molecule.transform;
       atoms.Add(loadedAtom);
       atomsPositions.Add(position);
       AddBondDictionary(loadedAtom, i - 1);
     }
-    molecule.name = "Mini_" + name;
+    if(mini)
+      molecule.name = "Mini_" + name;
     BondAtoms(molecule);
   }
 
@@ -132,9 +132,11 @@ public class Manager : MonoBehaviour
       float xOffset2 = atomsPositions[1].x - platform.transform.position.x;
       float zOffset2 = atomsPositions[1].z - platform.transform.position.z;
       Vector3 offSetPosition1 = new Vector3(atomsPositions[0].x - xOffset1, atomsPositions[0].y, atomsPositions[0].z - zOffset1);
-      Vector3 offSetPosition2 = new Vector3(atomsPositions[1].x - xOffset2, atomsPositions[1].y, atomsPositions[1].z - zOffset2);
-      atoms[0].transform.position = offSetPosition1;//atomsPositions [0];
-      atoms[1].transform.position = offSetPosition2;//atomsPositions [1];
+      Vector3 offSetPosition2 = new Vector3(atomsPositions[1].x - xOffset2, atomsPositions[1].y + 0.05f, atomsPositions[1].z - zOffset2);
+
+      atoms[0].transform.position = offSetPosition1; //- atomsPositions [0];
+      atoms[1].transform.position = offSetPosition2; // atomsPositions [1];
+
     } else { 
       for (int i = 0; i < numberOfBonds.Count; i++) {
         int bondId = numberOfBonds [i];
@@ -147,8 +149,6 @@ public class Manager : MonoBehaviour
         atoms [j].transform.position = offSetPosition;
       }
     }
-    //Vector3 posMol = new Vector3(platform.transform.position.x,platform.transform.position.y,platform.transform.position.z);
-    //molecule.transform.position = posMol;
   }
   
 
@@ -193,9 +193,9 @@ public class Manager : MonoBehaviour
   void Update ()
   {
     if (Input.GetKeyDown ("1")) 
-      LoadMolecule ("partial mol.txt");
+      LoadMolecule ("partial mol",false);
     else if(Input.GetKeyDown("2"))
-      LoadMolecule("CO2.txt");
+      LoadMolecule("CO2",false);
   }
 
   public void SetCanLoad(bool val)
