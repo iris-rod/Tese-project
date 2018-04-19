@@ -507,7 +507,6 @@ public class Molecule : MonoBehaviour
   {
     Vector3 pos = new Vector3(transform.position.x, transform.position.y+.4f, transform.position.z + .08f);
     Collider[] hitColliders = Physics.OverlapSphere(pos, 0.01f);
-    Debug.Log(hitColliders.Length);
     if (hitColliders.Length > 3)
     {
       for (int i = 0; i < hitColliders.Length; i++)
@@ -517,9 +516,6 @@ public class Molecule : MonoBehaviour
           shelves.GetComponent<ShelfManager>().LoadMolecule(transform.gameObject);
       }
     }
-    //Debug.Log(hitColliders.Length);
-    //if (hitColliders.Length < 1)
-      //shelves.GetComponent<ShelfManager>().LoadMolecule(transform.gameObject);
     
   }
 

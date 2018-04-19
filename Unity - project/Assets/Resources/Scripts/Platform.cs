@@ -26,10 +26,10 @@ public class Platform : MonoBehaviour {
 
   void CanSpawnNewAtom()
   {
-    Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.05f);
+    Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.15f);
     for (int i = 0; i < hitColliders.Length; i++)
     {
-      if (hitColliders[i].CompareTag("Interactable"))
+      if (hitColliders[i].CompareTag("Interactable") || hitColliders[i].CompareTag("Bond"))
       {
         canSpawnAtom= false;
         return;
