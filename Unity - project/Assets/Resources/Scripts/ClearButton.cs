@@ -5,19 +5,45 @@ using UnityEngine;
 public class ClearButton : MonoBehaviour {
 
   private Animator animator;
+  private bool m_Started;
 
 	// Use this for initialization
 	void Start () {
+    m_Started = true;
     animator = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+    CheckCollision();
 	}
 
-  void OnTriggerEnter(Collider col)
+  private void CheckCollision()
   {
-    string name = col.name.Split(' ')[0];
+    Collider[] colliders = Physics.OverlapBox(transform.position,transform.localScale/2);
+    if(colliders.Length > 1)
+    {
+      for(int i = 0; i < colliders.Length; i++)
+      {
+        if (colliders[i].transform.name.Split(' ')[0] == "Contact")
+        {
+           GameObject[] molecules = GameObject.FindGameObjectsWithTag("Molecule");
+           for(int j = 0; j < molecules.Length; j++)
+           {
+             if(molecules[j].name.Split('_')[0] != "Mini")
+               Destroy(molecules[j]);
+           }
+          animator.SetBool("pushed",true);
+          Invoke("Reset", .5f);
+          break;
+        }
+      }
+    }
+  }
+
+  void OnCollisionEnter(Collision col)
+  {
+    string name = col.transform.name.Split(' ')[0];
     if(name == "Contact")
     {
      /* GameObject[] molecules = GameObject.FindGameObjectsWithTag("Molecule");
@@ -27,9 +53,9 @@ public class ClearButton : MonoBehaviour {
           Destroy(molecules[i]);
       }*/
     }
-    Debug.Log("here");
-    animator.SetBool("pushed",true);
-    Invoke("Reset", .5f);
+    //Debug.Log("here");
+    //animator.SetBool("pushed",true);
+    //Invoke("Reset", .5f);
   }
 
   void Reset()
