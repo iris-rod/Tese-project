@@ -22,9 +22,12 @@ public class HandController : MonoBehaviour
   private bool palmUp;
   private float interval;
   private bool Z, X, fingerStreched;
-  private bool pointing;
   private int rotationSign;
-  
+
+  //pointing at shelf
+  private Vector3 indexPos, indexDir;
+  private bool pointing;
+
   //detect hand movement
   private Vector3 lastHandPosition, lastHandNormal;
   private Vector3 positionMovement;
@@ -220,35 +223,6 @@ public class HandController : MonoBehaviour
     }
   }
   
-
-  void CheckHandMovement (Hand hand)
-  {
-    movementFinished = false;
-    if (!hand.IsLeft) {
-      Vector3 movementNorm = (lastHandPosition - hand.PalmPosition.ToVector3 ()).normalized;
-      if (canDetect) {
-        if (flipping) {
-          if (!(movementNorm.x >= lastMovementNorm.x) || !(movementNorm.z <= lastMovementNorm.z))
-            flipping = false;
-          else if (movementNorm.x >= -.1f && movementNorm.z <= -0.6f)
-            movementFinished = true;
-        } else if (movementNorm.x <= -0.4f && movementNorm.z >= -0.1f) {
-          flipping = true;
-        }
-      }
-      
-      if (movementFinished) {
-        GameObject notepad = GameObject.FindGameObjectWithTag("Interface");
-        if(notepad.GetComponent<NotepadController>().IsPicked())
-          notepad.GetComponent<NotepadController>().Open();
-        flipping = false;
-        canDetect = false;
-        Invoke("ResetDetect",1.5f);
-      }
-      lastHandPosition = hand.PalmPosition.ToVector3();
-      lastMovementNorm = movementNorm;      
-    }  
-  }
   
   void ResetDetect ()
   {
@@ -268,6 +242,17 @@ public class HandController : MonoBehaviour
       {
         StopRotation();
       }
+      //pointing
+      if (hand.Fingers[1].IsExtended && !hand.Fingers[0].IsExtended && !hand.Fingers[2].IsExtended && !hand.Fingers[3].IsExtended && !hand.Fingers[4].IsExtended)
+      {
+        pointing = true;
+        indexPos = hand.Fingers[1].TipPosition.ToVector3();
+        indexDir = hand.Fingers[1].Direction.ToVector3();
+      }
+      else
+      {
+        pointing = false;
+      }
     }
     else
     {
@@ -279,13 +264,7 @@ public class HandController : MonoBehaviour
       {
         StopTranslate();
       }
-      if(hand.Fingers[1].IsExtended && !hand.Fingers[0].IsExtended && !hand.Fingers[2].IsExtended && !hand.Fingers[3].IsExtended && !hand.Fingers[4].IsExtended)
-      {
-        pointing = true;
-      }else
-      {
-        pointing = false;
-      }
+
     }
   }
 
@@ -393,6 +372,15 @@ public class HandController : MonoBehaviour
   public bool IsPointing()
   {
     return pointing;
+  }
+
+  public Vector3 GetIndexPosition()
+  {
+    return indexPos;
+  }
+  public Vector3 GetIndexDirection()
+  {
+    return indexDir;
   }
 
 }

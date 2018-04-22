@@ -21,8 +21,6 @@ public class LoadButton : MonoBehaviour {
     platform = GameObject.FindGameObjectWithTag("Platform");
     if(transform.parent.name == "Interface")
       VR = transform.parent.GetComponent<InterfaceManager>().camera.GetComponent<Manager>().VR;
-    else if(transform.parent.name == "notepad")
-      VR = transform.parent.GetComponent<NotepadController>().GetVR();
   }
 
   // Update is called once per frame

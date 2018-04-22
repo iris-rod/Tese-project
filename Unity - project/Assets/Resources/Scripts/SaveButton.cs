@@ -16,8 +16,6 @@ public class SaveButton : MonoBehaviour {
     //inputField = transform.parent.GetComponent<InterfaceManager>().GetInputField();
     if(transform.parent.name == "Interface")
       VR = transform.parent.GetComponent<InterfaceManager>().camera.GetComponent<Manager>().VR;
-    else if(transform.parent.name == "notepad")
-      VR = transform.parent.GetComponent<NotepadController>().GetVR();
     if(VR){
       moleculeID = 1;
     }

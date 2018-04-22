@@ -39,6 +39,7 @@ public class Molecule : MonoBehaviour
   private bool freeHand;
   private bool distanceToBond;
   private bool MultipleLines;
+  private bool PointToLoad;
   private GameObject shelves;
   private bool isMini;
 
@@ -49,6 +50,7 @@ public class Molecule : MonoBehaviour
     freeHand = camera.GetComponent<Manager>().freeHandRotation;
     MultipleLines = camera.GetComponent<Manager>().MultipleLines;
     distanceToBond = camera.GetComponent<Manager>().DistanceToBond;
+    PointToLoad = camera.GetComponent<Manager>().PointToLoad;
   }
 
   // Use this for initialization
@@ -106,7 +108,7 @@ public class Molecule : MonoBehaviour
       if (bondingAtoms)
         CheckDistance();
     }
-    else
+    else if(isMini && !PointToLoad)
     {
       CheckIfSelected();
     }

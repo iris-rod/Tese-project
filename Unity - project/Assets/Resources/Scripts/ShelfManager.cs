@@ -50,7 +50,7 @@ public class ShelfManager : MonoBehaviour {
       yShelfPosition -= 0.1f;
       zOffset = 1;
     }
-    return new Vector3(-0.5f, yShelfPosition, -.2f + ((zOffset - 1) * .1f)); //z -> -0.25
+    return new Vector3(-0.45f, yShelfPosition, -.2f + ((zOffset - 1) * .1f)); //z -> -0.25
   }
 
   void OnTriggerEnter(Collider col)
@@ -91,5 +91,21 @@ public class ShelfManager : MonoBehaviour {
       string name = molecule.name.Split('_')[1] + "_" + molecule.name.Split('_')[2];
       GetComponent<InterfaceManager>().Load(false, name);
     }
+  }
+
+  public void LoadShelf(Vector3 fingerPos, Vector3 fingerDir)
+  {
+    RaycastHit hit;
+
+    if(Physics.Raycast(fingerPos,fingerDir, out hit, Mathf.Infinity))
+    {
+      Debug.DrawRay(fingerPos, fingerDir * hit.distance, Color.yellow);
+      Debug.Log(hit.transform.name);
+      if(hit.transform.name.Split('_')[0] == "Mini")
+      {
+        LoadMolecule(hit.transform.gameObject);
+      }
+    }
+
   }
 }

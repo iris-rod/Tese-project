@@ -13,7 +13,9 @@ public class Manager : MonoBehaviour
   public GameObject platform;
   public GameObject handController;
   public GameObject savedBarManager;
-  public Text info;
+  public BlackBoardManager BBManager;
+  public ShelfManager SManager;
+
   public Leap.Unity.Interaction.InteractionManager manager;
   public bool touchOtherToSwitch;
   public bool VR;
@@ -21,6 +23,7 @@ public class Manager : MonoBehaviour
   public bool MultipleLines;
   public bool freeHandRotation;
   public bool DistanceToBond;
+  public bool PointToLoad;
 
   private List<GameObject> atoms = new List<GameObject> ();
   private List<Vector3> atomsPositions = new List<Vector3> ();
@@ -73,9 +76,8 @@ public class Manager : MonoBehaviour
     }
     catch (Exception e)
     {
-      info.text = "File does not exist.";
+      Debug.Log(e);
       text = "";
-      Invoke("ResetInfo", 3);
     }
     //molecule position
     string[] firsSplit = text.Split('M');
@@ -130,11 +132,6 @@ public class Manager : MonoBehaviour
       return molPostSaved;
     else
       return molPreSaved;
-  }
-
-  void ResetInfo ()
-  {
-    info.text = "";
   }
 
   void BondAtoms (GameObject molecule)
@@ -211,12 +208,22 @@ public class Manager : MonoBehaviour
   {
     if (Input.GetKeyDown("1"))
     {
+      BBManager.SetTexture("1");
       LoadMolecule("partial mol", false);
     }
     else if (Input.GetKeyDown("2"))
     {
+      BBManager.SetTexture("2");
       LoadMolecule("CO2", false);
     }
+
+    if (handController.GetComponent<HandController>().IsPointing() && PointToLoad)
+    {
+      Vector3 fingerPos = handController.GetComponent<HandController>().GetIndexPosition();
+      Vector3 fingerDir = handController.GetComponent<HandController>().GetIndexDirection();
+      SManager.LoadShelf(fingerPos,fingerDir);
+    }
+
   }
 
   public void SetCanLoad(bool val)
