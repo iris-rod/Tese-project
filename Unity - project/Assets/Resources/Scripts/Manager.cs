@@ -17,7 +17,6 @@ public class Manager : MonoBehaviour
   public ShelfManager SManager;
 
   public Leap.Unity.Interaction.InteractionManager manager;
-  public bool touchOtherToSwitch;
   public bool VR;
   public bool setOnHand;
   public bool MultipleLines;

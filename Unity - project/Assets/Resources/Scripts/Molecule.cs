@@ -42,6 +42,8 @@ public class Molecule : MonoBehaviour
   private bool PointToLoad;
   private GameObject shelves;
   private bool isMini;
+  private bool isPointed;
+  private Vector3 hitScale;
 
   void Awake()
   {
@@ -59,9 +61,11 @@ public class Molecule : MonoBehaviour
     pivotOffset = 0.1f;
     numberOfBonds = 1;
     graspedAtoms = 0;
+    hitScale = new Vector3(0.03f, 0.1f, 0.1f);
     pivotGrabbed = false;
     isRotating = false;
     rotate = false;
+    isPointed = false;
     pivot = Instantiate(rotationToogle, transform.position, transform.rotation);
     pivot.transform.parent = transform;
     SetManagerPivot();
@@ -108,7 +112,7 @@ public class Molecule : MonoBehaviour
       if (bondingAtoms)
         CheckDistance();
     }
-    else if(isMini && !PointToLoad)
+    else if(isMini)
     {
       CheckIfSelected();
     }
@@ -505,20 +509,37 @@ public class Molecule : MonoBehaviour
     translate = false;
   }
 
+  //Check if the mini in the shelf was touched
   void CheckIfSelected()
   {
-    Vector3 pos = new Vector3(transform.position.x, transform.position.y+.4f, transform.position.z + .08f);
-    Collider[] hitColliders = Physics.OverlapSphere(pos, 0.01f);
-    if (hitColliders.Length > 3)
+    Vector3 pos = new Vector3(transform.position.x, transform.position.y+.4f, transform.position.z + .03f);
+    Collider[] hitColliders = Physics.OverlapBox(pos,hitScale);
+    if (hitColliders.Length > 0)
     {
+      
       for (int i = 0; i < hitColliders.Length; i++)
       {
         string name = hitColliders[i].name.Split(' ')[0];
-        if (name == "Contact") 
+        if (name == "Contact" && ((PointToLoad && isPointed)) || (!PointToLoad)) 
           shelves.GetComponent<ShelfManager>().LoadMolecule(transform.gameObject);
       }
     }
-    
   }
 
+
+  //highlight the mini on the shelf that is being pointed at
+  public void HighlightMini(bool value)
+  {
+    for(int i = 0; i < transform.childCount; i++)
+    {
+      Transform child = transform.GetChild(i);
+      if (child.CompareTag("Interactable"))
+        child.GetComponent<Atom>().Highlight(value);
+      else if (child.CompareTag("Bond"))
+        child.GetComponent<BondController>().Highlight(value);
+      else if (child.CompareTag("Pivot"))
+        child.GetComponent<PivotController>().Highlight(value);
+    }
+    isPointed = value;
+  }
 }

@@ -11,6 +11,8 @@ public class ShelfManager : MonoBehaviour {
  
   private GameObject mini;
   private bool newMini;
+  private string lastPointedMini;
+  private bool waiting;
 
   private float yShelfPosition;
   private int zOffset;
@@ -22,6 +24,8 @@ public class ShelfManager : MonoBehaviour {
     zOffset = moleculeID;
     newMini = true;
     canSave = true;
+    waiting = false;
+    lastPointedMini = "";
     yShelfPosition = 1.6f-.04f;
 	}
 	
@@ -86,24 +90,37 @@ public class ShelfManager : MonoBehaviour {
 
   public void LoadMolecule(GameObject molecule)
   {
-    if (platform.GetComponent<Platform>().IsFree())
+    if (!waiting && platform.GetComponent<Platform>().IsFree())
     {
       string name = molecule.name.Split('_')[1] + "_" + molecule.name.Split('_')[2];
       GetComponent<InterfaceManager>().Load(false, name);
+      waiting = true;
+      Invoke("Wait",1);
     }
+  }
+
+  void Wait()
+  {
+    waiting = false;
   }
 
   public void LoadShelf(Vector3 fingerPos, Vector3 fingerDir)
   {
     RaycastHit hit;
-
     if(Physics.Raycast(fingerPos,fingerDir, out hit, Mathf.Infinity))
     {
       Debug.DrawRay(fingerPos, fingerDir * hit.distance, Color.yellow);
-      Debug.Log(hit.transform.name);
+      //Debug.Log(hit.transform.name);
+      string first = hit.transform.name.Split('_')[0];
+      if (lastPointedMini != "" && hit.transform.name != lastPointedMini)
+      {
+        GameObject.Find(lastPointedMini).GetComponent<Molecule>().HighlightMini(false);
+      }
+
       if(hit.transform.name.Split('_')[0] == "Mini")
       {
-        LoadMolecule(hit.transform.gameObject);
+        hit.transform.GetComponent<Molecule>().HighlightMini(true);//LoadMolecule(hit.transform.gameObject);
+        lastPointedMini = hit.transform.name;
       }
     }
 

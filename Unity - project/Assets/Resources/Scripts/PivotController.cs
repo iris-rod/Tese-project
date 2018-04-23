@@ -130,4 +130,12 @@ public class PivotController : MonoBehaviour {
     return axis;
   }
 
+  public void Highlight(bool highlight)
+  {
+    if (highlight)
+      highlightGrasp.SetFloat("_Outline", 0.001f);
+    else
+      highlightGrasp.SetFloat("_Outline", 0.0f);
+  }
+
 }

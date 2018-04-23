@@ -16,6 +16,7 @@ public class BondController : MonoBehaviour
   private float factor;
   private float doubleBond = 0.02f;
   private float tripleBond = 0.03f;
+  private Material highlightGrasp;
 
   private int bondType;
   public float distanceToDetach;
@@ -50,6 +51,7 @@ public class BondController : MonoBehaviour
     detaching = false;
     scale0 = transform.localScale;
     SetDistance();
+    highlightGrasp = transform.GetComponent<MeshRenderer>().materials[1];
   }
 
 
@@ -189,6 +191,14 @@ public class BondController : MonoBehaviour
   {
     Transform[] atoms = new Transform[2] { ballA,ballB};
     return atoms;
+  }
+
+  public void Highlight(bool highlight)
+  {
+    if (highlight)
+      highlightGrasp.SetFloat("_Outline", 0.001f);
+    else
+      highlightGrasp.SetFloat("_Outline", 0.0f);
   }
 
 }

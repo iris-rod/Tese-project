@@ -63,18 +63,21 @@ public class Atom : MonoBehaviour {
       Attach();
     else Dettach();
 
-    if (GetComponent<InteractionBehaviour>().isGrasped)
+    if (transform.parent == null || !(transform.parent.name.Split('_')[0] == "Mini"))
     {
-      highlightGrasp.SetFloat("_Outline", 0.015f);
-    }
-    else
-    {
-      highlightGrasp.SetFloat("_Outline", 0.00f);
-      if (toBond) toBond = false;
-    }
+      if (GetComponent<InteractionBehaviour>().isGrasped)
+      {
+        highlightGrasp.SetFloat("_Outline", 0.015f);
+      }
+      else
+      {
+        highlightGrasp.SetFloat("_Outline", 0.00f);
+        if (toBond) toBond = false;
+      }
 
-    if (isRotating)
-      Rotate();
+      if (isRotating)
+        Rotate();
+    }
   }
 
   public void SetDistanceToPivot(Vector3 pivotPos)
@@ -137,6 +140,14 @@ public class Atom : MonoBehaviour {
   public string GetAtomType()
   {
     return atomType;
+  }
+
+  public void Highlight(bool highlight)
+  {
+    if(highlight)
+      highlightGrasp.SetFloat("_Outline", 0.001f);
+    else
+      highlightGrasp.SetFloat("_Outline", 0.0f);
   }
 
   public List<int> GetBonds()
