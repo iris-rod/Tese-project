@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class Molecule : MonoBehaviour
 {
-  
+
   private int graspedAtoms;
   private int numberOfBonds;
   private bool pivotGrabbed;
-  private bool isRotating, rotate, translate;
+  private bool canTranslate, rotate, translate;
   private GameObject bond;
   private float bondScale;
   private float pivotOffset;
@@ -27,19 +27,20 @@ public class Molecule : MonoBehaviour
   public GameObject rotationToogle;
   private GameObject pivot;
   private GameObject handController;
-  private GameObject camera;
-  private Vector3 initpos;
 
-  //variables used to bond atoms according to 
+  //variables picked up from the manager
+  private int bondType;
+  private int rotationType;
+  private bool distanceToBond;
+  private bool MultipleLines;
+  private bool PointToLoad;
+
+  //variables used to bond atoms
   private bool bondingAtoms;
   private GameObject atom1, atom2;
   private int distBond;
 
-  private int bondType;
-  private bool freeHand;
-  private bool distanceToBond;
-  private bool MultipleLines;
-  private bool PointToLoad;
+  //variables related to the mini molecules on the shelves
   private GameObject shelves;
   private bool isMini;
   private bool isPointed;
@@ -47,9 +48,9 @@ public class Molecule : MonoBehaviour
 
   void Awake()
   {
+    GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
     shelves = GameObject.Find("shelves");
-    camera = GameObject.FindGameObjectWithTag("MainCamera");
-    freeHand = camera.GetComponent<Manager>().freeHandRotation;
+    rotationType = camera.GetComponent<Manager>().rotationType;
     MultipleLines = camera.GetComponent<Manager>().MultipleLines;
     distanceToBond = camera.GetComponent<Manager>().DistanceToBond;
     PointToLoad = camera.GetComponent<Manager>().PointToLoad;
@@ -63,7 +64,6 @@ public class Molecule : MonoBehaviour
     graspedAtoms = 0;
     hitScale = new Vector3(0.03f, 0.1f, 0.1f);
     pivotGrabbed = false;
-    isRotating = false;
     rotate = false;
     isPointed = false;
     pivot = Instantiate(rotationToogle, transform.position, transform.rotation);
@@ -107,12 +107,13 @@ public class Molecule : MonoBehaviour
       graspedAtoms = 0;
       pivotGrabbed = false;
 
+      Debug.Log(rotate);
       CheckRotate();
       CheckTranslate();
       if (bondingAtoms)
         CheckDistance();
     }
-    else if(isMini)
+    else if (isMini)
     {
       CheckIfSelected();
     }
@@ -126,6 +127,7 @@ public class Molecule : MonoBehaviour
       CreateBondDist(dist);
   }
 
+  //creates the bond according to the distance to guide the user
   void SetInvisibleBond(float dist)
   {
     bond = simpleBond;
@@ -145,11 +147,11 @@ public class Molecule : MonoBehaviour
       bond = doubleBond;
       bondNumber = 2;
     }
-   
+
     if (lastInviBondType != bondNumber)
     {
-      if(lastInviBond != null)
-        lastInviBond.GetComponent<FeedbackBondController>().DestroyBond(atom1,atom2);
+      if (lastInviBond != null)
+        lastInviBond.GetComponent<FeedbackBondController>().DestroyBond(atom1, atom2);
       GameObject newBond = Instantiate(bond, transform.position, transform.rotation);
       Color color = newBond.GetComponent<MeshRenderer>().material.color;
       color.a = 0.4f;
@@ -166,7 +168,7 @@ public class Molecule : MonoBehaviour
 
   void CheckTranslate()
   {
-    if (translate)
+    if (translate && canTranslate)
     {
       Vector3 v = handController.GetComponent<HandController>().GetHandMovement();
       transform.position -= v;
@@ -182,13 +184,20 @@ public class Molecule : MonoBehaviour
       Transform child = transform.GetChild(i);
       if (child.CompareTag("Interactable") && rotate)
       {
-        if (!freeHand)
-          child.RotateAround(pointRotate, Vector3.forward, handController.GetComponent<HandController>().GetRotationSign() * 80 * Time.deltaTime);//handController.GetComponent<HandController>().GetHandRotation()
-        else
+        if (rotationType == 1)
+          child.RotateAround(pointRotate, axis, 80 * Time.deltaTime);//handController.GetComponent<HandController>().GetHandRotation()
+        else if (rotationType == 2)
           child.RotateAround(pointRotate, Vector3.forward, handController.GetComponent<HandController>().GetHandRotation());
+        else if (rotationType == 3)
+          child.GetComponent<Atom>().SetRotating(true);
       }
       else if (child.CompareTag("Interactable") && !rotate)
-        child.RotateAround(pointRotate, axis, 0);
+      {
+        if (rotationType == 1 || rotationType == 2)
+          child.RotateAround(pointRotate, axis, 0);
+        else
+          child.GetComponent<Atom>().SetRotating(false);
+      }
     }
   }
 
@@ -209,6 +218,9 @@ public class Molecule : MonoBehaviour
 
   void CheckMoleculeState()
   {
+    if(rotationType == 3)
+      rotate = false;
+    canTranslate = false;
     //If 2 atoms are grasped and are not being bonded, you start detaching
     if (graspedAtoms >= 2)
     {
@@ -220,7 +232,11 @@ public class Molecule : MonoBehaviour
           child.GetComponent<BondController>().CheckDetaching();
         }
       }
-
+    }
+    //If pivot and 1 atom are grasped it is to start rotating
+    else if (pivotGrabbed && graspedAtoms >= 1 && rotationType == 3)
+    {
+      rotate = true;
     }
 
     //If only one atom is grasped, then you are just moving it, and stop all other actions
@@ -236,16 +252,10 @@ public class Molecule : MonoBehaviour
       }
     }
 
-    if (!pivotGrabbed)
-    {
-      isRotating = false;
-      for (int i = 0; i < transform.childCount; i++)
-      {
-        Transform child = transform.GetChild(i);
-        if (child.CompareTag("Interactable"))
-          child.GetComponent<Atom>().SetRotating(false);
-      }
-    }
+    if (pivotGrabbed && graspedAtoms == 0)
+      canTranslate = true;
+
+
   }
 
   void LockDistanceToPivot()
@@ -333,9 +343,9 @@ public class Molecule : MonoBehaviour
       distBond = 4;
     else if (dist <= .3f && dist > .2)
       distBond = 3;
-    else if(dist <= .4f && dist > 0.3f)
+    else if (dist <= .4f && dist > 0.3f)
       distBond = 2;
-    else if(dist > .4f)
+    else if (dist > .4f)
       distBond = 1;
 
     //get available bonds from the atoms
@@ -425,10 +435,10 @@ public class Molecule : MonoBehaviour
     atom1.transform.parent = transform;
     atom2.transform.parent = transform;
     bondingAtoms = false;
-    lastInviBond.GetComponent<FeedbackBondController>().DestroyBond(atom1,atom2);
+    lastInviBond.GetComponent<FeedbackBondController>().DestroyBond(atom1, atom2);
   }
 
-  
+
 
   //Destroy the molecule once there is no atoms bonded
   void UpdateStructure()
@@ -440,7 +450,7 @@ public class Molecule : MonoBehaviour
       return;
     }
     //update pivot position according to the positions of the existent atoms in the molecule
-    if (!isRotating)
+    if (!rotate)
     {
       Vector3 center = new Vector3(0, 0, 0);
       Vector3 lastPosition = new Vector3(0, 0, 0);
@@ -512,15 +522,15 @@ public class Molecule : MonoBehaviour
   //Check if the mini in the shelf was touched
   void CheckIfSelected()
   {
-    Vector3 pos = new Vector3(transform.position.x, transform.position.y+.4f, transform.position.z + .03f);
-    Collider[] hitColliders = Physics.OverlapBox(pos,hitScale);
+    Vector3 pos = new Vector3(transform.position.x, transform.position.y + .4f, transform.position.z + .03f);
+    Collider[] hitColliders = Physics.OverlapBox(pos, hitScale);
     if (hitColliders.Length > 0)
     {
-      
+
       for (int i = 0; i < hitColliders.Length; i++)
       {
         string name = hitColliders[i].name.Split(' ')[0];
-        if (name == "Contact" && ((PointToLoad && isPointed)) || (!PointToLoad)) 
+        if (name == "Contact" && ((PointToLoad && isPointed)) || (!PointToLoad))
           shelves.GetComponent<ShelfManager>().LoadMolecule(transform.gameObject);
       }
     }
@@ -530,7 +540,7 @@ public class Molecule : MonoBehaviour
   //highlight the mini on the shelf that is being pointed at
   public void HighlightMini(bool value)
   {
-    for(int i = 0; i < transform.childCount; i++)
+    for (int i = 0; i < transform.childCount; i++)
     {
       Transform child = transform.GetChild(i);
       if (child.CompareTag("Interactable"))

@@ -113,7 +113,7 @@ public class BondController : MonoBehaviour
     }
   }
 
-  //It is only dettaching if both atoms are grabbed (called by Molecule)
+  //It is only dettaching if both atoms on this bond are grabbed (called by Molecule)
   public void CheckDetaching()
   {
     detaching = false;

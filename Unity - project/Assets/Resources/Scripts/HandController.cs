@@ -150,15 +150,8 @@ public class HandController : MonoBehaviour
       lastRotation = hand.Rotation;
       lastPalmX = hand.PalmNormal.x;
       lastPalmZ = hand.PalmNormal.z;
-      if (pivotRotate.GetComponent<PivotController>().Axis)
-      {
-        bool endZ = pivotRotate.GetComponent<PivotController>().IsEndZGrabbed();
-        bool endX = pivotRotate.GetComponent<PivotController>().IsEndXGrabbed();
-        pivotRotate.transform.parent.GetComponent<Molecule>().SetAxis(endZ, endX);
-      }
-
     }
-    else if (hand.IsLeft && !pivotRotate.GetComponent<PivotController>().Axis)
+    else if (hand.IsLeft)
     {
       CheckAxis(hand);
       pivotRotate.transform.parent.GetComponent<Molecule>().SetAxis(Z,X);
@@ -236,6 +229,7 @@ public class HandController : MonoBehaviour
     {
       if (!rotating && !hand.Fingers[4].IsExtended && !hand.Fingers[3].IsExtended)
       {
+        Debug.Log("rotate");
         BeginRotation();
       }
       else if (rotating && (hand.Fingers[4].IsExtended || hand.Fingers[3].IsExtended))
@@ -305,9 +299,6 @@ public class HandController : MonoBehaviour
       if (obj != null && obj.CompareTag("Pivot") && obj.GetComponent<InteractionBehaviour>().isGrasped)
       {
         pivotRotate = obj;
-        bool endZ = obj.GetComponent<PivotController>().IsEndZGrabbed();
-        bool endX = obj.GetComponent<PivotController>().IsEndXGrabbed();
-        obj.transform.parent.GetComponent<Molecule>().SetAxis(endZ,endX);
         obj.transform.parent.GetComponent<Molecule>().Rotate();
         rotating = true;
         break;
