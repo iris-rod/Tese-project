@@ -229,7 +229,6 @@ public class HandController : MonoBehaviour
     {
       if (!rotating && !hand.Fingers[4].IsExtended && !hand.Fingers[3].IsExtended)
       {
-        Debug.Log("rotate");
         BeginRotation();
       }
       else if (rotating && (hand.Fingers[4].IsExtended || hand.Fingers[3].IsExtended))

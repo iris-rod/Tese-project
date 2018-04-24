@@ -12,7 +12,6 @@ public class Manager : MonoBehaviour
   public GameObject atomPrefab;
   public GameObject platform;
   public GameObject handController;
-  public GameObject savedBarManager;
   public BlackBoardManager BBManager;
   public ShelfManager SManager;
 
@@ -205,22 +204,20 @@ public class Manager : MonoBehaviour
 
   void Update ()
   {
-    if (Input.GetKeyDown("1"))
-    {
-      BBManager.SetTexture("1");
-      LoadMolecule("partial mol", false);
-    }
-    else if (Input.GetKeyDown("2"))
-    {
-      BBManager.SetTexture("2");
-      LoadMolecule("CO2", false);
+    if (Input.GetKeyDown ("1") && platform.GetComponent<Platform> ().IsFree ()) {
+      BBManager.SetTexture ("1");
+      LoadMolecule ("partial mol", false);
+    } else if (Input.GetKeyDown ("2") && platform.GetComponent<Platform> ().IsFree ()) {
+      BBManager.SetTexture ("2");
+      LoadMolecule ("CO2", false);
     }
 
-    if (handController.GetComponent<HandController>().IsPointing() && PointToLoad)
-    {
-      Vector3 fingerPos = handController.GetComponent<HandController>().GetIndexPosition();
-      Vector3 fingerDir = handController.GetComponent<HandController>().GetIndexDirection();
-      SManager.LoadShelf(fingerPos,fingerDir);
+    if (handController.GetComponent<HandController> ().IsPointing () && PointToLoad) {
+      Vector3 fingerPos = handController.GetComponent<HandController> ().GetIndexPosition ();
+      Vector3 fingerDir = handController.GetComponent<HandController> ().GetIndexDirection ();
+      SManager.LoadShelf (fingerPos, fingerDir);
+    } else {
+      SManager.CancelLoad();
     }
 
   }

@@ -145,7 +145,7 @@ public class Atom : MonoBehaviour {
   public void Highlight(bool highlight)
   {
     if(highlight)
-      highlightGrasp.SetFloat("_Outline", 0.001f);
+      highlightGrasp.SetFloat("_Outline", 0.01f);//.001
     else
       highlightGrasp.SetFloat("_Outline", 0.0f);
   }

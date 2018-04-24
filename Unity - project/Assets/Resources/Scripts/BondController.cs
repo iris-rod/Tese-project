@@ -45,8 +45,8 @@ public class BondController : MonoBehaviour
     factor = 60;
     if (split == "Mini")
     {
-      factor = 300f;
-      distance = 0.05f;
+      factor = 200f;//300
+      distance = 0.09f;//.05
     }
     detaching = false;
     scale0 = transform.localScale;
@@ -196,7 +196,7 @@ public class BondController : MonoBehaviour
   public void Highlight(bool highlight)
   {
     if (highlight)
-      highlightGrasp.SetFloat("_Outline", 0.001f);
+      highlightGrasp.SetFloat("_Outline", 0.01f);
     else
       highlightGrasp.SetFloat("_Outline", 0.0f);
   }

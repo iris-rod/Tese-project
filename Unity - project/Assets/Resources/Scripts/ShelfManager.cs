@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ShelfManager : MonoBehaviour {
 
+  private bool VR;
+  private bool Buttons;
   private int moleculeID;
   private bool canSave;
   private GameObject platform;
@@ -16,9 +18,13 @@ public class ShelfManager : MonoBehaviour {
 
   private float yShelfPosition;
   private int zOffset;
+  
+  private GameObject[] spots;
 
   // Use this for initialization
   void Start () {
+    VR = true;
+    Buttons = true;
     platform = GameObject.Find("InviPlatform");
     moleculeID = 1;
     zOffset = moleculeID;
@@ -26,35 +32,54 @@ public class ShelfManager : MonoBehaviour {
     canSave = true;
     waiting = false;
     lastPointedMini = "";
-    yShelfPosition = 1.6f-.04f;
+    if(!VR)
+      yShelfPosition = 1.6f-.04f;
+    else yShelfPosition = .85f;
+    spots = GameObject.FindGameObjectsWithTag("Interface");
 	}
 	
 	// Update is called once per frame
 	void Update ()
   {
-    if (mini != null && newMini)
-    {
-      Vector3 pos = GetMiniPosition();
+    if (mini != null && newMini) {
+      Vector3 pos = GetMiniPosition ();
       mini.transform.position = pos;
-      BoxCollider col = mini.GetComponent<BoxCollider>();
-      col.size = new Vector3(.5f,.5f,.5f);
-      col.center = new Vector3(0,2,.1f);
-      col.isTrigger = true;
-      mini.transform.localScale -= new Vector3(0.8f, 0.8f, 0.8f);
+      //desktop version values for the mini mols on the shelves
+      if (!VR) {
+        mini.transform.localScale -= new Vector3 (0.8f, 0.8f, 0.8f);
+      }
+      //VR version values for the mini mols on the shelves
+      else {
+        mini.transform.localScale -= new Vector3 (0.2f, 0.2f, 0.2f);
+      }
       mini.transform.parent = transform;
       newMini = false;
       zOffset++;
     }
   }
 
-  private Vector3 GetMiniPosition()
+  private Vector3 GetMiniPosition ()
   {
-    if ((moleculeID-1) % 5 == 0)
-    {
-      yShelfPosition -= 0.1f;
+    SetMoleculeOnSpot();
+    if ((moleculeID - 1) % 4 == 0) {
+      yShelfPosition -= .3f;//desktop->0.1f;
       zOffset = 1;
     }
-    return new Vector3(-0.45f, yShelfPosition, -.2f + ((zOffset - 1) * .1f)); //z -> -0.25
+    if (!VR)
+      return new Vector3 (-0.45f, yShelfPosition, -.2f + ((zOffset - 1) * .1f)); //z -> -0.25
+    else
+      return new Vector3 (-0.23f, yShelfPosition, -.2f + ((zOffset - 1) * .25f)); 
+    
+  }
+  
+  private void SetMoleculeOnSpot ()
+  {
+    for (int i = 0; i < spots.Length; i++) {
+      if (!spots [i].GetComponent<LoadButton1> ().HasMolecule()) {
+        spots [i].GetComponent<LoadButton1> ().SetMolecule (mini);
+        return;
+      }
+    }
   }
 
   void OnTriggerEnter(Collider col)
@@ -79,12 +104,6 @@ public class ShelfManager : MonoBehaviour {
     GetComponent<InterfaceManager>().Load(true,"saved_" + moleculeID);
     mini = GameObject.Find("Mini_saved_"+(moleculeID).ToString());
     mini.gameObject.AddComponent(typeof(BoxCollider));
-    for(int i = 0; i < transform.childCount; i++)
-    {
-      Transform child = transform.GetChild(i);
-      if (child.CompareTag("Interactable"))
-        child.GetComponent<InteractionBehaviour>().ignoreGrasping = false;
-    }
     newMini = true;
   }
 
@@ -104,25 +123,37 @@ public class ShelfManager : MonoBehaviour {
     waiting = false;
   }
 
-  public void LoadShelf(Vector3 fingerPos, Vector3 fingerDir)
+  public void LoadShelf (Vector3 fingerPos, Vector3 fingerDir)
   {
     RaycastHit hit;
-    if(Physics.Raycast(fingerPos,fingerDir, out hit, Mathf.Infinity))
-    {
-      Debug.DrawRay(fingerPos, fingerDir * hit.distance, Color.yellow);
-      //Debug.Log(hit.transform.name);
-      string first = hit.transform.name.Split('_')[0];
-      if (lastPointedMini != "" && hit.transform.name != lastPointedMini)
-      {
-        GameObject.Find(lastPointedMini).GetComponent<Molecule>().HighlightMini(false);
-      }
-
-      if(hit.transform.name.Split('_')[0] == "Mini")
-      {
-        hit.transform.GetComponent<Molecule>().HighlightMini(true);//LoadMolecule(hit.transform.gameObject);
-        lastPointedMini = hit.transform.name;
+    if (Physics.Raycast (fingerPos, fingerDir, out hit, Mathf.Infinity)) {
+      Debug.DrawRay (fingerPos, fingerDir * hit.distance, Color.yellow);
+      
+      if (hit.transform.parent != null) {      
+        string first = hit.transform.parent.name.Split ('_') [0];
+      
+        //if detect the mini molecule (the parent is the shelf)
+        if (first == "shelves" && hit.transform.name != lastPointedMini) {
+          if (lastPointedMini != "")
+            GameObject.Find (lastPointedMini).GetComponent<Molecule> ().HighlightMini (false);  
+          hit.transform.GetComponent<Molecule> ().HighlightMini (true);
+          lastPointedMini = hit.transform.name;
+        }
+      
+        //if detect a atom or other component from the mini molecule      
+        if (first == "Mini" && hit.transform.parent.name != lastPointedMini) { //lastPointedMini != "" &&
+          if (lastPointedMini != "")
+            GameObject.Find (lastPointedMini).GetComponent<Molecule> ().HighlightMini (false);  
+          hit.transform.parent.GetComponent<Molecule> ().HighlightMini (true);//LoadMolecule(hit.transform.gameObject);
+          lastPointedMini = hit.transform.parent.name;   
+        }
       }
     }
-
+  }
+  
+  public void CancelLoad ()
+  {
+    if(lastPointedMini != "")
+      GameObject.Find (lastPointedMini).GetComponent<Molecule> ().HighlightMini (false);      
   }
 }

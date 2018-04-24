@@ -57,25 +57,30 @@ public class Molecule : MonoBehaviour
   }
 
   // Use this for initialization
-  void Start()
+  void Start ()
   {
     pivotOffset = 0.1f;
     numberOfBonds = 1;
     graspedAtoms = 0;
-    hitScale = new Vector3(0.03f, 0.1f, 0.1f);
+    hitScale = new Vector3 (.15f, .15f, .15f);//desktop -> new Vector3(0.03f, 0.1f, 0.1f);
     pivotGrabbed = false;
     rotate = false;
     isPointed = false;
-    pivot = Instantiate(rotationToogle, transform.position, transform.rotation);
+    pivot = Instantiate (rotationToogle, transform.position, transform.rotation);
     pivot.transform.parent = transform;
-    SetManagerPivot();
-    UpdateStructure();
+    SetManagerPivot ();
+    UpdateStructure ();
     isMini = false;
-    string split = transform.name.Split('_')[0];
-    if (split == "Mini")
-    {
+    string split = transform.name.Split ('_') [0];
+    if (split == "Mini") {
       isMini = true;
       pivotOffset = 0.04f;
+      for (int i = 0; i < transform.childCount; i++) {
+        Transform child = transform.GetChild(i);
+        if(child.CompareTag("Interactable"))
+          child.GetComponent<InteractionBehaviour>().ignoreGrasping = true;
+          
+      }
     }
   }
 
@@ -107,7 +112,6 @@ public class Molecule : MonoBehaviour
       graspedAtoms = 0;
       pivotGrabbed = false;
 
-      Debug.Log(rotate);
       CheckRotate();
       CheckTranslate();
       if (bondingAtoms)
@@ -213,7 +217,7 @@ public class Molecule : MonoBehaviour
       else if (child.CompareTag("Pivot") && child.GetComponent<InteractionBehaviour>().isGrasped)
         pivotGrabbed = true;
     }
-    CheckMoleculeState();
+    //CheckMoleculeState();
   }
 
   void CheckMoleculeState()
@@ -221,6 +225,7 @@ public class Molecule : MonoBehaviour
     if(rotationType == 3)
       rotate = false;
     canTranslate = false;
+    
     //If 2 atoms are grasped and are not being bonded, you start detaching
     if (graspedAtoms >= 2)
     {
@@ -522,7 +527,8 @@ public class Molecule : MonoBehaviour
   //Check if the mini in the shelf was touched
   void CheckIfSelected()
   {
-    Vector3 pos = new Vector3(transform.position.x, transform.position.y + .4f, transform.position.z + .03f);
+    
+    Vector3 pos = new Vector3(transform.position.x-.43f,transform.position.y+1.5f, transform.position.z+.1f);//desktop -> new Vector3(transform.position.x, transform.position.y + .4f, transform.position.z + .03f);
     Collider[] hitColliders = Physics.OverlapBox(pos, hitScale);
     if (hitColliders.Length > 0)
     {
@@ -534,6 +540,13 @@ public class Molecule : MonoBehaviour
           shelves.GetComponent<ShelfManager>().LoadMolecule(transform.gameObject);
       }
     }
+  }
+  
+  void OnDrawGizmos ()
+  {
+    Gizmos.color = Color.red;
+    Vector3 pos = new Vector3(transform.position.x-.43f,transform.position.y+1.5f, transform.position.z+.1f);
+    Gizmos.DrawWireCube(pos,hitScale);
   }
 
 

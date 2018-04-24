@@ -41,23 +41,6 @@ public class ClearButton : MonoBehaviour {
     }
   }
 
-  void OnCollisionEnter(Collision col)
-  {
-    string name = col.transform.name.Split(' ')[0];
-    if(name == "Contact")
-    {
-     /* GameObject[] molecules = GameObject.FindGameObjectsWithTag("Molecule");
-      for(int i = 0; i < molecules.Length; i++)
-      {
-        if(molecules[i].name.Split('_')[0] != "Mini")
-          Destroy(molecules[i]);
-      }*/
-    }
-    //Debug.Log("here");
-    //animator.SetBool("pushed",true);
-    //Invoke("Reset", .5f);
-  }
-
   void Reset()
   {
     animator.SetBool("pushed", false);
