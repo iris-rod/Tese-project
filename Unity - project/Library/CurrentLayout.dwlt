@@ -70,7 +70,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 221}
   m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 63
+  controlID: 64
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -91,10 +91,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 947
-  m_MinSize: {x: 683, y: 442}
-  m_MaxSize: {x: 12008, y: 8042}
+  m_MinSize: {x: 681, y: 342}
+  m_MaxSize: {x: 12006, y: 8042}
   vertical: 0
-  controlID: 94
+  controlID: 62
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -113,8 +113,8 @@ MonoBehaviour:
     y: 0
     width: 477
     height: 947
-  m_MinSize: {x: 277, y: 71}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -138,14 +138,14 @@ MonoBehaviour:
     y: 586
     width: 1443
     height: 361
-  m_MinSize: {x: 200, y: 200}
+  m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 4000, y: 4000}
-  m_ActualView: {fileID: 17}
+  m_ActualView: {fileID: 19}
   m_Panes:
   - {fileID: 14}
   - {fileID: 17}
   - {fileID: 19}
-  m_Selected: 1
+  m_Selected: 2
   m_LastSelected: 0
 --- !u!114 &7
 MonoBehaviour:
@@ -231,10 +231,10 @@ MonoBehaviour:
     y: 0
     width: 1443
     height: 947
-  m_MinSize: {x: 406, y: 442}
+  m_MinSize: {x: 406, y: 342}
   m_MaxSize: {x: 8006, y: 8042}
   vertical: 1
-  controlID: 95
+  controlID: 63
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -253,8 +253,8 @@ MonoBehaviour:
     y: 0
     width: 1239
     height: 586
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 13}
@@ -370,20 +370,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Resources/Prefabs
+    - Assets/Resources/Scripts
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Resources/Prefabs
+  - Assets/Resources/Scripts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Iris Rodrigues\Documents\GitHub\Tese-project\Unity -
     project
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 33}
-    m_SelectedIDs: 502b0000
-    m_LastClickedID: 11088
-    m_ExpandedIDs: 00000000462700009627000050280000ce280000d22800000229000098290000e82900000a2a0000262a00002c2a0000ac2b0000de2b00006e2c0000323300003433000000ca9a3bffffff7f
+    m_SelectedIDs: 342b0000
+    m_LastClickedID: 11060
+    m_ExpandedIDs: 000000004c2700009c27000056280000d4280000d8280000082900009e290000062a0000282a0000442a00004a2a0000ca2b0000fc2b00008c2c0000e6330000e833000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -411,7 +411,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000462700009627000050280000ce280000d22800000229000098290000e82900000a2a0000262a00002c2a0000ac2b0000de2b00006e2c00003233000034330000
+    m_ExpandedIDs: 000000004c2700009c27000056280000d4280000d8280000082900009e290000062a0000282a0000442a00004a2a0000ca2b0000fc2b00008c2c0000e6330000e8330000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -436,8 +436,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: e4fbffff
-    m_LastClickedInstanceID: -1052
+    m_SelectedInstanceIDs: f6340000
+    m_LastClickedInstanceID: 13558
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
@@ -527,28 +527,28 @@ MonoBehaviour:
     height: 565
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 48010000
-    m_LastClickedID: 0
-    m_ExpandedIDs: c486ffff82c8ffffe4fbffffe6fbffff00000000a82f0000
+    m_SelectedIDs: f6340000
+    m_LastClickedID: 13558
+    m_ExpandedIDs: 90f3ffffe6fbffff00000000f6340000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: LoadButton
-      m_OriginalName: LoadButton
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: -145940
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 2}
     m_SearchString: 
   m_ExpandedScenes:
-  - Prototype VR
+  - PrototypeDesktop
   m_CurrenRootInstanceID: 0
   m_Locked: 0
   m_CurrentSortingName: TransformSorting
@@ -611,7 +611,7 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: 0.20680574, y: -0.48422158, z: 0.11895521, w: 0.84179896}
     speed: 2
-    m_Value: {x: 0.20680419, y: -0.48421794, z: 0.118954316, w: 0.84179264}
+    m_Value: {x: -0.20680574, y: 0.48422155, z: -0.11895521, w: -0.84179896}
   m_Size:
     m_Target: 1.4965588
     speed: 2

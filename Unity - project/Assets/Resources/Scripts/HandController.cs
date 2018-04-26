@@ -37,6 +37,7 @@ public class HandController : MonoBehaviour
 
   //testing variables
   private bool UpDown = true;
+  private int rotationType;
 
   // Use this for initialization
   void Start()
@@ -56,6 +57,7 @@ public class HandController : MonoBehaviour
     rightHandPiching = false;
     interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
     pivots = GameObject.FindGameObjectsWithTag("Pivot");
+    rotationType = transform.parent.GetComponent<Manager>().rotationType;
   }
 
   public void updateCurrentHand(Hand leapHand)
@@ -134,22 +136,21 @@ public class HandController : MonoBehaviour
     if (hand.IsLeft)
     {
       movement = lastPalmPosition - hand.PalmPosition.ToVector3();//- lastPalmPosition;
-      //lastPalmPosition = hand.PalmPosition.ToVector3();
     }
   }
 
   //Set angle to rotate from hand current and last rotation, and the axis it must rotate around
-  void Rotate(Hand hand)
+  void Rotate (Hand hand)
   {
-    if (!hand.IsLeft)
-    {
-      handRotation = Quaternion.Angle(hand.Rotation.ToQuaternion(), lastRotation.ToQuaternion());
-      
+    if (!hand.IsLeft) {    
+      handRotation = Quaternion.Angle (hand.Rotation.ToQuaternion (), lastRotation.ToQuaternion ());
+      if (handRotation == 180) {
+        handRotation = 0;
+      }
       if (hand.PalmNormal.x < lastPalmX)// || (hand.PalmNormal.x <0 && lastPalmX <0 && hand.PalmNormal.x > lastPalmX))
         handRotation = -handRotation;
       lastRotation = hand.Rotation;
       lastPalmX = hand.PalmNormal.x;
-      lastPalmZ = hand.PalmNormal.z;
     }
     else if (hand.IsLeft)
     {
@@ -159,42 +160,45 @@ public class HandController : MonoBehaviour
   }
 
   //Check hand position to determine which axis the molecule rotates
-  void CheckAxis(Hand hand)
+  void CheckAxis (Hand hand)
   {
-    if (fingerStreched) // left hand is open
-    {
-      if (UpDown)
-      { //palma para cima ou para baixo
-        if (hand.PalmNormal.y >= interval && hand.PalmNormal.y <= 1)
-        {
+    if (fingerStreched) { // left hand is open
+      if (UpDown) { //palma para cima ou para baixo
+        if (hand.PalmNormal.y >= interval && hand.PalmNormal.y <= 1) {
           Z = true;
           X = false;
-        }
-        else if (hand.PalmNormal.y <= -interval && hand.PalmNormal.y >= -1)
-        {
+        } else if (hand.PalmNormal.y <= -interval && hand.PalmNormal.y >= -1) {
           Z = false;
           X = true;
         }
-      }
-      else 
-      { //palma para o lado e virada para tras
-        if(hand.PalmNormal.x >= interval && hand.PalmNormal.x <= 1 && hand.PalmNormal.y >= -.2f && hand.PalmNormal.y <= .15f) //x 1 y 0.1
-        {
-          Z = true;
-          X = false;
-        }
-        else if (hand.PalmNormal.z <= -interval && hand.PalmNormal.z >= -1) //x 0 y 0.1
-        {
-          Z = false;
-          X = true;
-        }
+      } 
+      else {
+        Z = false;
+        X = false;
       }
     }
-    else
-    {
-      Z = false;
-      X = false;
+    else if(!UpDown) 
+    { 
+      //palma para o lado e virada para tras
+      if(hand.PalmNormal.x >= interval && hand.PalmNormal.x <= 1 && hand.PalmNormal.y >= -.2f && hand.PalmNormal.y <= .15f && hand.PalmNormal.z >= -.35f && hand.PalmNormal.z <= 0.05f) //x 1 y 0.1
+      {
+        Z = true;
+        X = false;
+      }
+      else if (hand.PalmNormal.z <= -interval && hand.PalmNormal.z >= -1) //x 0 y 0.1
+      {
+        Z = false;
+        X = true;
+      }    
+      else{
+        Z = false;
+        X = false;
+      }  
     }
+    else if(!fingerStreched && UpDown){
+        Z = false;
+        X = false;
+    }    
     
   }
 
@@ -202,7 +206,7 @@ public class HandController : MonoBehaviour
   /* Functions used on trigger of index finger streched**/
   public void SelectAxis()
   {
-    if (pivotRotate != null)
+    if (pivotRotate != null && UpDown)
     {
       fingerStreched = true;
     }
@@ -227,11 +231,11 @@ public class HandController : MonoBehaviour
   {
     if (!hand.IsLeft)
     {
-      if (!rotating && !hand.Fingers[4].IsExtended && !hand.Fingers[3].IsExtended)
+      if (!rotating && rotationType != 3 && !hand.Fingers[4].IsExtended && !hand.Fingers[3].IsExtended)
       {
         BeginRotation();
       }
-      else if (rotating && (hand.Fingers[4].IsExtended || hand.Fingers[3].IsExtended))
+      else if (rotating && rotationType != 3 && (hand.Fingers[4].IsExtended || hand.Fingers[3].IsExtended))
       {
         StopRotation();
       }
@@ -317,6 +321,8 @@ public class HandController : MonoBehaviour
       }
     }
     rotating = false;
+    lastRotation = new Leap.LeapQuaternion();
+    lastPalmX = 0;
   }
 
   public void GrabbedAtom()
