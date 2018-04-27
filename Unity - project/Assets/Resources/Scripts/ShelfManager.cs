@@ -10,6 +10,7 @@ public class ShelfManager : MonoBehaviour {
   private int moleculeID;
   private bool canSave;
   private GameObject platform;
+  private bool start;
  
   private GameObject mini;
   private bool newMini;
@@ -23,8 +24,7 @@ public class ShelfManager : MonoBehaviour {
 
   // Use this for initialization
   void Start () {
-    VR = true;
-    Buttons = true;
+    start = true;
     platform = GameObject.Find("InviPlatform");
     moleculeID = 1;
     zOffset = moleculeID;
@@ -41,6 +41,12 @@ public class ShelfManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
   {
+    if (start)
+    {
+      VR = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>().VR;
+      Buttons = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>().UseButtonToLoad;
+      start = false;
+    }
     if (mini != null && newMini) {
       Vector3 pos = GetMiniPosition ();
       mini.transform.position = pos;
@@ -62,7 +68,10 @@ public class ShelfManager : MonoBehaviour {
   {
     SetMoleculeOnSpot();
     if ((moleculeID - 1) % 4 == 0) {
-      yShelfPosition -= .3f;//desktop->0.1f;
+      if (VR)
+        yShelfPosition -= .3f;//desktop->0.1f;
+      else
+        yShelfPosition -= .1f;
       zOffset = 1;
     }
     if (!VR)

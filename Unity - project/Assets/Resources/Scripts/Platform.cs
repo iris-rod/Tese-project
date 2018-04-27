@@ -11,7 +11,7 @@ public class Platform : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-    hitScale = new Vector3(0.15f,.15f,.15f);
+    hitScale = new Vector3(0.15f,.15f,.15f);//vr .15,.15,.15
     canSpawnAtom = true;
     spawnPoint = new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z);
 	}

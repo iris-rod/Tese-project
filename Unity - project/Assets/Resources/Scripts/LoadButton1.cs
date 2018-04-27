@@ -26,9 +26,9 @@ private Animator animator;
     {
       for(int i = 0; i < colliders.Length; i++)
       {
-        if (colliders[i].transform.name.Split(' ')[0] == "Contact")
+        if (colliders[i].transform.name.Split(' ')[0] == "Contact" && molecule != null)
         {
-          transform.parent.GetComponent<ShelfManager>().LoadMolecule(molecule);
+          transform.parent.transform.parent.GetComponent<ShelfManager>().LoadMolecule(molecule);
           animator.SetBool("pushed",true);
           Invoke("Reset", .5f);
           break;

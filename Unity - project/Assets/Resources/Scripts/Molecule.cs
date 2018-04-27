@@ -34,6 +34,7 @@ public class Molecule : MonoBehaviour
   private bool distanceToBond;
   private bool MultipleLines;
   private bool PointToLoad;
+  private bool UseButtonToLoad;
 
   //variables used to bond atoms
   private bool bondingAtoms;
@@ -54,6 +55,7 @@ public class Molecule : MonoBehaviour
     MultipleLines = camera.GetComponent<Manager>().MultipleLines;
     distanceToBond = camera.GetComponent<Manager>().DistanceToBond;
     PointToLoad = camera.GetComponent<Manager>().PointToLoad;
+    UseButtonToLoad = camera.GetComponent<Manager>().UseButtonToLoad;
   }
 
   // Use this for initialization
@@ -117,8 +119,9 @@ public class Molecule : MonoBehaviour
       if (bondingAtoms)
         CheckDistance();
     }
-    else if (isMini)
+    else if (isMini && !UseButtonToLoad)
     {
+      Debug.Log("here");
       CheckIfSelected();
     }
   }

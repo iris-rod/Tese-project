@@ -21,6 +21,7 @@ public class Manager : MonoBehaviour
   public bool MultipleLines;
   public bool DistanceToBond;
   public bool PointToLoad;
+  public bool UseButtonToLoad;
   public int rotationType;
 
   private List<GameObject> atoms = new List<GameObject> ();
@@ -204,6 +205,7 @@ public class Manager : MonoBehaviour
 
   void Update ()
   {
+    Debug.Log(platform.GetComponent<Platform>().IsFree());
     if (Input.GetKeyDown ("1") && platform.GetComponent<Platform> ().IsFree ()) {
       BBManager.SetTexture ("1");
       LoadMolecule ("partial mol", false);
