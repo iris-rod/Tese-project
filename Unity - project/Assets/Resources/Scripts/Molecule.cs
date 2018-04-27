@@ -10,7 +10,7 @@ public class Molecule : MonoBehaviour
   private int graspedAtoms;
   private int numberOfBonds;
   private bool pivotGrabbed;
-  private bool canTranslate, rotate, translate;
+  private bool canTranslate, rotate, translate, isRotating;
   private GameObject bond;
   private float bondScale;
   private float pivotOffset;
@@ -67,6 +67,7 @@ public class Molecule : MonoBehaviour
     hitScale = new Vector3 (.15f, .15f, .15f);//desktop -> new Vector3(0.03f, 0.1f, 0.1f);
     pivotGrabbed = false;
     rotate = false;
+    isRotating = false;
     isPointed = false;
     pivot = Instantiate (rotationToogle, transform.position, transform.rotation);
     pivot.transform.parent = transform;
@@ -113,7 +114,6 @@ public class Molecule : MonoBehaviour
       UpdateStructure();
       graspedAtoms = 0;
       pivotGrabbed = false;
-
       CheckRotate();
       CheckTranslate();
       if (bondingAtoms)
@@ -182,28 +182,29 @@ public class Molecule : MonoBehaviour
     }
   }
 
-  void CheckRotate()
+  void CheckRotate ()
   {
     Vector3 pointRotate = pivot.transform.position;
     pointRotate.y += pivotOffset;
-    for (int i = 0; i < transform.childCount; i++)
-    {
-      Transform child = transform.GetChild(i);
-      if (child.CompareTag("Interactable") && rotate)
-      {
-        if (rotationType == 1)
-          child.RotateAround(pointRotate, axis, 80 * Time.deltaTime);//handController.GetComponent<HandController>().GetHandRotation()
-        else if (rotationType == 2)
-          child.RotateAround(pointRotate, Vector3.forward, handController.GetComponent<HandController>().GetHandRotation());
-        else if (rotationType == 3)
-          child.GetComponent<Atom>().SetRotating(true);
-      }
-      else if (child.CompareTag("Interactable") && !rotate)
-      {
+    for (int i = 0; i < transform.childCount; i++) {
+      Transform child = transform.GetChild (i);
+      if (child.CompareTag ("Interactable") && rotate) {
+        if (rotationType == 1) {
+          float a = 80 * Time.deltaTime;
+          child.RotateAround (pointRotate, axis, a);//handController.GetComponent<HandController>().GetHandRotation()
+        } else if (rotationType == 2)
+          child.RotateAround (pointRotate, axis, (handController.GetComponent<HandController> ().GetHandRotation ()));//forward
+        else if (rotationType == 3) {
+          isRotating = true;
+          child.GetComponent<Atom> ().SetRotating (true);
+        }
+      } else if (child.CompareTag ("Interactable") && !rotate) {
         if (rotationType == 1 || rotationType == 2)
-          child.RotateAround(pointRotate, axis, 0);
-        else
-          child.GetComponent<Atom>().SetRotating(false);
+          child.RotateAround (pointRotate, axis, 0);
+        else {
+          child.GetComponent<Atom> ().SetRotating (false);
+          isRotating = false;
+        }
       }
     }
   }
@@ -220,7 +221,7 @@ public class Molecule : MonoBehaviour
       else if (child.CompareTag("Pivot") && child.GetComponent<InteractionBehaviour>().isGrasped)
         pivotGrabbed = true;
     }
-    //CheckMoleculeState();
+    CheckMoleculeState();
   }
 
   void CheckMoleculeState()
@@ -245,6 +246,8 @@ public class Molecule : MonoBehaviour
     else if (pivotGrabbed && graspedAtoms >= 1 && rotationType == 3)
     {
       rotate = true;
+      if(!isRotating)
+      LockDistanceToPivot();
     }
 
     //If only one atom is grasped, then you are just moving it, and stop all other actions
@@ -262,8 +265,6 @@ public class Molecule : MonoBehaviour
 
     if (pivotGrabbed && graspedAtoms == 0)
       canTranslate = true;
-
-
   }
 
   void LockDistanceToPivot()
@@ -458,7 +459,7 @@ public class Molecule : MonoBehaviour
       return;
     }
     //update pivot position according to the positions of the existent atoms in the molecule
-    if (!rotate)
+    if (!isRotating)
     {
       Vector3 center = new Vector3(0, 0, 0);
       Vector3 lastPosition = new Vector3(0, 0, 0);
