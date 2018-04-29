@@ -21,11 +21,12 @@ private Animator animator;
 
   private void CheckCollision()
   {
-    Collider[] colliders = Physics.OverlapBox(transform.position,transform.localScale/2);
+    Collider[] colliders = Physics.OverlapBox(transform.position,transform.localScale/10);
     if(colliders.Length > 1)
     {
       for(int i = 0; i < colliders.Length; i++)
       {
+        Debug.Log(colliders[i].transform.name);
         if (colliders[i].transform.name.Split(' ')[0] == "Contact" && molecule != null)
         {
           transform.parent.transform.parent.GetComponent<ShelfManager>().LoadMolecule(molecule);

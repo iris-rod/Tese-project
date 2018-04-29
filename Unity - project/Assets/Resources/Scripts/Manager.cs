@@ -205,7 +205,6 @@ public class Manager : MonoBehaviour
 
   void Update ()
   {
-    Debug.Log(platform.GetComponent<Platform>().IsFree());
     if (Input.GetKeyDown ("1") && platform.GetComponent<Platform> ().IsFree ()) {
       BBManager.SetTexture ("1");
       LoadMolecule ("partial mol", false);
