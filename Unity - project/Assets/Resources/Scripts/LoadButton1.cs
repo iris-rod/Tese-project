@@ -26,7 +26,6 @@ private Animator animator;
     {
       for(int i = 0; i < colliders.Length; i++)
       {
-        Debug.Log(colliders[i].transform.name);
         if (colliders[i].transform.name.Split(' ')[0] == "Contact" && molecule != null)
         {
           transform.parent.transform.parent.GetComponent<ShelfManager>().LoadMolecule(molecule);

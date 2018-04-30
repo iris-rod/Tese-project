@@ -22,36 +22,40 @@ public class BondController : MonoBehaviour
   public float distanceToDetach;
   public float distance; //At which they stick together
 
-  void Start()
+  void Start ()
   {
-    switch (bondType)
-    {
-      case 1:
-        distanceToDetach = 0.3f;
-        break;
-      case 2:
-        distanceToDetach = 0.35f;
-        break;
-      case 3:
-        distanceToDetach = 0.45f;
-        break;
-      case 4:
-        distanceToDetach = 0.55f;
-        break;
+    switch (bondType) {
+    case 1:
+      distanceToDetach = 0.3f;
+      break;
+    case 2:
+      distanceToDetach = 0.35f;
+      break;
+    case 3:
+      distanceToDetach = 0.45f;
+      break;
+    case 4:
+      distanceToDetach = 0.55f;
+      break;
 
     }
-    string split = transform.parent.name.Split('_')[0];
+    string split = transform.parent.name.Split ('_') [0];
     distance = 0.15f;
     factor = 60;
-    if (split == "Mini")
-    {
+    if (split == "Mini") {
       factor = 200f;//300
       distance = 0.09f;//.05
     }
     detaching = false;
     scale0 = transform.localScale;
-    SetDistance();
-    highlightGrasp = transform.GetComponent<MeshRenderer>().materials[1];
+    SetDistance ();
+    highlightGrasp = transform.GetComponent<MeshRenderer> ().materials [1];
+    if (transform.name != "MoleculeV3(Clone)" && split != "Mini") {
+      for (int i = 0; i < transform.childCount; i++) {
+        Transform child =  transform.GetChild(i);
+        child.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + child.tag.Trim() + " Invi", typeof(Material)) as Material;
+      }
+    }
   }
 
 

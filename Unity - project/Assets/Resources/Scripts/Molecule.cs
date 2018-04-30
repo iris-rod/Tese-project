@@ -78,13 +78,17 @@ public class Molecule : MonoBehaviour
     if (split == "Mini") {
       isMini = true;
       pivotOffset = 0.04f;
-      for (int i = 0; i < transform.childCount; i++) {
+    }
+    
+    if (split != "MoleculeV3(Clone)") {
+    for (int i = 0; i < transform.childCount; i++) {
         Transform child = transform.GetChild(i);
-        if(child.CompareTag("Interactable"))
+        if(child.CompareTag("Interactable") || child.CompareTag("Pivot"))
           child.GetComponent<InteractionBehaviour>().ignoreGrasping = true;
-          
       }
     }
+    if(transform.name != "MoleculeV3(Clone)" && !isMini)
+      pivot.transform.GetComponent<MeshRenderer>().material =  Resources.Load("Materials/Pivot Invi", typeof(Material)) as Material;
   }
 
   public void SetHandController(GameObject handCtrl)
@@ -121,7 +125,6 @@ public class Molecule : MonoBehaviour
     }
     else if (isMini && !UseButtonToLoad)
     {
-      Debug.Log("here");
       CheckIfSelected();
     }
   }

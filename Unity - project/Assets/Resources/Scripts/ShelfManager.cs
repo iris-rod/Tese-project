@@ -23,19 +23,29 @@ public class ShelfManager : MonoBehaviour {
   private GameObject[] spots;
 
   // Use this for initialization
-  void Start () {
+  void Start ()
+  {
     start = true;
-    platform = GameObject.Find("InviPlatform");
+    platform = GameObject.Find ("InviPlatform");
     moleculeID = 1;
     zOffset = moleculeID;
     newMini = true;
     canSave = true;
     waiting = false;
     lastPointedMini = "";
-    if(!VR)
-      yShelfPosition = 1.6f-.04f;
-    else yShelfPosition = .85f;
-    spots = GameObject.FindGameObjectsWithTag("Interface");
+    if (!VR)
+      yShelfPosition = 1.6f - .04f;
+    else
+      yShelfPosition = .85f;
+    spots = GameObject.FindGameObjectsWithTag ("Interface");
+    int id = 0;
+    for (int i = 0; i < transform.childCount; i++) {
+      Transform child  = transform.GetChild(i);
+      if (child.name.Split (' ') [0] == "Button") {
+        spots [id] = child.GetChild (0).gameObject;
+        id++;
+      }
+    }
 	}
 	
 	// Update is called once per frame
@@ -50,6 +60,7 @@ public class ShelfManager : MonoBehaviour {
     if (mini != null && newMini) {
       Vector3 pos = GetMiniPosition ();
       mini.transform.position = pos;
+      
       //desktop version values for the mini mols on the shelves
       if (!VR) {
         mini.transform.localScale -= new Vector3 (0.8f, 0.8f, 0.8f);
@@ -66,7 +77,10 @@ public class ShelfManager : MonoBehaviour {
 
   private Vector3 GetMiniPosition ()
   {
-    SetMoleculeOnSpot();
+    Vector3 buttonPosition =  SetMoleculeOnSpot();
+    Vector3 spotPosition = new Vector3(buttonPosition.x + .4f, buttonPosition.y - 1.5f, buttonPosition.z - .1f);
+    return spotPosition;
+    /*
     if ((moleculeID - 1) % 4 == 0) {
       if (VR)
         yShelfPosition -= .3f;//desktop->0.1f;
@@ -78,17 +92,18 @@ public class ShelfManager : MonoBehaviour {
       return new Vector3 (-0.45f, yShelfPosition, -.2f + ((zOffset - 1) * .1f)); //z -> -0.25
     else
       return new Vector3 (-0.23f, yShelfPosition, -.2f + ((zOffset - 1) * .25f)); 
-    
+    */
   }
   
-  private void SetMoleculeOnSpot ()
+  private Vector3 SetMoleculeOnSpot ()
   {
     for (int i = 0; i < spots.Length; i++) {
       if (!spots [i].GetComponent<LoadButton1> ().HasMolecule()) {
         spots [i].GetComponent<LoadButton1> ().SetMolecule (mini);
-        return;
+        return spots[i].transform.position;
       }
     }
+    return new Vector3(0,0,0);
   }
 
   void OnTriggerEnter(Collider col)

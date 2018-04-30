@@ -62,68 +62,81 @@ public class Manager : MonoBehaviour
     HandleTextFile.SaveFile (name + ".txt", text);
   }
 
-  public void LoadMolecule(string name, bool mini)
+  public void LoadMolecule (string name, bool mini)
   {
-    numberOfBonds = new List<int>();
-    atoms = new List<GameObject>();
-    atomsPositions = new List<Vector3>();
-    allBondsFormed = new List<List<int>>();
+    bool rotationInvi = false;
+    if (name == "Rotation1" || name == "Rotation2")
+      rotationInvi = true;
+    numberOfBonds = new List<int> ();
+    atoms = new List<GameObject> ();
+    atomsPositions = new List<Vector3> ();
+    allBondsFormed = new List<List<int>> ();
     string text = "";
-    try
-    {
-      text = HandleTextFile.ReadString(name + ".txt");
-    }
-    catch (Exception e)
-    {
-      Debug.Log(e);
+    try {
+      text = HandleTextFile.ReadString (name + ".txt");
+    } catch (Exception e) {
+      Debug.Log (e);
       text = "";
     }
     //molecule position
-    string[] firsSplit = text.Split('M');
-    Vector3 moleculePosition = StringToVector3(firsSplit[1]);
-    GameObject molecule = Instantiate(moleculePrefab, initialPos, Quaternion.identity);
-    molecule.GetComponent<Molecule>().SetHandController(handController);
+    string[] firsSplit = text.Split ('M');
+    Vector3 moleculePosition = StringToVector3 (firsSplit [1]);
+    GameObject molecule = Instantiate (moleculePrefab, initialPos, Quaternion.identity);
+    molecule.GetComponent<Molecule> ().SetHandController (handController);
     
     //read atoms
-    string[] split = firsSplit[2].Split('N');
+    string[] split = firsSplit [2].Split ('N');
 
-    for (int j = 1; j < split.Length; j++)
-    {
-      string[] atom = split[j].Split('_');
-      List<int> bondsFormed = new List<int>();
-      for (int k = 3; k < atom.Length; k++)
-      {
-        int value = int.Parse(atom[k]);
-        bondsFormed.Add(value);
-        if (!numberOfBonds.Contains(value))
-          numberOfBonds.Add(value);
+    for (int j = 1; j < split.Length; j++) {
+      string[] atom = split [j].Split ('_');
+      List<int> bondsFormed = new List<int> ();
+      for (int k = 3; k < atom.Length; k++) {
+        int value = int.Parse (atom [k]);
+        bondsFormed.Add (value);
+        if (!numberOfBonds.Contains (value))
+          numberOfBonds.Add (value);
       }
-      allBondsFormed.Add(bondsFormed);
+      allBondsFormed.Add (bondsFormed);
     }
-    InitBondDictionary();
-    for (int i = 1; i < split.Length; i++)
-    {
-      string[] atom = split[i].Split('_');
-      string atomType = atom[0].Substring(7);
-      int allowedBonds = Properties.BONDS[atomType];
-      int bondsMade = int.Parse(atom[1]);
-      Vector3 position = StringToVector3(atom[2]);
-      GameObject loadedAtom = Instantiate(atomPrefab, initialPos, Quaternion.identity);
-      loadedAtom.GetComponent<Atom>().handController = handController;
-      loadedAtom.GetComponent<Atom>().manager = manager;
-      Material mat = Resources.Load("Materials/" + atomType + " 2", typeof(Material)) as Material;
-      loadedAtom.GetComponent<Atom>().SetProperties(atomType, mat, allowedBonds);
+    InitBondDictionary ();
+    for (int i = 1; i < split.Length; i++) {
+      string[] atom = split [i].Split ('_');
+      string atomType = atom [0].Substring (7);
+      int allowedBonds = Properties.BONDS [atomType];
+      int bondsMade = int.Parse (atom [1]);
+      Vector3 position = StringToVector3 (atom [2]);
+      GameObject loadedAtom = Instantiate (atomPrefab, initialPos, Quaternion.identity);
+      loadedAtom.GetComponent<Atom> ().handController = handController;
+      loadedAtom.GetComponent<Atom> ().manager = manager;
+      Material mat = Resources.Load ("Materials/" + atomType + " 2", typeof(Material)) as Material;
+      if (rotationInvi)
+        mat = Resources.Load ("Materials/" + atomType + " Invi", typeof(Material)) as Material;
+      loadedAtom.GetComponent<Atom> ().SetProperties (atomType, mat, allowedBonds);
       loadedAtom.transform.parent = molecule.transform;
-      atoms.Add(loadedAtom);
-      atomsPositions.Add(position);
-      AddBondDictionary(loadedAtom, i - 1);
+      atoms.Add (loadedAtom);
+      atomsPositions.Add (position);
+      AddBondDictionary (loadedAtom, i - 1);
     }
-    if(mini)
+    if (mini)
       molecule.name = "Mini_" + name;
-    BondAtoms(molecule);
-    molecule.transform.position += GetMoleculeFinalPos(name);
+    BondAtoms (molecule);
+    if (!rotationInvi)
+      molecule.transform.position += GetMoleculeFinalPos (name);
+    else {
+      molecule.name = name;
+      SetMoleculeTransparent(molecule);
+    }
   }
-
+  
+  private void SetMoleculeTransparent (GameObject molecule)
+  {
+    for (int i = 1; i < molecule.transform.childCount; i++) {
+      Transform child = molecule.transform.GetChild(i);
+      if(child.CompareTag("Bond")) {
+        child.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + child.tag.Trim() + " Invi", typeof(Material)) as Material;
+      }
+  }
+}
   private Vector3 GetMoleculeFinalPos(string fileName)
   {
     string first = fileName.Split('_')[0];
@@ -211,8 +224,16 @@ public class Manager : MonoBehaviour
     } else if (Input.GetKeyDown ("2") && platform.GetComponent<Platform> ().IsFree ()) {
       BBManager.SetTexture ("2");
       LoadMolecule ("CO2", false);
+    } else if (Input.GetKeyDown ("8"))
+      LoadMolecule ("Rotation1", false);
+    else if (Input.GetKeyDown ("9"))
+      LoadMolecule ("Rotation2", false);
+    
+    if (Input.GetKeyDown ("s")) {
+      GameObject mol = GameObject.Find("MoleculeV3(Clone)");
+      SaveMolecule(mol,"Rotation1");
     }
-
+    
     if (handController.GetComponent<HandController> ().IsPointing () && PointToLoad) {
       Vector3 fingerPos = handController.GetComponent<HandController> ().GetIndexPosition ();
       Vector3 fingerDir = handController.GetComponent<HandController> ().GetIndexDirection ();
