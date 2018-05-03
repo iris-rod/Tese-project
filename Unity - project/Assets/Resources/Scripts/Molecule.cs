@@ -268,6 +268,31 @@ public class Molecule : MonoBehaviour
 
     if (pivotGrabbed && graspedAtoms == 0)
       canTranslate = true;
+
+    //testing avoid atoms intersection
+    if(graspedAtoms > 0)
+    {
+      for(int i = 0; i < transform.childCount; i++)
+      {
+        Transform child = transform.GetChild(i);
+        if (child.CompareTag("Interactable"))
+        {
+          child.GetComponent<Rigidbody>().useGravity = false;
+          child.GetComponent<Rigidbody>().isKinematic = false;
+        }
+      }
+    }else
+    {
+      for (int i = 0; i < transform.childCount; i++)
+      {
+        Transform child = transform.GetChild(i);
+        if (child.CompareTag("Interactable"))
+        {
+          child.GetComponent<Rigidbody>().useGravity = true;
+          child.GetComponent<Rigidbody>().isKinematic = true;
+        }
+      }
+    }
   }
 
   void LockDistanceToPivot()
@@ -461,6 +486,7 @@ public class Molecule : MonoBehaviour
       Destroy(gameObject);
       return;
     }
+
     //update pivot position according to the positions of the existent atoms in the molecule
     if (!isRotating)
     {

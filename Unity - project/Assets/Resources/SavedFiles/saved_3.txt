@@ -1,12 +1,12 @@
 M(0.5, -0.1, 0.5)M
-N atom: Carbon_4 _(-0.7, 1.9, 0.1)
+N atom: Carbon_4 _(-0.4, 2.0, 0.2)
     _1
     _2
 
-N atom: Oxygen_2 _(-0.5, 1.9, 0.1)
+N atom: Oxygen_2 _(-0.3, 1.9, 0.3)
     _1
 
-N atom: Oxygen_2 _(-0.5, 1.9, 0.1)
+N atom: Oxygen_2 _(-0.3, 1.9, 0.3)
     _2
 
 

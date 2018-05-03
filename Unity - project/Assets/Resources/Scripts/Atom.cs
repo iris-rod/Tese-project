@@ -192,6 +192,11 @@ public class Atom : MonoBehaviour {
       else
         highlightMat.SetFloat("_Outline", 0.02f);
     }
+   /* if (col.transform.CompareTag("Interactable"))
+    {
+      float distance = 0.2f;// + transform.GetComponent<SphereCollider>().radius;
+      col.transform.position = (col.transform.position - transform.position).normalized * distance + transform.position;
+    }*/
   }
 
   void OnCollisionExit(Collision col)

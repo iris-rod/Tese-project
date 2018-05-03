@@ -59,7 +59,6 @@ public class ShelfManager : MonoBehaviour {
     }
     if (mini != null && newMini) {
       Vector3 pos = GetMiniPosition ();
-      mini.transform.position = pos;
       
       //desktop version values for the mini mols on the shelves
       if (!VR) {
@@ -69,7 +68,9 @@ public class ShelfManager : MonoBehaviour {
       else {
         mini.transform.localScale -= new Vector3 (0.2f, 0.2f, 0.2f);
       }
+
       mini.transform.parent = transform;
+      mini.transform.position = pos;
       newMini = false;
       zOffset++;
     }
@@ -77,8 +78,14 @@ public class ShelfManager : MonoBehaviour {
 
   private Vector3 GetMiniPosition ()
   {
-    Vector3 buttonPosition =  SetMoleculeOnSpot();
-    Vector3 spotPosition = new Vector3(buttonPosition.x + .4f, buttonPosition.y - 1.5f, buttonPosition.z - .1f);
+    Transform button =  SetMoleculeOnSpot();
+    Vector3 spotPosition = new Vector3(button.parent.position.x, button.parent.position.y, button.parent.position.z);//-1.5, -.1
+    for(int i = 0; i < mini.transform.childCount; i++)
+    {
+      Transform child = mini.transform.GetChild(i);
+      Vector3 pos = new Vector3(child.position.x, child.position.y-1.5f, child.position.z-.2f);
+      child.position = pos;
+    }
     return spotPosition;
     /*
     if ((moleculeID - 1) % 4 == 0) {
@@ -95,15 +102,15 @@ public class ShelfManager : MonoBehaviour {
     */
   }
   
-  private Vector3 SetMoleculeOnSpot ()
+  private Transform SetMoleculeOnSpot ()
   {
     for (int i = 0; i < spots.Length; i++) {
       if (!spots [i].GetComponent<LoadButton1> ().HasMolecule()) {
         spots [i].GetComponent<LoadButton1> ().SetMolecule (mini);
-        return spots[i].transform.position;
+        return spots[i].transform;
       }
     }
-    return new Vector3(0,0,0);
+    return null;
   }
 
   void OnTriggerEnter(Collider col)
