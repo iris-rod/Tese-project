@@ -31,15 +31,15 @@ public class Molecule : MonoBehaviour
   //variables picked up from the manager
   private int bondType;
   private int rotationType;
-  private bool distanceToBond;
+  private int typeOfBonding;
   private bool MultipleLines;
   private bool PointToLoad;
   private bool UseButtonToLoad;
 
   //variables used to bond atoms
-  private bool bondingAtoms;
+  private bool bondingAtoms, canUpdateTap;
   private GameObject atom1, atom2;
-  private int distBond;
+  private int distBond, numberOfTaps;
 
   //variables related to the mini molecules on the shelves
   private GameObject shelves;
@@ -53,7 +53,7 @@ public class Molecule : MonoBehaviour
     shelves = GameObject.Find("shelves");
     rotationType = camera.GetComponent<Manager>().rotationType;
     MultipleLines = camera.GetComponent<Manager>().MultipleLines;
-    distanceToBond = camera.GetComponent<Manager>().DistanceToBond;
+    typeOfBonding = camera.GetComponent<Manager>().TypeOfBonding;
     PointToLoad = camera.GetComponent<Manager>().PointToLoad;
     UseButtonToLoad = camera.GetComponent<Manager>().UseButtonToLoad;
   }
@@ -69,6 +69,7 @@ public class Molecule : MonoBehaviour
     rotate = false;
     isRotating = false;
     isPointed = false;
+    canUpdateTap = true;
     pivot = Instantiate (rotationToogle, transform.position, transform.rotation);
     pivot.transform.parent = transform;
     SetManagerPivot ();
@@ -87,8 +88,10 @@ public class Molecule : MonoBehaviour
           child.GetComponent<InteractionBehaviour>().ignoreGrasping = true;
       }
     }
-    if(transform.name != "MoleculeV3(Clone)" && !isMini)
-      pivot.transform.GetComponent<MeshRenderer>().material =  Resources.Load("Materials/Pivot Invi", typeof(Material)) as Material;
+    if (transform.name != "MoleculeV3(Clone)" && !isMini)
+    {
+      pivot.transform.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Pivot Invi", typeof(Material)) as Material;
+    }
   }
 
   public void SetHandController(GameObject handCtrl)
@@ -120,8 +123,10 @@ public class Molecule : MonoBehaviour
       pivotGrabbed = false;
       CheckRotate();
       CheckTranslate();
-      if (bondingAtoms)
+      if (bondingAtoms && typeOfBonding == 1)
         CheckDistance();
+      else if (bondingAtoms && typeOfBonding == 2)
+        CheckTaps();
     }
     else if (isMini && !UseButtonToLoad)
     {
@@ -132,32 +137,64 @@ public class Molecule : MonoBehaviour
   void CheckDistance()
   {
     float dist = Vector3.Distance(atom1.transform.position, atom2.transform.position);
-    SetInvisibleBond(dist);
+    SetInvisibleBond(dist, true);
     if (!atom1.GetComponent<Atom>().IsBonding() && !atom2.GetComponent<Atom>().IsBonding())
       CreateBondDist(dist);
   }
 
+  void CheckTaps()
+  {
+    SetInvisibleBond(numberOfTaps, false);
+    if (!atom1.GetComponent<Atom>().IsBonding() && !atom2.GetComponent<Atom>().IsBonding())
+      CreateBondTaps(numberOfTaps);
+  }
+
   //creates the bond according to the distance to guide the user
-  void SetInvisibleBond(float dist)
+  void SetInvisibleBond(float value, bool dist)
   {
     bond = simpleBond;
     int bondNumber = 1;
-    if (dist <= .2f)
+    if (dist)
     {
-      bond = quadrupleBond;
-      bondNumber = 4;
+      if (value <= .2f)
+      {
+        bond = quadrupleBond;
+        bondNumber = 4;
+      }
+      else if (value <= .3f && value > .2)
+      {
+        bond = tripleBond;
+        bondNumber = 3;
+      }
+      else if (value <= .4f && value > 0.3f)
+      {
+        bond = doubleBond;
+        bondNumber = 2;
+      }
     }
-    else if (dist <= .3f && dist > .2)
+    else
     {
-      bond = tripleBond;
-      bondNumber = 3;
+      int n = Mathf.RoundToInt(value);
+      switch (n)
+      {
+        case 1:
+          bond = simpleBond;
+          bondNumber = 1;
+          break;
+        case 2:
+          bond = doubleBond;
+          bondNumber = 2;
+          break;
+        case 3:
+          bond = tripleBond;
+          bondNumber = 3;
+          break;
+        case 4:
+          bond = quadrupleBond;
+          bondNumber = 4;
+          break;
+      }
     }
-    else if (dist <= .4f && dist > 0.3f)
-    {
-      bond = doubleBond;
-      bondNumber = 2;
-    }
-
     if (lastInviBondType != bondNumber)
     {
       if (lastInviBond != null)
@@ -339,37 +376,6 @@ public class Molecule : MonoBehaviour
       bondType = availableBondsA;
     else
       bondType = availableBondsB;
-
-    //get the prefab for the given bond type
-
-    if (MultipleLines)
-    {
-      switch (bondType)
-      {
-        case 1:
-          bond = simpleBond;
-          break;
-        case 2:
-          bond = doubleBond;
-          break;
-        case 3:
-          bond = tripleBond;
-          break;
-        case 4:
-          bond = quadrupleBond;
-          break;
-      }
-      bondScale = 0;
-    }
-    else
-    {
-      bond = simpleBond;
-      if (bondType == 2)
-        bondScale = 0.02f;
-      else if (bondType == 3)
-        bondScale = 0.03f;
-
-    }
   }
 
   //Check what type of bond must be created
@@ -401,44 +407,49 @@ public class Molecule : MonoBehaviour
     if (distBond <= bondType) bondType = distBond;
     else return;
 
-    //get the prefab for the given bond type
+  }
 
-    if (MultipleLines)
-    {
-      switch (bondType)
-      {
-        case 1:
-          bond = simpleBond;
-          break;
-        case 2:
-          bond = doubleBond;
-          break;
-        case 3:
-          bond = tripleBond;
-          break;
-        case 4:
-          bond = quadrupleBond;
-          break;
-      }
-      bondScale = 0;
-    }
+  private void DefineBondTypeTaps(GameObject atomA, GameObject atomB, int taps)
+  {
+    //get available bonds from the atoms
+    int availableBondsA = atomA.GetComponent<Atom>().GetAvailableBonds();
+    int availableBondsB = atomB.GetComponent<Atom>().GetAvailableBonds();
+    if (availableBondsA <= 0 || availableBondsB <= 0)
+      return;
+
+    bondType = 0;
+    //get the smallest bond type possible between the two atoms
+    if (availableBondsA < availableBondsB)
+      bondType = availableBondsA;
     else
-    {
-      bond = simpleBond;
-      if (bondType == 2)
-        bondScale = 0.02f;
-      else if (bondType == 3)
-        bondScale = 0.03f;
+      bondType = availableBondsB;
 
+    if (taps <= bondType) bondType = taps;
+    else return;
+  }
+
+  public void UpdateBondType(int value)
+  {
+    if (canUpdateTap)
+    {
+      numberOfTaps += value;
+      if (numberOfTaps > 4)
+        numberOfTaps = 1;
+      canUpdateTap = false;
+      Invoke("ResetTap",.5f);
     }
   }
 
+  private void ResetTap()
+  {
+    canUpdateTap = true;
+  }
 
   //Create a new bond between the given atoms
   public void CreateBond(GameObject atomA, GameObject atomB)
   {
     //bonding automatically according to their available bonds
-    if (!distanceToBond)
+    if ((typeOfBonding == 0))
     {
       DefineBondType(atomA, atomB);
       GameObject newBond = Instantiate(bond, transform.position, transform.rotation);
@@ -449,10 +460,10 @@ public class Molecule : MonoBehaviour
       atomA.transform.parent = transform;
       atomB.transform.parent = transform;
     }
-    else //bonding according to distance and available bonds
+    else if(typeOfBonding == 1 || typeOfBonding == 2)//bonding according to distance and available bonds
     {
-      atomA.GetComponent<Atom>().SettingBond();
-      atomB.GetComponent<Atom>().SettingBond();
+      atomA.GetComponent<Atom>().SettingBond(typeOfBonding);
+      atomB.GetComponent<Atom>().SettingBond(typeOfBonding);
       bondingAtoms = true;
       atomA.transform.parent = transform;
       atomB.transform.parent = transform;
@@ -475,6 +486,19 @@ public class Molecule : MonoBehaviour
     lastInviBond.GetComponent<FeedbackBondController>().DestroyBond(atom1, atom2);
   }
 
+  private void CreateBondTaps(int taps)
+  {
+    DefineBondTypeTaps(atom1, atom2, taps);
+    GameObject newBond = Instantiate(bond, transform.position, transform.rotation);
+    AddBond(newBond);
+    newBond.GetComponent<BondController>().SetAtoms(atom1, atom2, bondType);
+    newBond.transform.localScale += new Vector3(bondScale, bondScale, 0);
+    newBond.transform.parent = transform;
+    atom1.transform.parent = transform;
+    atom2.transform.parent = transform;
+    bondingAtoms = false;
+    lastInviBond.GetComponent<FeedbackBondController>().DestroyBond(atom1, atom2);
+  }
 
 
   //Destroy the molecule once there is no atoms bonded

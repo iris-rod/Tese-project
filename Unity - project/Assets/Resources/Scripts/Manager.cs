@@ -19,10 +19,11 @@ public class Manager : MonoBehaviour
   public bool VR;
   public bool setOnHand;
   public bool MultipleLines;
-  public bool DistanceToBond;
+  public int TypeOfBonding;
   public bool PointToLoad;
   public bool UseButtonToLoad;
   public int rotationType;
+  
 
   private List<GameObject> atoms = new List<GameObject> ();
   private List<Vector3> atomsPositions = new List<Vector3> ();

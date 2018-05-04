@@ -50,7 +50,8 @@ public class BondController : MonoBehaviour
     scale0 = transform.localScale;
     SetDistance ();
     highlightGrasp = transform.GetComponent<MeshRenderer> ().materials [1];
-    if (transform.name != "MoleculeV3(Clone)" && split != "Mini") {
+    if (transform.parent.name != "MoleculeV3(Clone)" && split != "Mini") {
+      transform.GetComponent<MeshRenderer>().material = Resources.Load("Materials/"+transform.tag.Trim()+ " Invi", typeof(Material)) as Material;
       for (int i = 0; i < transform.childCount; i++) {
         Transform child =  transform.GetChild(i);
         child.GetComponent<MeshRenderer>().material = Resources.Load("Materials/" + child.tag.Trim() + " Invi", typeof(Material)) as Material;

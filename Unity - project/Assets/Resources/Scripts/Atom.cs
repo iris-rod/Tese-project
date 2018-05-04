@@ -30,10 +30,12 @@ public class Atom : MonoBehaviour {
   private float distanceToPivot;
   private Vector3 pivotPosition;
   private bool toBond;
+  private int typeOfBonding;
 
   // Use this for initialization
   void Start ()
   {
+    typeOfBonding = 0;
     distanceToPivot = 0;
     isRotating = false;
     isAttached = false;
@@ -173,8 +175,9 @@ public class Atom : MonoBehaviour {
     return numberOfBonds < numberOfBondsAllowed;
   }
 
-  public void SettingBond()
+  public void SettingBond(int bondType)
   {
+    typeOfBonding = bondType;
     toBond = true;
   }
 
@@ -185,18 +188,18 @@ public class Atom : MonoBehaviour {
 
   void OnCollisionEnter(Collision col)
   {
-    if (col.transform.CompareTag("Interactable") && canBond && col.transform.GetComponent<Atom>().CanBond())
+    if (col.transform.CompareTag("Interactable") && toBond && col.transform.GetComponent<Atom>().toBond && typeOfBonding == 2)
+    {
+      transform.parent.GetComponent<Molecule>().UpdateBondType(1);
+    }
+    else if (col.transform.CompareTag("Interactable") && canBond && col.transform.GetComponent<Atom>().CanBond())
     {
       if(HasFreeBonds() && col.transform.GetComponent<Atom>().HasFreeBonds())
         StickToMolecule(col.gameObject);
       else
         highlightMat.SetFloat("_Outline", 0.02f);
     }
-   /* if (col.transform.CompareTag("Interactable"))
-    {
-      float distance = 0.2f;// + transform.GetComponent<SphereCollider>().radius;
-      col.transform.position = (col.transform.position - transform.position).normalized * distance + transform.position;
-    }*/
+
   }
 
   void OnCollisionExit(Collision col)
