@@ -24,9 +24,9 @@ public class InterfaceManager : MonoBehaviour {
     camera.GetComponent<Manager>().SaveMolecule(mol,name);
   }
 
-  public void Load (bool mini,string name)
+  public GameObject Load (bool mini,string name)
   {
     //camera.GetComponent<Manager>().LoadMolecule(mol.GetComponent<SavedMolecule>().GetFileName());
-    camera.GetComponent<Manager>().LoadMolecule(name,mini);
+    return camera.GetComponent<Manager>().LoadMolecule(name,mini);
   }
 }

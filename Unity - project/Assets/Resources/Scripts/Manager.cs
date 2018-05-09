@@ -37,8 +37,8 @@ public class Manager : MonoBehaviour
 
   void Start()
   {
-    molPostSaved = new Vector3(0.4f, 0f, 0.2f);
-    molPreSaved = new Vector3(.5f, -0.1f, .5f);
+    molPostSaved = Vector3.zero;// on platform -> new Vector3(.8f,0f,.4f);//molecules saved in runtime
+    molPreSaved = new Vector3(.5f, -0.1f, .5f); //molecules saved for testing
   }
 
   public void SaveMolecule (GameObject molecule, string name)
@@ -63,7 +63,7 @@ public class Manager : MonoBehaviour
     HandleTextFile.SaveFile (name + ".txt", text);
   }
 
-  public void LoadMolecule (string name, bool mini)
+  public GameObject LoadMolecule (string name, bool mini)
   {
     bool rotationInvi = false;
     if (name == "Rotation1" || name == "Rotation2")
@@ -120,13 +120,17 @@ public class Manager : MonoBehaviour
     }
     if (mini)
       molecule.name = "Mini_" + name;
+      
     BondAtoms (molecule);
+    
     if (!rotationInvi)
       molecule.transform.position += GetMoleculeFinalPos (name);
     else {
       molecule.name = name;
       SetMoleculeTransparent(molecule);
     }
+    
+    return molecule;
   }
   
   private void SetMoleculeTransparent (GameObject molecule)
@@ -151,7 +155,7 @@ public class Manager : MonoBehaviour
   {
 
     if (atoms.Count == 2) {
-      molecule.GetComponent<Molecule> ().CreateBond (atoms [1], atoms [0]);
+      molecule.GetComponent<Molecule> ().CreateBond (atoms [1], atoms [0], true);
       float xOffset1 = atomsPositions[0].x - platform.transform.position.x;
       float zOffset1 = atomsPositions[0].z - platform.transform.position.z;
       float xOffset2 = atomsPositions[1].x - platform.transform.position.x;
@@ -173,7 +177,7 @@ public class Manager : MonoBehaviour
       for (int i = 0; i < numberOfBonds.Count; i++)
       {
         int bondId = numberOfBonds[i];
-        molecule.GetComponent<Molecule>().CreateBond(bonds[bondId][0], bonds[bondId][1]);
+        molecule.GetComponent<Molecule>().CreateBond(bonds[bondId][0], bonds[bondId][1], true);
       }
     }
   }

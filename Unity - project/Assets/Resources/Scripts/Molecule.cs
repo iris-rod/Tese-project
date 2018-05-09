@@ -362,11 +362,11 @@ public class Molecule : MonoBehaviour
   }
 
   //Check what type of bond must be created
-  void DefineBondType(GameObject atomA, GameObject atomB)
+  void DefineBondType (GameObject atomA, GameObject atomB)
   {
     //get available bonds from the atoms
-    int availableBondsA = atomA.GetComponent<Atom>().GetAvailableBonds();
-    int availableBondsB = atomB.GetComponent<Atom>().GetAvailableBonds();
+    int availableBondsA = atomA.GetComponent<Atom> ().GetAvailableBonds ();
+    int availableBondsB = atomB.GetComponent<Atom> ().GetAvailableBonds ();
     if (availableBondsA <= 0 || availableBondsB <= 0)
       return;
 
@@ -376,10 +376,25 @@ public class Molecule : MonoBehaviour
       bondType = availableBondsA;
     else
       bondType = availableBondsB;
+      
+    switch (bondType) {
+      case 1:
+        bond=simpleBond;
+        break;
+      case 2:
+        bond = doubleBond;
+        break;
+      case 3:
+        bond = tripleBond;
+        break;
+      case 4:
+        bond = quadrupleBond;
+        break;  
+    }
   }
 
   //Check what type of bond must be created
-  void DefineBondTypeDist(GameObject atomA, GameObject atomB, float dist)
+  void DefineBondTypeDist (GameObject atomA, GameObject atomB, float dist)
   {
     int distBond = 0;
     if (dist <= .2f)
@@ -392,8 +407,8 @@ public class Molecule : MonoBehaviour
       distBond = 1;
 
     //get available bonds from the atoms
-    int availableBondsA = atomA.GetComponent<Atom>().GetAvailableBonds();
-    int availableBondsB = atomB.GetComponent<Atom>().GetAvailableBonds();
+    int availableBondsA = atomA.GetComponent<Atom> ().GetAvailableBonds ();
+    int availableBondsB = atomB.GetComponent<Atom> ().GetAvailableBonds ();
     if (availableBondsA <= 0 || availableBondsB <= 0)
       return;
 
@@ -404,9 +419,28 @@ public class Molecule : MonoBehaviour
     else
       bondType = availableBondsB;
 
-    if (distBond <= bondType) bondType = distBond;
-    else return;
-
+    if (distBond <= bondType)
+      bondType = distBond;
+    else {
+      bondType = -1;
+      return;
+    }
+    
+    //define the gameobject of the bond to instantiate
+    switch (bondType) {
+      case 1:
+        bond=simpleBond;
+        break;
+      case 2:
+        bond = doubleBond;
+        break;
+      case 3:
+        bond = tripleBond;
+        break;
+      case 4:
+        bond = quadrupleBond;
+        break;  
+    }
   }
 
   private void DefineBondTypeTaps(GameObject atomA, GameObject atomB, int taps)
@@ -425,7 +459,27 @@ public class Molecule : MonoBehaviour
       bondType = availableBondsB;
 
     if (taps <= bondType) bondType = taps;
-    else return;
+    else {
+      bondType = -1;
+      return;
+    }
+    
+    //define the gameobject of the bond to instantiate
+    switch (bondType) {
+      case 1:
+        bond=simpleBond;
+        break;
+      case 2:
+        bond = doubleBond;
+        break;
+      case 3:
+        bond = tripleBond;
+        break;
+      case 4:
+        bond = quadrupleBond;
+        break;  
+    }
+    
   }
 
   public void UpdateBondType(int value)
@@ -446,10 +500,10 @@ public class Molecule : MonoBehaviour
   }
 
   //Create a new bond between the given atoms
-  public void CreateBond(GameObject atomA, GameObject atomB)
+  public void CreateBond(GameObject atomA, GameObject atomB, bool loaded)
   {
     //bonding automatically according to their available bonds
-    if ((typeOfBonding == 0))
+    if ((loaded))
     {
       DefineBondType(atomA, atomB);
       GameObject newBond = Instantiate(bond, transform.position, transform.rotation);
@@ -472,32 +526,36 @@ public class Molecule : MonoBehaviour
     }
   }
 
-  private void CreateBondDist(float dist)
+  private void CreateBondDist (float dist)
   {
-    DefineBondTypeDist(atom1, atom2, dist);
-    GameObject newBond = Instantiate(bond, transform.position, transform.rotation);
-    AddBond(newBond);
-    newBond.GetComponent<BondController>().SetAtoms(atom1, atom2, bondType);
-    newBond.transform.localScale += new Vector3(bondScale, bondScale, 0);
-    newBond.transform.parent = transform;
-    atom1.transform.parent = transform;
-    atom2.transform.parent = transform;
-    bondingAtoms = false;
-    lastInviBond.GetComponent<FeedbackBondController>().DestroyBond(atom1, atom2);
+    DefineBondTypeDist (atom1, atom2, dist);
+    if (bondType != -1) {
+      GameObject newBond = Instantiate (bond, transform.position, transform.rotation);
+      AddBond (newBond);
+      newBond.GetComponent<BondController> ().SetAtoms (atom1, atom2, bondType);
+      newBond.transform.localScale += new Vector3 (bondScale, bondScale, 0);
+      newBond.transform.parent = transform;
+      atom1.transform.parent = transform;
+      atom2.transform.parent = transform;
+      bondingAtoms = false;
+      lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
+    }
   }
 
-  private void CreateBondTaps(int taps)
+  private void CreateBondTaps (int taps)
   {
-    DefineBondTypeTaps(atom1, atom2, taps);
-    GameObject newBond = Instantiate(bond, transform.position, transform.rotation);
-    AddBond(newBond);
-    newBond.GetComponent<BondController>().SetAtoms(atom1, atom2, bondType);
-    newBond.transform.localScale += new Vector3(bondScale, bondScale, 0);
-    newBond.transform.parent = transform;
-    atom1.transform.parent = transform;
-    atom2.transform.parent = transform;
-    bondingAtoms = false;
-    lastInviBond.GetComponent<FeedbackBondController>().DestroyBond(atom1, atom2);
+    DefineBondTypeTaps (atom1, atom2, taps);
+    if (bondType != -1) {
+      GameObject newBond = Instantiate (bond, transform.position, transform.rotation);
+      AddBond (newBond);
+      newBond.GetComponent<BondController> ().SetAtoms (atom1, atom2, bondType);
+      newBond.transform.localScale += new Vector3 (bondScale, bondScale, 0);
+      newBond.transform.parent = transform;
+      atom1.transform.parent = transform;
+      atom2.transform.parent = transform;
+      bondingAtoms = false;
+      lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
+    }
   }
 
 

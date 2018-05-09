@@ -26,13 +26,9 @@ public class BoxAtoms : MonoBehaviour {
 
   private bool resumeUpdate;
   public GameObject atom;
-  public GameObject platform;
-  private Vector3 platformPosition;
-  private bool setOnHand;
 
 	// Use this for initialization
 	void Start () {
-    platformPosition = platform.transform.position;
     spawnPoint =  new Vector3(transform.position.x,transform.position.y + .1f,transform.position.z);//new Vector3(platformPosition.x, platformPosition.y + 0.1f, platformPosition.z);
     canPickNewAtom = true;
     resumeUpdate = true;
@@ -50,16 +46,10 @@ public class BoxAtoms : MonoBehaviour {
     {
       if (resumeUpdate)
       {
-        if (!setOnHand)
-        {
-          canPickNewAtom = platform.GetComponent<Platform>().IsFree();
-        }
-        else
-        {
           Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.01f);
           if (hitColliders.Length < 1)
             canPickNewAtom = true;
-        }
+        
       }
     }
     else
@@ -81,7 +71,6 @@ public class BoxAtoms : MonoBehaviour {
 
   void CheckManager()
   {
-    setOnHand = camera.GetComponent<Manager>().setOnHand;
     if (Input.GetKeyDown("j"))
     {
       TopOfBox = true;
@@ -100,34 +89,6 @@ public class BoxAtoms : MonoBehaviour {
     }
     else
       colliders[1].enabled = false;
-  }
-
-  void OnTriggerStay(Collider col)
-  {
-    string[] name = col.transform.name.Split(' ');
-    if (name[0] == "Contact" && canPickNewAtom && !TopOfBox)//&& IsHandPiched())
-    {
-      PickAtom();
-    }
-  }
-
-  void PickAtom()
-  {
-    if (setOnHand)
-    {
-      GetHandPosition();
-      spawnPoint = new Vector3(handPosition.x,handPosition.y-.01f, handPosition.z);
-    }
-    else
-      handPosition = new Vector3(platformPosition.x, platformPosition.y+0.1f, platformPosition.z);//handPosition = new Vector3(transform.position.x, 2f, 0.25f);
-    GetMaterial();
-    GameObject newAtom = Instantiate(atom, handPosition, transform.rotation);
-    newAtom.GetComponent<Atom>().handController = handController;
-    newAtom.GetComponent<Atom>().manager = GetComponent<InteractionBehaviour>().manager;
-    newAtom.GetComponent<Atom>().SetProperties(atomType,atomMaterial,atomBondsAllowed);
-    resumeUpdate = false;
-    canPickNewAtom = false;
-    Invoke("Resume",0.5f);
   }
 
   void Resume()

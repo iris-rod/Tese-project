@@ -9,7 +9,6 @@ public class HandController : MonoBehaviour
 {
   Hand currentHand;
   private GameObject[] interactableObjs, pivots, axis;
-  private bool leftHandPiching, rightHandPiching;
   private Hand leftHand, rightHand;
 
   private int atomsGrabbed;
@@ -34,6 +33,9 @@ public class HandController : MonoBehaviour
   private Vector3 lastMovementNorm, lastNormalNorm;
   private bool flipping, movementFinished;
   private bool canDetect;
+  private bool lastHandRight;
+  public GameObject leftHandGO;
+  public GameObject rightHandGO;
 
   //testing variables
   private bool UpDown = true;
@@ -45,6 +47,7 @@ public class HandController : MonoBehaviour
     movementFinished = false;
     flipping = false;
     pointing = false;
+    lastHandRight = false;
     canDetect = true;
     interval = 0.90f;
     handRotation = 0;
@@ -53,34 +56,30 @@ public class HandController : MonoBehaviour
     lastPalmZ = 0;
     rotating = false;
     translate = false;
-    leftHandPiching = false;
-    rightHandPiching = false;
     interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
     pivots = GameObject.FindGameObjectsWithTag("Pivot");
-    rotationType = transform.parent.GetComponent<Manager>().rotationType;//transform.parent.transform.parent.GetComponent<Manager>().rotationType;
+    rotationType = transform.parent.transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
   }
 
   public void updateCurrentHand(Hand leapHand)
   {
-
-      CheckFingersPosition(leapHand);
+    CheckFingersPosition(leapHand);    
+    pivots = GameObject.FindGameObjectsWithTag("Pivot");
+    if(!leftHandGO.activeSelf || !rightHandGO)
+      StopRotation();
+    if(!leftHandGO.activeSelf)
+      StopTranslate();
       //CheckHandMovement(leapHand); //use with notepad only
-      if (rotating)
-        Rotate(leapHand);
-      if (translate)
-        Translate(leapHand);
+      
+    if (rotating)
+      Rotate(leapHand);
+    if (translate)
+      Translate(leapHand);
 
-      if (leapHand.IsLeft && leapHand.IsPinching()) leftHandPiching = true;
-      else if (leapHand.IsLeft && !leapHand.IsPinching()) leftHandPiching = false;
+    if (leapHand.IsLeft) leftHand = leapHand;
+    else rightHand = leapHand;
 
-      if (!leapHand.IsLeft && leapHand.IsPinching()) rightHandPiching = true;
-      else if (!leapHand.IsLeft && !leapHand.IsPinching()) rightHandPiching = false;
-
-      if (leapHand.IsLeft) leftHand = leapHand;
-      else rightHand = leapHand;
-
-      if (leapHand.IsLeft) lastPalmPosition = leapHand.PalmPosition.ToVector3();
-    
+    if (leapHand.IsLeft) lastPalmPosition = leapHand.PalmPosition.ToVector3();
   }
 
   void Update()
@@ -89,8 +88,8 @@ public class HandController : MonoBehaviour
     CheckKeyboard();
 
     interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
-    pivots = GameObject.FindGameObjectsWithTag("Pivot");
 
+    Debug.Log(pivots.Length);
     int grabbedAtoms = 0;
     for (int i = 0; i < interactableObjs.Length; i++)
     {
@@ -284,7 +283,7 @@ public class HandController : MonoBehaviour
     for (int i = 0; i < pivots.Length; i++)
     {
       GameObject obj = pivots[i];
-      if (obj.CompareTag("Pivot"))
+      if (obj != null)
       {
         obj.transform.parent.GetComponent<Molecule>().StopTranslate();
         break;
@@ -299,7 +298,7 @@ public class HandController : MonoBehaviour
     for (int i = 0; i < pivots.Length; i++)
     {
       GameObject obj = pivots[i];
-      if (obj != null && obj.CompareTag("Pivot") && obj.GetComponent<InteractionBehaviour>().isGrasped)
+      if (obj != null && obj.GetComponent<InteractionBehaviour>().isGrasped)
       {
         pivotRotate = obj;
         obj.transform.parent.GetComponent<Molecule>().Rotate();
@@ -314,8 +313,9 @@ public class HandController : MonoBehaviour
     for (int i = 0; i < pivots.Length; i++)
     {
       GameObject obj = pivots[i];
-      if (obj.CompareTag("Pivot"))
+      if (obj!= null )
       {
+      Debug.Log("stop rotation : " + obj.transform.parent.name);
         obj.transform.parent.GetComponent<Molecule>().StopRotate();
         break;
       }
@@ -355,15 +355,6 @@ public class HandController : MonoBehaviour
     return rightHand;
   }
 
-  public bool IsLeftPiching()
-  {
-    return leftHandPiching;
-  }
-
-  public bool IsRightPiching()
-  {
-    return rightHandPiching;
-  }
 
   public bool IsPointing()
   {

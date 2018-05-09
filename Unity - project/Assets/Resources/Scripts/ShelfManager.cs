@@ -16,9 +16,6 @@ public class ShelfManager : MonoBehaviour {
   private bool newMini;
   private string lastPointedMini;
   private bool waiting;
-
-  private float yShelfPosition;
-  private int zOffset;
   
   private GameObject[] spots;
 
@@ -28,15 +25,10 @@ public class ShelfManager : MonoBehaviour {
     start = true;
     platform = GameObject.Find ("InviPlatform");
     moleculeID = 1;
-    zOffset = moleculeID;
     newMini = true;
     canSave = true;
     waiting = false;
     lastPointedMini = "";
-    if (!VR)
-      yShelfPosition = 1.6f - .04f;
-    else
-      yShelfPosition = .85f;
     spots = GameObject.FindGameObjectsWithTag ("Interface");
     int id = 0;
     for (int i = 0; i < transform.childCount; i++) {
@@ -72,7 +64,6 @@ public class ShelfManager : MonoBehaviour {
       mini.transform.parent = transform;
       mini.transform.position = pos;
       newMini = false;
-      zOffset++;
     }
   }
 
@@ -80,50 +71,39 @@ public class ShelfManager : MonoBehaviour {
   {
     Transform button =  SetMoleculeOnSpot();
     Vector3 spotPosition = new Vector3(button.parent.position.x, button.parent.position.y, button.parent.position.z);//-1.5, -.1
+    //change atoms position closer to the molecule object
     for(int i = 0; i < mini.transform.childCount; i++)
     {
       Transform child = mini.transform.GetChild(i);
-      Vector3 pos = new Vector3(child.position.x, child.position.y-1.5f, child.position.z-.2f);
+      Vector3 pos = new Vector3(child.position.x + .5f, child.position.y-1.8f, child.position.z+.2f);
       child.position = pos;
     }
     return spotPosition;
-    /*
-    if ((moleculeID - 1) % 4 == 0) {
-      if (VR)
-        yShelfPosition -= .3f;//desktop->0.1f;
-      else
-        yShelfPosition -= .1f;
-      zOffset = 1;
-    }
-    if (!VR)
-      return new Vector3 (-0.45f, yShelfPosition, -.2f + ((zOffset - 1) * .1f)); //z -> -0.25
-    else
-      return new Vector3 (-0.23f, yShelfPosition, -.2f + ((zOffset - 1) * .25f)); 
-    */
   }
   
   private Transform SetMoleculeOnSpot ()
   {
     for (int i = 0; i < spots.Length; i++) {
-      if (!spots [i].GetComponent<LoadButton1> ().HasMolecule()) {
-        spots [i].GetComponent<LoadButton1> ().SetMolecule (mini);
+      if (!spots [i].GetComponent<LoadButton> ().HasMolecule()) {
+        spots [i].GetComponent<LoadButton> ().SetMolecule (mini);
         return spots[i].transform;
       }
     }
     return null;
   }
 
-  void OnTriggerEnter(Collider col)
+  public void SaveMolecule(GameObject mol)
   {
-    if (col.CompareTag("Interactable") && canSave)
+    if (canSave)//col.CompareTag("Interactable") && canSave)
     {
-      GetComponent<InterfaceManager>().Save(col.transform.parent.gameObject, "saved_" + moleculeID.ToString());
-      CreateMiniMolecule(col.transform.parent);
+      GetComponent<InterfaceManager>().Save(mol.transform.parent.gameObject, "saved_" + moleculeID.ToString());//
+      CreateMiniMolecule(mol.transform.parent);//
       canSave = false;
       Invoke("ResetSave",1f);
       moleculeID++;
     }
   }
+
 
   void ResetSave()
   {
@@ -134,19 +114,21 @@ public class ShelfManager : MonoBehaviour {
   {
     GetComponent<InterfaceManager>().Load(true,"saved_" + moleculeID);
     mini = GameObject.Find("Mini_saved_"+(moleculeID).ToString());
-    mini.gameObject.AddComponent(typeof(BoxCollider));
+    //mini.gameObject.AddComponent(typeof(BoxCollider));
     newMini = true;
   }
 
-  public void LoadMolecule(GameObject molecule)
+  public GameObject LoadMolecule(GameObject molecule)
   {
-    if (!waiting && platform.GetComponent<Platform>().IsFree())
+    if (!waiting && true)//platform.GetComponent<Platform>().IsFree())
     {
       string name = molecule.name.Split('_')[1] + "_" + molecule.name.Split('_')[2];
-      GetComponent<InterfaceManager>().Load(false, name);
+      GameObject newMol = GetComponent<InterfaceManager>().Load(false, name);
       waiting = true;
       Invoke("Wait",1);
+      return newMol;
     }
+    return null;
   }
 
   void Wait()

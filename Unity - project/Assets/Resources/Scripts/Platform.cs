@@ -31,7 +31,7 @@ public class Platform : MonoBehaviour {
     Collider[] hitColliders = Physics.OverlapBox(spawnPoint, hitScale);
     for (int i = 0; i < hitColliders.Length; i++)
     {
-      if (hitColliders[i].CompareTag("Interactable") || hitColliders[i].CompareTag("Bond"))
+      if (hitColliders[i].CompareTag("Interactable") || hitColliders[i].CompareTag("Bond") || hitColliders[i].CompareTag("Pivot"))
       {
         canSpawnAtom= false;
         return;

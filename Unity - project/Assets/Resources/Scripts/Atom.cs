@@ -213,14 +213,14 @@ public class Atom : MonoBehaviour {
         Vector3 platePos = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
         GameObject mole = Instantiate (molecule, platePos, transform.rotation);
         mole.GetComponent<Molecule> ().SetHandController (handController);
-        mole.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject);
+        mole.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject, false);
       } else if (obj.transform.parent != transform.parent) {
         if (transform.parent == null) {
           transform.parent = obj.transform.parent;
         } else if (obj.transform.parent == null) {
           obj.transform.parent = transform.parent;
         }
-        transform.parent.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject);
+        transform.parent.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject, false);
       }
   }
 

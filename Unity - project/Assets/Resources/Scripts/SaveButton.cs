@@ -1,53 +1,50 @@
-﻿//using System;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using UnityEngine.UI;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-//public class SaveButton : MonoBehaviour {
+public class SaveButton : MonoBehaviour {
+
+  private Animator animator;
+  private bool m_Started;
+  private GameObject atom;
+
+  // Use this for initialization
+  void Start () {
+    m_Started = true;
+    animator = GetComponent<Animator>();
+  }
   
-//  private bool VR;
-//  GameObject inputField;
-//  GameObject molecule;
-//  private int moleculeID;
+  // Update is called once per frame
+  void Update () {
+    CheckCollision();
+  }
 
-//	// Use this for initialization
-//	void Start () {
-//    //inputField = transform.parent.GetComponent<InterfaceManager>().GetInputField();
-//    if(transform.parent.name == "Interface")
-//      VR = transform.parent.GetComponent<InterfaceManager>().camera.GetComponent<Manager>().VR;
-//    if(VR){
-//      moleculeID = 1;
-//    }
-//	}
-	
-//	// Update is called once per frame
-//	void Update () {
+  private void CheckCollision()
+  {
+    Collider[] colliders = Physics.OverlapBox(transform.position,transform.localScale/10);
+    if(colliders.Length > 1)
+    {
+      for(int i = 0; i < colliders.Length; i++)
+      {
+        if (colliders[i].transform.name.Split(' ')[0] == "Contact" && atom != null)
+        {
+          transform.parent.parent.parent.GetComponent<ShelfManager>().SaveMolecule(atom);
+          animator.SetBool("pushed",true);
+          Invoke("Reset", .5f);
+          break;
+        }
+      }
+    }
+  }
 
-//    /*var se = new InputField.SubmitEvent();
-//    se.AddListener(SubmitName);
-//    inputField.GetComponent<InputField>().onEndEdit = se;*/
-//  }
-
-//  private void SubmitName(string arg0)
-//  {
-//    transform.parent.GetComponent<InterfaceManager>().Save(molecule,arg0);
-//    inputField.SetActive(false);
-//  }
-
-//  void OnTriggerEnter (Collider col)
-//  {
-//    string[] name = col.transform.name.Split (' ');
-    
-//    if (col.CompareTag ("Interactable") && !VR) {//name[0] == "Contact" && col.GetComponent<HandController>().IsPointing())
-//      //inputField.SetActive (true);
-//      molecule = col.gameObject;
-//    } 
-//    else if (col.CompareTag ("Interactable") && VR) {
-//      transform.parent.GetComponent<InterfaceManager>().Save(col.transform.parent.gameObject,"saved_" + moleculeID.ToString());
-//      moleculeID++;
-//    }
-//    if(col.CompareTag("Interactable"))
-//      Destroy(col.transform.parent.transform.gameObject);
-//  }
-//}
+  void Reset()
+  {
+    animator.SetBool("pushed", false);
+  }
+  
+  public void SetAtom (GameObject mol)
+  {
+    atom = mol;
+  }
+  
+}
