@@ -25,6 +25,7 @@ public class CapsuleManager : MonoBehaviour {
       for (int i = 0; i < colliders.Length; i++) {
         if ((colliders [i].CompareTag ("Interactable") || colliders [i].CompareTag ("Pivot")) && !hasMolecule) {
           transform.GetChild (0).GetChild (0).GetComponent<SaveButton> ().SetAtom (colliders [i].transform.gameObject);
+
           hasMolecule = true;
           foundMol = true;
           break;

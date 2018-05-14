@@ -26,16 +26,16 @@ public class BondController : MonoBehaviour
   {
     switch (bondType) {
     case 1:
-      distanceToDetach = 0.3f;
+      distanceToDetach = 0.25f;
       break;
     case 2:
-      distanceToDetach = 0.35f;
+      distanceToDetach = 0.30f;
       break;
     case 3:
-      distanceToDetach = 0.45f;
+      distanceToDetach = 0.35f;
       break;
     case 4:
-      distanceToDetach = 0.55f;
+      distanceToDetach = 0.40f;
       break;
 
     }

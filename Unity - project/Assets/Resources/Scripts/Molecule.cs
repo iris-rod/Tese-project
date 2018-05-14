@@ -63,6 +63,7 @@ public class Molecule : MonoBehaviour
   {
     pivotOffset = 0.1f;
     numberOfBonds = 1;
+    numberOfTaps = 1;
     graspedAtoms = 0;
     hitScale = new Vector3 (.15f, .15f, .15f);//desktop -> new Vector3(0.03f, 0.1f, 0.1f);
     pivotGrabbed = false;
@@ -82,7 +83,7 @@ public class Molecule : MonoBehaviour
     }
     
     if (split != "MoleculeV3(Clone)") {
-    for (int i = 0; i < transform.childCount; i++) {
+      for (int i = 0; i < transform.childCount; i++) {
         Transform child = transform.GetChild(i);
         if(child.CompareTag("Interactable") || child.CompareTag("Pivot"))
           child.GetComponent<InteractionBehaviour>().ignoreGrasping = true;
@@ -201,7 +202,7 @@ public class Molecule : MonoBehaviour
         lastInviBond.GetComponent<FeedbackBondController>().DestroyBond(atom1, atom2);
       GameObject newBond = Instantiate(bond, transform.position, transform.rotation);
       Color color = newBond.GetComponent<MeshRenderer>().material.color;
-      color.a = 0.4f;
+      color.a = 0.3f;
       newBond.GetComponent<MeshRenderer>().material.color = color;
       Destroy(newBond.GetComponent(typeof(BondController)));
       newBond.AddComponent(typeof(FeedbackBondController));
@@ -306,30 +307,6 @@ public class Molecule : MonoBehaviour
     if (pivotGrabbed && graspedAtoms == 0)
       canTranslate = true;
 
-    //testing avoid atoms intersection
-    if(graspedAtoms > 0)
-    {
-      for(int i = 0; i < transform.childCount; i++)
-      {
-        Transform child = transform.GetChild(i);
-        if (child.CompareTag("Interactable"))
-        {
-          child.GetComponent<Rigidbody>().useGravity = false;
-          child.GetComponent<Rigidbody>().isKinematic = false;
-        }
-      }
-    }else
-    {
-      for (int i = 0; i < transform.childCount; i++)
-      {
-        Transform child = transform.GetChild(i);
-        if (child.CompareTag("Interactable"))
-        {
-          child.GetComponent<Rigidbody>().useGravity = true;
-          child.GetComponent<Rigidbody>().isKinematic = true;
-        }
-      }
-    }
   }
 
   void LockDistanceToPivot()
@@ -362,20 +339,9 @@ public class Molecule : MonoBehaviour
   }
 
   //Check what type of bond must be created
-  void DefineBondType (GameObject atomA, GameObject atomB)
+  void DefineBondType (GameObject atomA, GameObject atomB, int type)
   {
-    //get available bonds from the atoms
-    int availableBondsA = atomA.GetComponent<Atom> ().GetAvailableBonds ();
-    int availableBondsB = atomB.GetComponent<Atom> ().GetAvailableBonds ();
-    if (availableBondsA <= 0 || availableBondsB <= 0)
-      return;
-
-    bondType = 0;
-    //get the smallest bond type possible between the two atoms
-    if (availableBondsA < availableBondsB)
-      bondType = availableBondsA;
-    else
-      bondType = availableBondsB;
+    bondType = type;
       
     switch (bondType) {
       case 1:
@@ -397,13 +363,13 @@ public class Molecule : MonoBehaviour
   void DefineBondTypeDist (GameObject atomA, GameObject atomB, float dist)
   {
     int distBond = 0;
-    if (dist <= .2f)
+    if (dist < .2f) //.2
       distBond = 4;
-    else if (dist <= .3f && dist > .2)
+    else if (dist < .25f && dist >= .2) //.3 .2
       distBond = 3;
-    else if (dist <= .4f && dist > 0.3f)
+    else if (dist < .3f && dist >= 0.35f) //.4 .3
       distBond = 2;
-    else if (dist > .4f)
+    else if (dist >= .35f) //.4
       distBond = 1;
 
     //get available bonds from the atoms
@@ -490,7 +456,7 @@ public class Molecule : MonoBehaviour
       if (numberOfTaps > 4)
         numberOfTaps = 1;
       canUpdateTap = false;
-      Invoke("ResetTap",.5f);
+      Invoke("ResetTap",.3f);
     }
   }
 
@@ -500,12 +466,12 @@ public class Molecule : MonoBehaviour
   }
 
   //Create a new bond between the given atoms
-  public void CreateBond(GameObject atomA, GameObject atomB, bool loaded)
+  public void CreateBond(GameObject atomA, GameObject atomB, bool loaded, int type)
   {
     //bonding automatically according to their available bonds
     if ((loaded))
     {
-      DefineBondType(atomA, atomB);
+      DefineBondType(atomA, atomB, type);
       GameObject newBond = Instantiate(bond, transform.position, transform.rotation);
       AddBond(newBond);
       newBond.GetComponent<BondController>().SetAtoms(atomA, atomB, bondType);
@@ -539,7 +505,10 @@ public class Molecule : MonoBehaviour
       atom2.transform.parent = transform;
       bondingAtoms = false;
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
+    } else {
+      //lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
     }
+    bondType = 0;
   }
 
   private void CreateBondTaps (int taps)
@@ -555,7 +524,10 @@ public class Molecule : MonoBehaviour
       atom2.transform.parent = transform;
       bondingAtoms = false;
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
+    } else {
+      lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
     }
+    bondType = 0;
   }
 
 
@@ -643,7 +615,7 @@ public class Molecule : MonoBehaviour
   void CheckIfSelected()
   {
     
-    Vector3 pos = new Vector3(transform.position.x-.43f,transform.position.y+1.5f, transform.position.z+.1f);//desktop -> new Vector3(transform.position.x, transform.position.y + .4f, transform.position.z + .03f);
+    Vector3 pos = new Vector3(transform.position.x - .43f,transform.position.y + 1.5f, transform.position.z + .1f);//desktop -> new Vector3(transform.position.x, transform.position.y + .4f, transform.position.z + .03f);
     Collider[] hitColliders = Physics.OverlapBox(pos, hitScale);
     if (hitColliders.Length > 0)
     {
@@ -655,13 +627,6 @@ public class Molecule : MonoBehaviour
           shelves.GetComponent<ShelfManager>().LoadMolecule(transform.gameObject);
       }
     }
-  }
-  
-  void OnDrawGizmos ()
-  {
-    Gizmos.color = Color.red;
-    Vector3 pos = new Vector3(transform.position.x-.43f,transform.position.y+1.5f, transform.position.z+.1f);
-    Gizmos.DrawWireCube(pos,hitScale);
   }
 
 

@@ -29,6 +29,7 @@ public class SaveButton : MonoBehaviour {
         if (colliders[i].transform.name.Split(' ')[0] == "Contact" && atom != null)
         {
           transform.parent.parent.parent.GetComponent<ShelfManager>().SaveMolecule(atom);
+          Destroy(atom.transform.parent.gameObject);
           animator.SetBool("pushed",true);
           Invoke("Reset", .5f);
           break;

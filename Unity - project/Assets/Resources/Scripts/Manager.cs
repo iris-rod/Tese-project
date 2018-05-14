@@ -25,11 +25,12 @@ public class Manager : MonoBehaviour
   public int rotationType;
   
 
-  private List<GameObject> atoms = new List<GameObject> ();
+  private List<GameObject> atoms = new List<GameObject> (); 
   private List<Vector3> atomsPositions = new List<Vector3> ();
-  private List<List<int>> allBondsFormed = new List<List<int>> ();
+  private List<List<int>> allBondsFormed = new List<List<int>> (); //bonds formed for each atom H - [1] O - [1,2] H - [2]
   private List<int> numberOfBonds = new List<int> ();
-  private Dictionary<int, GameObject[]> bonds = new Dictionary<int, GameObject[]> ();
+  private Dictionary<int, GameObject[]> bonds = new Dictionary<int, GameObject[]> (); //
+  private Dictionary<int,int> bondsType = new Dictionary<int,int>();
 
   private bool canLoad = true;
   private Vector3 initialPos = new Vector3(0,0,0);
@@ -50,12 +51,12 @@ public class Manager : MonoBehaviour
       if (child.CompareTag ("Interactable")) {
         string atomType = child.GetComponent<Atom> ().GetAtomType ();
         int allowedBonds = Properties.BONDS [atomType];
-        List<int> bondsFormed = child.GetComponent<Atom> ().GetBonds ();
+        Dictionary<int,int> bondsFormed = child.GetComponent<Atom> ().GetBonds ();
         int bondsMade = child.GetComponent<Atom> ().GetNumberBondsMade ();
         Vector3 pos = new Vector3 (child.position.x, child.position.y, child.position.z);
         text += "N atom: " + atomType + "_" + bondsMade + " _" + pos + "\n";        
-        for (int j = 0; j < bondsFormed.Count; j++) {
-          text += "    _" + bondsFormed [j] + "\n";
+        foreach(var par in bondsFormed){
+          text += "    _" + par.Key + "_" + par.Value +"\n";
         }
         text += "\n";
       }
@@ -69,9 +70,11 @@ public class Manager : MonoBehaviour
     if (name == "Rotation1" || name == "Rotation2")
       rotationInvi = true;
     numberOfBonds = new List<int> ();
+    bondsType = new Dictionary<int, int>();
     atoms = new List<GameObject> ();
     atomsPositions = new List<Vector3> ();
     allBondsFormed = new List<List<int>> ();
+    
     string text = "";
     try {
       text = HandleTextFile.ReadString (name + ".txt");
@@ -79,6 +82,7 @@ public class Manager : MonoBehaviour
       Debug.Log (e);
       text = "";
     }
+    
     //molecule position
     string[] firsSplit = text.Split ('M');
     Vector3 moleculePosition = StringToVector3 (firsSplit [1]);
@@ -87,15 +91,17 @@ public class Manager : MonoBehaviour
     
     //read atoms
     string[] split = firsSplit [2].Split ('N');
-
     for (int j = 1; j < split.Length; j++) {
       string[] atom = split [j].Split ('_');
       List<int> bondsFormed = new List<int> ();
-      for (int k = 3; k < atom.Length; k++) {
-        int value = int.Parse (atom [k]);
-        bondsFormed.Add (value);
-        if (!numberOfBonds.Contains (value))
-          numberOfBonds.Add (value);
+      for (int k = 3; k < atom.Length; k+=2) {
+        int bID = int.Parse (atom [k]);
+        int type = int.Parse(atom[k+1]);
+        bondsFormed.Add (bID);
+        if (!numberOfBonds.Contains (bID)) {
+          numberOfBonds.Add (bID);
+          bondsType.Add(bID,type);
+        }
       }
       allBondsFormed.Add (bondsFormed);
     }
@@ -155,7 +161,7 @@ public class Manager : MonoBehaviour
   {
 
     if (atoms.Count == 2) {
-      molecule.GetComponent<Molecule> ().CreateBond (atoms [1], atoms [0], true);
+      molecule.GetComponent<Molecule> ().CreateBond (atoms [1], atoms [0], true, bondsType[numberOfBonds[0]]);
       float xOffset1 = atomsPositions[0].x - platform.transform.position.x;
       float zOffset1 = atomsPositions[0].z - platform.transform.position.z;
       float xOffset2 = atomsPositions[1].x - platform.transform.position.x;
@@ -177,18 +183,18 @@ public class Manager : MonoBehaviour
       for (int i = 0; i < numberOfBonds.Count; i++)
       {
         int bondId = numberOfBonds[i];
-        molecule.GetComponent<Molecule>().CreateBond(bonds[bondId][0], bonds[bondId][1], true);
+        molecule.GetComponent<Molecule>().CreateBond(bonds[bondId][0], bonds[bondId][1], true,bondsType[bondId]);
       }
     }
   }
   
-
+  
   void AddBondDictionary (GameObject atom, int ind)
   {
-    List<int> atomBonds = allBondsFormed [ind];
+    List<int> atomBonds = allBondsFormed [ind]; //os bonds do atomo
     for (int i = 0; i < atomBonds.Count; i++) {
-      int bondId = atomBonds [i];
-      if (bonds [bondId] [0] == null)
+      int bondId = atomBonds [i]; //cada bond do atomo
+      if (bonds [bondId] [0] == null) //identificar o atomo como uma das ends do bond
         bonds [bondId] [0] = atom;
       else
         bonds [bondId] [1] = atom;
@@ -236,15 +242,7 @@ public class Manager : MonoBehaviour
     
     if (Input.GetKeyDown ("s")) {
       GameObject mol = GameObject.Find("MoleculeV3(Clone)");
-      SaveMolecule(mol,"Rotation1");
-    }
-    
-    if (handController.GetComponent<HandController> ().IsPointing () && PointToLoad) {
-      Vector3 fingerPos = handController.GetComponent<HandController> ().GetIndexPosition ();
-      Vector3 fingerDir = handController.GetComponent<HandController> ().GetIndexDirection ();
-      SManager.LoadShelf (fingerPos, fingerDir);
-    } else {
-      SManager.CancelLoad();
+      SaveMolecule(mol,"Rotation2");
     }
 
   }

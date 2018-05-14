@@ -23,10 +23,6 @@ public class HandController : MonoBehaviour
   private bool Z, X, fingerStreched;
   private int rotationSign;
 
-  //pointing at shelf
-  private Vector3 indexPos, indexDir;
-  private bool pointing;
-
   //detect hand movement
   private Vector3 lastHandPosition, lastHandNormal;
   private Vector3 positionMovement;
@@ -46,7 +42,6 @@ public class HandController : MonoBehaviour
   {
     movementFinished = false;
     flipping = false;
-    pointing = false;
     lastHandRight = false;
     canDetect = true;
     interval = 0.90f;
@@ -61,16 +56,16 @@ public class HandController : MonoBehaviour
     rotationType = transform.parent.transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
   }
 
-  public void updateCurrentHand(Hand leapHand)
+  public void updateCurrentHand (Hand leapHand)
   {
-    CheckFingersPosition(leapHand);    
-    pivots = GameObject.FindGameObjectsWithTag("Pivot");
+    CheckFingersPosition (leapHand);    
+    pivots = GameObject.FindGameObjectsWithTag ("Pivot");
+
     if(!leftHandGO.activeSelf || !rightHandGO)
       StopRotation();
     if(!leftHandGO.activeSelf)
       StopTranslate();
-      //CheckHandMovement(leapHand); //use with notepad only
-      
+
     if (rotating)
       Rotate(leapHand);
     if (translate)
@@ -89,7 +84,6 @@ public class HandController : MonoBehaviour
 
     interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
 
-    Debug.Log(pivots.Length);
     int grabbedAtoms = 0;
     for (int i = 0; i < interactableObjs.Length; i++)
     {
@@ -238,17 +232,7 @@ public class HandController : MonoBehaviour
       {
         StopRotation();
       }
-      //pointing
-      if (hand.Fingers[1].IsExtended && !hand.Fingers[0].IsExtended && !hand.Fingers[2].IsExtended && !hand.Fingers[3].IsExtended && !hand.Fingers[4].IsExtended)
-      {
-        pointing = true;
-        indexPos = hand.Fingers[1].TipPosition.ToVector3();
-        indexDir = hand.Fingers[1].Direction.ToVector3();
-      }
-      else
-      {
-        pointing = false;
-      }
+      
     }
     else
     {
@@ -313,9 +297,8 @@ public class HandController : MonoBehaviour
     for (int i = 0; i < pivots.Length; i++)
     {
       GameObject obj = pivots[i];
-      if (obj!= null )
+      if (obj != null )
       {
-      Debug.Log("stop rotation : " + obj.transform.parent.name);
         obj.transform.parent.GetComponent<Molecule>().StopRotate();
         break;
       }
@@ -356,18 +339,5 @@ public class HandController : MonoBehaviour
   }
 
 
-  public bool IsPointing()
-  {
-    return pointing;
-  }
-
-  public Vector3 GetIndexPosition()
-  {
-    return indexPos;
-  }
-  public Vector3 GetIndexDirection()
-  {
-    return indexDir;
-  }
 
 }
