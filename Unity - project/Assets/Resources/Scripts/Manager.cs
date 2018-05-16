@@ -229,17 +229,28 @@ public class Manager : MonoBehaviour
 
   void Update ()
   {
-    if (Input.GetKeyDown ("1") && platform.GetComponent<Platform> ().IsFree ()) {
+    if (Input.GetKeyDown ("s") && platform.GetComponent<Platform> ().IsFree ()) {
       BBManager.SetTexture ("1");
+      GetComponent<TestsManager>().CheckReloadTask("partial mol");
       LoadMolecule ("partial mol", false);
-    } else if (Input.GetKeyDown ("2") && platform.GetComponent<Platform> ().IsFree ()) {
+    } else if (Input.GetKeyDown ("a") && platform.GetComponent<Platform> ().IsFree ()) {
       BBManager.SetTexture ("2");
       LoadMolecule ("CO2", false);
-    } else if (Input.GetKeyDown ("8"))
+      GetComponent<TestsManager>().CheckReloadTask("CO2");
+    }
+    //invisible final positions for rotations
+    else if (Input.GetKeyDown ("z"))
       LoadMolecule ("Rotation1", false);
-    else if (Input.GetKeyDown ("9"))
+    else if (Input.GetKeyDown ("x"))
       LoadMolecule ("Rotation2", false);
-    
+
+    //invisible final positions for moves
+    else if (Input.GetKeyDown("c"))
+      LoadMolecule("Move1", false);
+    else if (Input.GetKeyDown("b"))
+      LoadMolecule("Move2", false);
+
+
     if (Input.GetKeyDown ("s")) {
       GameObject mol = GameObject.Find("MoleculeV3(Clone)");
       SaveMolecule(mol,"Rotation2");

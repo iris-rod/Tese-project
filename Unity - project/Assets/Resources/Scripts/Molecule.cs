@@ -27,6 +27,7 @@ public class Molecule : MonoBehaviour
   public GameObject rotationToogle;
   private GameObject pivot;
   private GameObject handController;
+  private GameObject camera;
 
   //variables picked up from the manager
   private int bondType;
@@ -49,7 +50,7 @@ public class Molecule : MonoBehaviour
 
   void Awake()
   {
-    GameObject camera = GameObject.FindGameObjectWithTag("MainCamera");
+    camera = GameObject.FindGameObjectWithTag("MainCamera");
     shelves = GameObject.Find("shelves");
     rotationType = camera.GetComponent<Manager>().rotationType;
     MultipleLines = camera.GetComponent<Manager>().MultipleLines;
@@ -118,6 +119,7 @@ public class Molecule : MonoBehaviour
   {
     if (!isMini)
     {
+      CheckVariables();
       CheckAtomsGrasped();
       UpdateStructure();
       graspedAtoms = 0;
@@ -133,6 +135,12 @@ public class Molecule : MonoBehaviour
     {
       CheckIfSelected();
     }
+  }
+
+  void CheckVariables()
+  {
+    typeOfBonding = camera.GetComponent<Manager>().TypeOfBonding;
+    rotationType = camera.GetComponent<Manager>().rotationType;
   }
 
   void CheckDistance()
