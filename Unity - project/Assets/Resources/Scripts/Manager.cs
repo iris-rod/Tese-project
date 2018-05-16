@@ -17,11 +17,8 @@ public class Manager : MonoBehaviour
 
   public Leap.Unity.Interaction.InteractionManager manager;
   public bool VR;
-  public bool setOnHand;
   public bool MultipleLines;
   public int TypeOfBonding;
-  public bool PointToLoad;
-  public bool UseButtonToLoad;
   public int rotationType;
   
 
@@ -66,9 +63,10 @@ public class Manager : MonoBehaviour
 
   public GameObject LoadMolecule (string name, bool mini)
   {
-    bool rotationInvi = false;
-    if (name == "Rotation1" || name == "Rotation2")
-      rotationInvi = true;
+    string auxName = name.Split('_')[0];
+    bool invi = false;
+    if (auxName == "Rotation" || auxName == "Move")
+      invi = true;
     numberOfBonds = new List<int> ();
     bondsType = new Dictionary<int, int>();
     atoms = new List<GameObject> ();
@@ -116,7 +114,7 @@ public class Manager : MonoBehaviour
       loadedAtom.GetComponent<Atom> ().handController = handController;
       loadedAtom.GetComponent<Atom> ().manager = manager;
       Material mat = Resources.Load ("Materials/" + atomType + " 2", typeof(Material)) as Material;
-      if (rotationInvi)
+      if (invi)
         mat = Resources.Load ("Materials/" + atomType + " Invi", typeof(Material)) as Material;
       loadedAtom.GetComponent<Atom> ().SetProperties (atomType, mat, allowedBonds);
       loadedAtom.transform.parent = molecule.transform;
@@ -129,7 +127,7 @@ public class Manager : MonoBehaviour
       
     BondAtoms (molecule);
     
-    if (!rotationInvi)
+    if (!invi)
       molecule.transform.position += GetMoleculeFinalPos (name);
     else {
       molecule.name = name;
@@ -229,7 +227,7 @@ public class Manager : MonoBehaviour
 
   void Update ()
   {
-    if (Input.GetKeyDown ("s") && platform.GetComponent<Platform> ().IsFree ()) {
+    if (Input.GetKeyDown ("q") && platform.GetComponent<Platform> ().IsFree ()) {
       BBManager.SetTexture ("1");
       GetComponent<TestsManager>().CheckReloadTask("partial mol");
       LoadMolecule ("partial mol", false);
@@ -240,20 +238,20 @@ public class Manager : MonoBehaviour
     }
     //invisible final positions for rotations
     else if (Input.GetKeyDown ("z"))
-      LoadMolecule ("Rotation1", false);
+      LoadMolecule ("Rotation_1", false);
     else if (Input.GetKeyDown ("x"))
-      LoadMolecule ("Rotation2", false);
+      LoadMolecule ("Rotation_2", false);
 
     //invisible final positions for moves
     else if (Input.GetKeyDown("c"))
-      LoadMolecule("Move1", false);
+      LoadMolecule("Move_1", false);
     else if (Input.GetKeyDown("b"))
-      LoadMolecule("Move2", false);
+      LoadMolecule("Move_2", false);
 
 
     if (Input.GetKeyDown ("s")) {
       GameObject mol = GameObject.Find("MoleculeV3(Clone)");
-      SaveMolecule(mol,"Rotation2");
+      SaveMolecule(mol,"Move_2");
     }
 
   }

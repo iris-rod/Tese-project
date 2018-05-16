@@ -32,6 +32,10 @@ public class ClearButton : MonoBehaviour {
               if (molecules [j].name.Split ('_') [0] != "Mini")
                 Destroy (molecules [j]);
             }
+            GameObject[] invis = GameObject.FindGameObjectsWithTag ("Invisible");
+            for (int j = 0; j < invis.Length; j++) {
+                Destroy (invis [j]);
+            }
           } else if (obj.ToLower () == "atom") {
             GameObject[] atoms = GameObject.FindGameObjectsWithTag ("Interactable");
             for (int j = 0; j < atoms.Length; j++) {

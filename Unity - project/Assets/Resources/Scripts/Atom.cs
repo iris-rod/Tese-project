@@ -115,12 +115,6 @@ public class Atom : MonoBehaviour {
       }
     }
   }
-  
-  void OnDrawGizmos ()
-  {
-  //Gizmos.color = Color.yellow;
-  //Gizmos.DrawSphere(transform.position, radiusCollision);
-  }
 
   public void SetDistanceToPivot(Vector3 pivotPos)
   {
@@ -203,10 +197,6 @@ public class Atom : MonoBehaviour {
     foreach(var par in bonds){
       bondIDType.Add(par.Key, par.Value);
     }
-    /*for(int i = 0; i < bonds.Count; i++)
-    {
-      bondIDs.Add(bonds[i]);
-    }*/
   }
 
   public int GetNumberBondsMade()

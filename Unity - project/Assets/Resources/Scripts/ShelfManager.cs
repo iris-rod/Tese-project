@@ -6,7 +6,6 @@ using UnityEngine;
 public class ShelfManager : MonoBehaviour {
 
   private bool VR;
-  private bool Buttons;
   private int moleculeID;
   private bool canSave;
   private GameObject platform;
@@ -46,7 +45,6 @@ public class ShelfManager : MonoBehaviour {
     if (start)
     {
       VR = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>().VR;
-      Buttons = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>().UseButtonToLoad;
       start = false;
     }
     if (mini != null && newMini) {
@@ -70,7 +68,7 @@ public class ShelfManager : MonoBehaviour {
   private Vector3 GetMiniPosition ()
   {
     Transform button =  SetMoleculeOnSpot();
-    Vector3 spotPosition = new Vector3(button.parent.position.x, button.parent.position.y, button.parent.position.z);//-1.5, -.1
+    Vector3 spotPosition = new Vector3(button.parent.position.x, button.parent.position.y, button.parent.position.z);
     //change atoms position closer to the molecule object
     for(int i = 0; i < mini.transform.childCount; i++)
     {

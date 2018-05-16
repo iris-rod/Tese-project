@@ -34,8 +34,6 @@ public class Molecule : MonoBehaviour
   private int rotationType;
   private int typeOfBonding;
   private bool MultipleLines;
-  private bool PointToLoad;
-  private bool UseButtonToLoad;
 
   //variables used to bond atoms
   private bool bondingAtoms, canUpdateTap;
@@ -55,8 +53,6 @@ public class Molecule : MonoBehaviour
     rotationType = camera.GetComponent<Manager>().rotationType;
     MultipleLines = camera.GetComponent<Manager>().MultipleLines;
     typeOfBonding = camera.GetComponent<Manager>().TypeOfBonding;
-    PointToLoad = camera.GetComponent<Manager>().PointToLoad;
-    UseButtonToLoad = camera.GetComponent<Manager>().UseButtonToLoad;
   }
 
   // Use this for initialization
@@ -78,22 +74,46 @@ public class Molecule : MonoBehaviour
     UpdateStructure ();
     isMini = false;
     string split = transform.name.Split ('_') [0];
+    
     if (split == "Mini") {
       isMini = true;
       pivotOffset = 0.04f;
-    }
-    
-    if (split != "MoleculeV3(Clone)") {
+      
+      //disable interaction with saved molecules on the shelf
       for (int i = 0; i < transform.childCount; i++) {
         Transform child = transform.GetChild(i);
         if(child.CompareTag("Interactable") || child.CompareTag("Pivot"))
           child.GetComponent<InteractionBehaviour>().ignoreGrasping = true;
       }
     }
+    //disable all scripts in atoms of molecules used for testing 
     if (transform.name != "MoleculeV3(Clone)" && !isMini)
     {
       pivot.transform.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Pivot Invi", typeof(Material)) as Material;
+      DisableScriptsAtoms();
     }
+  }
+  
+  private void DisableScriptsAtoms ()
+  {
+    for (int i = 0; i < transform.childCount; i++) {
+      Transform child = transform.GetChild (i);
+      if (child.CompareTag ("Interactable")) {
+        child.GetComponent<Atom> ().enabled = false;
+        child.GetComponent<InteractionBehaviour> ().enabled = false;
+        child.GetComponent<BondRepManager> ().enabled = false;
+        child.GetComponent<SphereCollider> ().enabled = false;
+      } else if (child.CompareTag ("Pivot")) {
+        child.GetComponent<InteractionBehaviour> ().enabled = false;
+        child.GetComponent<PivotController> ().enabled = false;
+        child.GetComponent<SphereCollider> ().enabled = false;
+      } else if (child.CompareTag ("Bond")) {
+        //child.GetComponent<BondController> ().enabled = false;
+      }
+    }
+   transform.gameObject.AddComponent(typeof(InvisibleMoleculeBehaviour));
+   transform.GetComponent<InvisibleMoleculeBehaviour>().SetTask(transform.name.ToLower());
+   transform.tag = "Invisible";
   }
 
   public void SetHandController(GameObject handCtrl)
@@ -131,10 +151,6 @@ public class Molecule : MonoBehaviour
       else if (bondingAtoms && typeOfBonding == 2)
         CheckTaps();
     }
-    else if (isMini && !UseButtonToLoad)
-    {
-      CheckIfSelected();
-    }
   }
 
   void CheckVariables()
@@ -165,17 +181,17 @@ public class Molecule : MonoBehaviour
     int bondNumber = 1;
     if (dist)
     {
-      if (value <= .2f)
+      if (value <= .15f)
       {
         bond = quadrupleBond;
         bondNumber = 4;
       }
-      else if (value <= .3f && value > .2)
+      else if (value <= .20f && value > .15f)
       {
         bond = tripleBond;
         bondNumber = 3;
       }
-      else if (value <= .4f && value > 0.3f)
+      else if (value <= .25f && value > 0.20)
       {
         bond = doubleBond;
         bondNumber = 2;
@@ -371,13 +387,13 @@ public class Molecule : MonoBehaviour
   void DefineBondTypeDist (GameObject atomA, GameObject atomB, float dist)
   {
     int distBond = 0;
-    if (dist < .2f) //.2
+    if (dist < .15f) //.2
       distBond = 4;
-    else if (dist < .25f && dist >= .2) //.3 .2
+    else if (dist < .20f && dist >= .15f) //.3 .2
       distBond = 3;
-    else if (dist < .3f && dist >= 0.35f) //.4 .3
+    else if (dist < .25f && dist >= 0.20f) //.4 .3
       distBond = 2;
-    else if (dist >= .35f) //.4
+    else if (dist >= .25f) //.4
       distBond = 1;
 
     //get available bonds from the atoms
@@ -396,6 +412,7 @@ public class Molecule : MonoBehaviour
     if (distBond <= bondType)
       bondType = distBond;
     else {
+      Debug.Log("here");
       bondType = -1;
       return;
     }
@@ -514,7 +531,8 @@ public class Molecule : MonoBehaviour
       bondingAtoms = false;
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
     } else {
-      //lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
+      Debug.Log(lastInviBond);
+      lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
     }
     bondType = 0;
   }
@@ -619,23 +637,6 @@ public class Molecule : MonoBehaviour
     translate = false;
   }
 
-  //Check if the mini in the shelf was touched
-  void CheckIfSelected()
-  {
-    
-    Vector3 pos = new Vector3(transform.position.x - .43f,transform.position.y + 1.5f, transform.position.z + .1f);//desktop -> new Vector3(transform.position.x, transform.position.y + .4f, transform.position.z + .03f);
-    Collider[] hitColliders = Physics.OverlapBox(pos, hitScale);
-    if (hitColliders.Length > 0)
-    {
-
-      for (int i = 0; i < hitColliders.Length; i++)
-      {
-        string name = hitColliders[i].name.Split(' ')[0];
-        if (name == "Contact" && ((PointToLoad && isPointed)) || (!PointToLoad))
-          shelves.GetComponent<ShelfManager>().LoadMolecule(transform.gameObject);
-      }
-    }
-  }
 
 
   //highlight the mini on the shelf that is being pointed at

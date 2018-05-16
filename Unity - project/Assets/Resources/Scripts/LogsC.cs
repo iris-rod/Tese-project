@@ -84,9 +84,21 @@ public class LogsC : MonoBehaviour
     subtask["cleanMolecule"] = 0;
     subtask["cleanAtoms"] = 0;
     subtask["reload"] = 0;
+    subtask["distance"] = 0.0f;
 
     int taskId = session["tasks"].Count - 1;
     session["tasks"][taskId]["subtasks"].Add(subtask);
+  }
+
+  public void sessionSubTaskDistance (float dist)
+  {
+    if (session == null)
+      return;
+
+    int taskId = session["task"].Count - 1;
+    int subtaskId = session["tasks"][taskId]["subtasks"].Count - 1;
+
+    session["task"][taskId]["subtasks"][subtaskId]["distance"] = dist;
   }
 
   public void sessionSubTaskCleanMol()
