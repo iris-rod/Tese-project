@@ -100,7 +100,6 @@ public class TestsManager : MonoBehaviour {
 
     if (Input.GetKeyDown (KeyCode.KeypadEnter)) {
       if (!subtaskInSession) {
-      Debug.Log("new");
         subtaskInSession = true;
         LogsC.Instance.sessionNewSubTask ();
       }

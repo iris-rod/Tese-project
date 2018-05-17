@@ -15,16 +15,15 @@ public class PivotController : MonoBehaviour {
   private Vector3 positionEndZ, positionEndX;
   private bool endZGrabbed, endXGrabbed;
   private Quaternion rotation;
-
-  public GameObject axisEnd;
+  
   public bool Axis;
+
+  private bool graspedByLeft;
 
 
   // Use this for initialization
   void Start ()
   {
-    //positionEndX = new Vector3(-0.3f,2,0.2f);
-    //positionEndX = new Vector3(-0.3f, 2.5f, 0.2f);
     endZGrabbed = false;
     endXGrabbed = false;
     grabbed = false;
@@ -42,20 +41,22 @@ public class PivotController : MonoBehaviour {
     {
       highlightGrasp.SetFloat("_Outline", 0.005f);
       transform.rotation.ToAngleAxis(out currentAngle, out axis);
-      if (Axis)
-      {
-        if (!grabbed) SetEndAxis();
-        CheckAxisEnd();
-      }
     }
     else
     {
       highlightGrasp.SetFloat("_Outline", 0);
-      if(Axis)
-        RemoveAxis();
-      grabbed = false;
     }
     //transform.rotation = rotation;
+  }
+
+  public bool IsGraspedByLeft()
+  {
+    return graspedByLeft;
+  }
+
+  public void SetGraspedByLeft(bool val)
+  {
+    graspedByLeft = val;
   }
 
   void CheckAxisEnd()
@@ -99,23 +100,6 @@ public class PivotController : MonoBehaviour {
   {
     Destroy(endZ);
     Destroy(endX);
-  }
-
-  void SetEndAxis()
-  {
-    positionEndZ = new Vector3(transform.position.x, transform.position.y + 0.15f, transform.position.z);
-    positionEndX = new Vector3(transform.position.x - 0.2f, transform.position.y, transform.position.z);
-
-    endZ = Instantiate(axisEnd,positionEndZ,transform.rotation);
-    endZ.transform.parent = transform.parent;
-    endZ.GetComponent<InteractionBehaviour>().manager = transform.GetComponent<InteractionBehaviour>().manager;
-    HMZ = endZ.GetComponent<MeshRenderer>().materials[1];
-
-    endX = Instantiate(axisEnd, positionEndX, transform.rotation);
-    endX.transform.parent = transform.parent;
-    endX.GetComponent<InteractionBehaviour>().manager = transform.GetComponent<InteractionBehaviour>().manager;
-    HMX = endX.GetComponent<MeshRenderer>().materials[1];
-    grabbed = true;
   }
 
   public float GetAngle()

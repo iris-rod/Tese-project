@@ -22,6 +22,7 @@ public class HandController : MonoBehaviour
   private float interval;
   private bool Z, X, fingerStreched;
   private int rotationSign;
+  private Vector3 leftHandPosition, rightHandPosition;
 
   //detect hand movement
   private Vector3 lastHandPosition, lastHandNormal;
@@ -32,7 +33,6 @@ public class HandController : MonoBehaviour
   private GameObject grabbedPivot; // stop grasping when the hand is too far away from the GO
   public GameObject leftHandGO;
   public GameObject rightHandGO;
-  
 
   //testing variables
   private bool UpDown = true;
@@ -52,21 +52,22 @@ public class HandController : MonoBehaviour
     translate = false;
     interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
     pivots = GameObject.FindGameObjectsWithTag("Pivot");
-    rotationType = transform.parent.transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
+    rotationType = transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
   }
 
   public void updateCurrentHand (Hand leapHand)
   {
-    rotationType = transform.parent.transform.parent.GetComponent<Manager> ().rotationType;
+    rotationType = transform.parent.GetComponent<Manager> ().rotationType;
     CheckFingersPosition (leapHand);    
     pivots = GameObject.FindGameObjectsWithTag ("Pivot");
+
 
     if (!leftHandGO.activeSelf || !rightHandGO.activeSelf) {
       StopRotation ();
     }
     if (!leftHandGO.activeSelf)
       StopTranslate ();
-      Debug.Log("r: "  +rotating + " t: "+translate);
+
     //so roda se as duas maos estiverem a aparecer
     if (leftHandGO.activeSelf && rightHandGO.activeSelf) {
       if (rotating && !translate)
@@ -80,9 +81,16 @@ public class HandController : MonoBehaviour
       else
         rightHand = leapHand;
 
-      if (leapHand.IsLeft)
-        lastPalmPosition = leapHand.PalmPosition.ToVector3 ();
-        
+    if (leapHand.IsLeft)
+    {
+      lastPalmPosition = leapHand.PalmPosition.ToVector3();
+      leftHandPosition = leapHand.PalmPosition.ToVector3();
+    }
+    else
+    {
+      rightHandPosition = leapHand.PalmPosition.ToVector3();
+    }
+    CheckGraspingPivot();
     CheckDistanceToPivot(leapHand);
   }
 
@@ -121,20 +129,49 @@ public class HandController : MonoBehaviour
     }
     
   }
-  
+
+  // check which hand is grabbing the pivot
+  void CheckGraspingPivot()
+  {
+    for(int i = 0; i < pivots.Length; i++)
+    {
+      GameObject pivot = pivots[i];
+      if(pivot != null && pivot.GetComponent<InteractionBehaviour>().isGrasped)
+      {
+        float leftDist = 100;
+        float rightDist = 100;
+        if (leftHandGO != null)
+          leftDist = Vector3.Distance(leftHandPosition, pivot.transform.position);
+        if(rightHandGO != null)
+          rightDist = Vector3.Distance(rightHandPosition, pivot.transform.position);
+
+        if (rightDist < leftDist)
+          pivot.GetComponent<PivotController>().SetGraspedByLeft(false);
+        else
+          pivot.GetComponent<PivotController>().SetGraspedByLeft(true);
+      }
+    }
+  }
+
+  // avoid pivot being grabbed when the hand is to far from it
   void CheckDistanceToPivot (Hand hand)
   {
     float maxDist = .1f;
-      for (int i = 0; i < pivots.Length; i++) {
-        GameObject pivot = pivots [i];
-        if (pivot != null && pivot.GetComponent<InteractionBehaviour> ().isGrasped) {
-          if (Vector3.Distance (pivot.transform.position, hand.PalmPosition.ToVector3()) > maxDist) {
-            pivot.GetComponent<InteractionBehaviour> ().ignoreGrasping = true;
+    for (int i = 0; i < pivots.Length; i++) {
+       GameObject pivot = pivots [i];
+      if (hand.IsLeft == pivot.GetComponent<PivotController>().IsGraspedByLeft())
+      {
+        //Debug.Log(pivot.GetComponent<PivotController>().IsGraspedByLeft());
+        if (pivot != null && pivot.GetComponent<InteractionBehaviour>().isGrasped)
+        {
+          if (Vector3.Distance(pivot.transform.position, hand.PalmPosition.ToVector3()) > maxDist)
+          {
+            pivot.GetComponent<InteractionBehaviour>().ignoreGrasping = true;
             grabbedPivot = pivot;
-            Invoke("ResetGrasp",0.5f);
+            Invoke("ResetGrasp", 0.5f);
           }
-        } 
-      
+        }
+      }
     }
   }
   
