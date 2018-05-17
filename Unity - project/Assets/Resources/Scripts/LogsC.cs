@@ -8,7 +8,7 @@ public class LogsC : MonoBehaviour
 
   public static LogsC Instance;
   private JsonData logData = null;
-  private string fileName = "log.json";
+  private string fileName = "log_lixo.json";
 
   private JsonData session = null;
 
@@ -66,13 +66,35 @@ public class LogsC : MonoBehaviour
 
   public void sessionNewTask(string taskName)
   {
+    //int taskId = session["tasks"].Count - 1;
+    //float time = float.Parse(session["tasks"][taskId]["time"].ToString());
+
+    //session["tasks"][taskId]["time"] = Time.realtimeSinceStartup - time;
+    
+    addNewTask(taskName);
+  }
+  
+  public void sessionStopTask ()
+  {
     int taskId = session["tasks"].Count - 1;
     float time = float.Parse(session["tasks"][taskId]["time"].ToString());
 
     session["tasks"][taskId]["time"] = Time.realtimeSinceStartup - time;
-    
-    addNewTask(taskName);
   }
+
+  #region tasks
+
+  private void addNewTask(string taskName)
+  {
+    JsonData task = new JsonData();
+
+    task["nome"] = taskName;
+    task["time"] = Time.realtimeSinceStartup;
+    task["subtasks"] = new JsonData();
+    session["tasks"].Add(task);
+    addNewSubTask(1);
+  }
+  #endregion
 
   #region subtasks
   private void addNewSubTask(int i)
@@ -88,6 +110,15 @@ public class LogsC : MonoBehaviour
 
     int taskId = session["tasks"].Count - 1;
     session["tasks"][taskId]["subtasks"].Add(subtask);
+  }
+
+  public void sessionStopSubTask ()
+  {
+    int taskId = session["tasks"].Count - 1;
+    int subtaskId = session["tasks"][taskId]["subtasks"].Count - 1;
+    float time = float.Parse(session["tasks"][taskId]["subtasks"][subtaskId]["time"].ToString());
+
+    session["tasks"][taskId]["subtasks"][subtaskId]["time"] = Time.realtimeSinceStartup - time;
   }
 
   public void sessionSubTaskDistance (float dist)
@@ -141,59 +172,14 @@ public class LogsC : MonoBehaviour
   {
     int taskId = session["tasks"].Count - 1;
     int subtaskId = session["tasks"][taskId]["subtasks"].Count - 1;
-    float time = float.Parse(session["tasks"][taskId]["subtasks"][subtaskId]["time"].ToString());
+    //float time = float.Parse(session["tasks"][taskId]["subtasks"][subtaskId]["time"].ToString());
 
-    session["tasks"][taskId]["subtasks"][subtaskId]["time"] = Time.realtimeSinceStartup - time;
+    //session["tasks"][taskId]["subtasks"][subtaskId]["time"] = Time.realtimeSinceStartup - time;
     addNewSubTask(subtaskId+2);
   }
   #endregion subtasks
 
-  #region tasks
 
-  private void addNewTask(string taskName)
-  {
-    JsonData task = new JsonData();
-
-    task["nome"] = taskName;
-    task["time"] = Time.realtimeSinceStartup;
-    task["subtasks"] = new JsonData();
-    session["tasks"].Add(task);
-    addNewSubTask(1);
-  }
-
-  /*public void sessionTaskCleanMol()
-  {
-    if (session == null)
-      return;
-
-    int taskId = session["task"].Count - 1;
-    int nr = int.Parse(session["task"][taskId]["cleanMolecule"].ToString());
-
-    session["task"][taskId]["cleanMolecule"] = nr + 1;
-  }
-
-  public void sessionTaskCleanAtom()
-  {
-    if (session == null)
-      return;
-
-    int taskId = session["tasks"].Count - 1;
-    int nr = int.Parse(session["tasks"][taskId]["cleanAtoms"].ToString());
-
-    session["tasks"][taskId]["cleanAtoms"] = nr + 1;
-  }
-
-  public void sessionTaskReload()
-  {
-    if (session == null)
-      return;
-
-    int taskId = session["tasks"].Count - 1;
-    int nr = int.Parse(session["tasks"][taskId]["reload"].ToString());
-
-    session["tasks"][taskId]["reload"] = nr + 1;
-  }*/
-  #endregion
 
   #region fileUtils
   public string getSaveDir()

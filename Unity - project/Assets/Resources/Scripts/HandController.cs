@@ -27,11 +27,12 @@ public class HandController : MonoBehaviour
   private Vector3 lastHandPosition, lastHandNormal;
   private Vector3 positionMovement;
   private Vector3 lastMovementNorm, lastNormalNorm;
-  private bool flipping, movementFinished;
   private bool canDetect;
   private bool lastHandRight;
+  private GameObject grabbedPivot; // stop grasping when the hand is too far away from the GO
   public GameObject leftHandGO;
   public GameObject rightHandGO;
+  
 
   //testing variables
   private bool UpDown = true;
@@ -40,8 +41,6 @@ public class HandController : MonoBehaviour
   // Use this for initialization
   void Start()
   {
-    movementFinished = false;
-    flipping = false;
     lastHandRight = false;
     canDetect = true;
     interval = 0.90f;
@@ -58,23 +57,33 @@ public class HandController : MonoBehaviour
 
   public void updateCurrentHand (Hand leapHand)
   {
+    rotationType = transform.parent.transform.parent.GetComponent<Manager> ().rotationType;
     CheckFingersPosition (leapHand);    
     pivots = GameObject.FindGameObjectsWithTag ("Pivot");
 
-    if(!leftHandGO.activeSelf || !rightHandGO)
-      StopRotation();
-    if(!leftHandGO.activeSelf)
-      StopTranslate();
+    if (!leftHandGO.activeSelf || !rightHandGO.activeSelf) {
+      StopRotation ();
+    }
+    if (!leftHandGO.activeSelf)
+      StopTranslate ();
+      Debug.Log("r: "  +rotating + " t: "+translate);
+    //so roda se as duas maos estiverem a aparecer
+    if (leftHandGO.activeSelf && rightHandGO.activeSelf) {
+      if (rotating && !translate)
+        Rotate (leapHand);
+    }
+      if (translate && !rotating)
+        Translate (leapHand);
 
-    if (rotating)
-      Rotate(leapHand);
-    if (translate)
-      Translate(leapHand);
+      if (leapHand.IsLeft)
+        leftHand = leapHand;
+      else
+        rightHand = leapHand;
 
-    if (leapHand.IsLeft) leftHand = leapHand;
-    else rightHand = leapHand;
-
-    if (leapHand.IsLeft) lastPalmPosition = leapHand.PalmPosition.ToVector3();
+      if (leapHand.IsLeft)
+        lastPalmPosition = leapHand.PalmPosition.ToVector3 ();
+        
+    CheckDistanceToPivot(leapHand);
   }
 
   void Update()
@@ -110,6 +119,27 @@ public class HandController : MonoBehaviour
         obj.GetComponent<Atom>().DisableBond();
       }
     }
+    
+  }
+  
+  void CheckDistanceToPivot (Hand hand)
+  {
+    float maxDist = .1f;
+      for (int i = 0; i < pivots.Length; i++) {
+        GameObject pivot = pivots [i];
+        if (pivot != null && pivot.GetComponent<InteractionBehaviour> ().isGrasped) {
+          if (Vector3.Distance (pivot.transform.position, hand.PalmPosition.ToVector3()) > maxDist) {
+            pivot.GetComponent<InteractionBehaviour> ().ignoreGrasping = true;
+            grabbedPivot = pivot;
+            Invoke("ResetGrasp",0.5f);
+          }
+        } 
+      
+    }
+  }
+  
+  void ResetGrasp(){
+    grabbedPivot.GetComponent<InteractionBehaviour> ().ignoreGrasping = false;
   }
 
   void CheckKeyboard()
@@ -222,7 +252,7 @@ public class HandController : MonoBehaviour
   //Verify the fingers position to determine what action to do (rotate or translate)
   void CheckFingersPosition(Hand hand)
   {
-    if (!hand.IsLeft)
+    if (hand.IsRight && !translate)
     {
       if (!rotating && rotationType != 3 && !hand.Fingers[4].IsExtended && !hand.Fingers[3].IsExtended)
       {
@@ -234,7 +264,7 @@ public class HandController : MonoBehaviour
       }
       
     }
-    else
+    else if(hand.IsLeft && !rotating)
     {
       if (!translate && !hand.Fingers[4].IsExtended && !hand.Fingers[3].IsExtended)
       {

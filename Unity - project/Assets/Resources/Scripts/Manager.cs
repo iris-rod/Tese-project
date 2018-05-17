@@ -227,7 +227,7 @@ public class Manager : MonoBehaviour
 
   void Update ()
   {
-    if (Input.GetKeyDown ("q") && platform.GetComponent<Platform> ().IsFree ()) {
+    if (Input.GetKeyDown ("s") && platform.GetComponent<Platform> ().IsFree ()) {
       BBManager.SetTexture ("1");
       GetComponent<TestsManager>().CheckReloadTask("partial mol");
       LoadMolecule ("partial mol", false);
@@ -249,10 +249,10 @@ public class Manager : MonoBehaviour
       LoadMolecule("Move_2", false);
 
 
-    if (Input.GetKeyDown ("s")) {
+    /*if (Input.GetKeyDown ("s")) {
       GameObject mol = GameObject.Find("MoleculeV3(Clone)");
       SaveMolecule(mol,"Move_2");
-    }
+    }*/
 
   }
 

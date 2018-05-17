@@ -235,14 +235,11 @@ public class Atom : MonoBehaviour {
       else
         highlightMat.SetFloat ("_Outline", 0.02f);
     }
-    
-
-
   }
 
   void OnCollisionExit(Collision col)
   {
-    highlightMat.SetFloat("_Outline", 0.0f);
+      highlightMat.SetFloat("_Outline", 0.0f);
   }
 
   void StickToMolecule (GameObject obj)
