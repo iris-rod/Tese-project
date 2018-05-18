@@ -52,16 +52,19 @@ public class HandController : MonoBehaviour
     translate = false;
     interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
     pivots = GameObject.FindGameObjectsWithTag("Pivot");
-    rotationType = transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
+    rotationType = transform.parent.transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
   }
 
   public void updateCurrentHand (Hand leapHand)
   {
-    rotationType = transform.parent.GetComponent<Manager> ().rotationType;
-    CheckFingersPosition (leapHand);    
-    pivots = GameObject.FindGameObjectsWithTag ("Pivot");
+    rotationType = transform.parent.transform.parent.GetComponent<Manager> ().rotationType;
+    //CheckFingersPosition (leapHand);    
+    UpdatePivots();
 
 
+    CheckGraspingPivot();
+    CheckDistanceToPivot(leapHand);
+    
     if (!leftHandGO.activeSelf || !rightHandGO.activeSelf) {
       StopRotation ();
     }
@@ -90,8 +93,6 @@ public class HandController : MonoBehaviour
     {
       rightHandPosition = leapHand.PalmPosition.ToVector3();
     }
-    CheckGraspingPivot();
-    CheckDistanceToPivot(leapHand);
   }
 
   void Update()
@@ -129,26 +130,45 @@ public class HandController : MonoBehaviour
     }
     
   }
+  
+  void UpdatePivots ()
+  {
+  
+    GameObject[] pivotsInScene = GameObject.FindGameObjectsWithTag ("Pivot");
+    int length = 0;
+    for (int i = 0; i < pivotsInScene.Length; i++) {
+      if (pivotsInScene [i].transform.parent.name == "MoleculeV3(Clone)")
+        length++;
+    }
+    pivots = new GameObject[length];
+    for (int i = 0, n = 0; i < pivotsInScene.Length; i++) {
+      if (pivotsInScene [i].transform.parent.name == "MoleculeV3(Clone)") {
+        pivots [n] = pivotsInScene [i];
+        n++;
+      }
+    }   
+    
+  }
 
   // check which hand is grabbing the pivot
-  void CheckGraspingPivot()
+  void CheckGraspingPivot ()
   {
-    for(int i = 0; i < pivots.Length; i++)
-    {
-      GameObject pivot = pivots[i];
-      if(pivot != null && pivot.GetComponent<InteractionBehaviour>().isGrasped)
-      {
+    for (int i = 0; i < pivots.Length; i++) {
+      GameObject pivot = pivots [i];
+      if (pivot != null && pivot.GetComponent<InteractionBehaviour> ().isGrasped) {
         float leftDist = 100;
         float rightDist = 100;
         if (leftHandGO != null)
-          leftDist = Vector3.Distance(leftHandPosition, pivot.transform.position);
-        if(rightHandGO != null)
-          rightDist = Vector3.Distance(rightHandPosition, pivot.transform.position);
+          leftDist = Vector3.Distance (leftHandPosition, pivot.transform.position);
+        if (rightHandGO != null)
+          rightDist = Vector3.Distance (rightHandPosition, pivot.transform.position);
 
         if (rightDist < leftDist)
-          pivot.GetComponent<PivotController>().SetGraspedByLeft(false);
+          pivot.GetComponent<PivotController> ().SetGrasped (2);
         else
-          pivot.GetComponent<PivotController>().SetGraspedByLeft(true);
+          pivot.GetComponent<PivotController> ().SetGrasped (1);
+      } else {
+          pivot.GetComponent<PivotController> ().SetGrasped (0);
       }
     }
   }
@@ -158,19 +178,32 @@ public class HandController : MonoBehaviour
   {
     float maxDist = .1f;
     for (int i = 0; i < pivots.Length; i++) {
-       GameObject pivot = pivots [i];
-      if (hand.IsLeft == pivot.GetComponent<PivotController>().IsGraspedByLeft())
-      {
+      GameObject pivot = pivots [i];
+      if ((hand.IsLeft && pivot.GetComponent<PivotController> ().IsGrasped () == 1) || (hand.IsRight && pivot.GetComponent<PivotController> ().IsGrasped () == 2)) {
         //Debug.Log(pivot.GetComponent<PivotController>().IsGraspedByLeft());
-        if (pivot != null && pivot.GetComponent<InteractionBehaviour>().isGrasped)
-        {
-          if (Vector3.Distance(pivot.transform.position, hand.PalmPosition.ToVector3()) > maxDist)
-          {
-            pivot.GetComponent<InteractionBehaviour>().ignoreGrasping = true;
+        if (pivot != null && pivot.GetComponent<InteractionBehaviour> ().isGrasped) {
+          if (Vector3.Distance (pivot.transform.position, hand.PalmPosition.ToVector3 ()) > maxDist) {
+            pivot.GetComponent<InteractionBehaviour> ().ignoreGrasping = true;
+            pivot.GetComponent<PivotController> ().SetGrasped (0);
+            StopTranslate ();
+            StopRotation ();
             grabbedPivot = pivot;
-            Invoke("ResetGrasp", 0.5f);
+            Z = false;
+            X = false;
+            Invoke ("ResetGrasp", 0.5f);
+          } else if (hand.IsRight) {
+            StopTranslate ();
+            BeginRotation ();
+          } else if (hand.IsLeft) {
+            StopRotation ();
+            BeginTranslate ();
           }
-        }
+        } 
+      } else if(pivot.GetComponent<PivotController> ().IsGrasped () == 0) {
+        StopTranslate ();
+        StopRotation ();
+        Z = false;
+        X = false;
       }
     }
   }
@@ -224,38 +257,49 @@ public class HandController : MonoBehaviour
   {
     if (fingerStreched) { // left hand is open
       if (UpDown) { //palma para cima ou para baixo
+        //Debug.Log("y: " + hand.PalmNormal.y + " min: "  +interval);
         if (hand.PalmNormal.y >= interval && hand.PalmNormal.y <= 1) {
+        
+          leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.05f);
           Z = true;
           X = false;
         } else if (hand.PalmNormal.y <= -interval && hand.PalmNormal.y >= -1) {
+          leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.05f);
           Z = false;
           X = true;
         }
       } 
       else {
+          leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.0f);
         Z = false;
         X = false;
       }
     }
     else if(!UpDown) 
     { 
+        //Debug.Log("x: " + hand.PalmNormal.x + " min: "  +interval);
+       // Debug.Log("y: " + hand.PalmNormal.y + " -.2f - .15f"  );
       //palma para o lado e virada para tras
       if(hand.PalmNormal.x >= interval && hand.PalmNormal.x <= 1 && hand.PalmNormal.y >= -.2f && hand.PalmNormal.y <= .15f && hand.PalmNormal.z >= -.35f && hand.PalmNormal.z <= 0.05f) //x 1 y 0.1
       {
+          leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.05f);
         Z = true;
         X = false;
       }
       else if (hand.PalmNormal.z <= -interval && hand.PalmNormal.z >= -1) //x 0 y 0.1
       {
+          leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.05f);
         Z = false;
         X = true;
       }    
       else{
+          leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.0f);
         Z = false;
         X = false;
       }  
     }
     else if(!fingerStreched && UpDown){
+        leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.0f);
         Z = false;
         X = false;
     }    
@@ -351,6 +395,7 @@ public class HandController : MonoBehaviour
       GameObject obj = pivots[i];
       if (obj != null && obj.GetComponent<InteractionBehaviour>().isGrasped)
       {
+        //rightHandGO.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1].SetFloat("_Outline", 0.025f);
         pivotRotate = obj;
         obj.transform.parent.GetComponent<Molecule>().Rotate();
         rotating = true;
@@ -366,6 +411,7 @@ public class HandController : MonoBehaviour
       GameObject obj = pivots[i];
       if (obj != null )
       {
+        //rightHandGO.transform.GetChild(0).GetComponent<MeshRenderer>().materials[1].SetFloat("_Outline", 0.0f);
         obj.transform.parent.GetComponent<Molecule>().StopRotate();
         break;
       }

@@ -18,7 +18,7 @@ public class PivotController : MonoBehaviour {
   
   public bool Axis;
 
-  private bool graspedByLeft;
+  private int graspedByLeft;
 
 
   // Use this for initialization
@@ -49,12 +49,12 @@ public class PivotController : MonoBehaviour {
     //transform.rotation = rotation;
   }
 
-  public bool IsGraspedByLeft()
+  public int IsGrasped()
   {
     return graspedByLeft;
   }
 
-  public void SetGraspedByLeft(bool val)
+  public void SetGrasped(int val)
   {
     graspedByLeft = val;
   }

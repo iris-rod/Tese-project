@@ -8,7 +8,7 @@ public class LogsC : MonoBehaviour
 
   public static LogsC Instance;
   private JsonData logData = null;
-  private string fileName = "log_lixo.json";
+  private string fileName = "log_7.json";
 
   private JsonData session = null;
 

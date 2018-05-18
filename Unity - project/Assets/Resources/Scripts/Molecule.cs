@@ -412,7 +412,6 @@ public class Molecule : MonoBehaviour
     if (distBond <= bondType)
       bondType = distBond;
     else {
-      Debug.Log("here");
       bondType = -1;
       return;
     }
@@ -531,7 +530,6 @@ public class Molecule : MonoBehaviour
       bondingAtoms = false;
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
     } else {
-      Debug.Log(lastInviBond);
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
     }
     bondType = 0;

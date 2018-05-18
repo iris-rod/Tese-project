@@ -1,14 +1,14 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\Scripts\HandController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\Scripts\LogsC.cs">
     <Files>
-      <File FileName="Assets\Resources\Scripts\LogsC.cs" Line="25" Column="1" />
+      <File FileName="Assets\Resources\Scripts\LogsC.cs" Line="34" Column="1" />
       <File FileName="Assets\Resources\Scripts\TestsManager.cs" Line="103" Column="21" />
       <File FileName="Assets\Resources\Scripts\CompletedButton.cs" Line="34" Column="38" />
-      <File FileName="Assets\Resources\Scripts\Atom.cs" Line="237" Column="6" />
-      <File FileName="Assets\Resources\Scripts\Molecule.cs" Line="626" Column="4" />
-      <File FileName="Assets\Resources\Scripts\Manager.cs" Line="250" Column="1" />
-      <File FileName="Assets\Resources\Scripts\HandController.cs" Line="132" Column="79" />
+      <File FileName="Assets\Resources\Scripts\Atom.cs" Line="242" Column="1" />
+      <File FileName="Assets\Resources\Scripts\Molecule.cs" Line="534" Column="1" />
+      <File FileName="Assets\Resources\Scripts\HandController.cs" Line="149" Column="6" />
+      <File FileName="Assets\Resources\Scripts\PivotController.cs" Line="57" Column="33" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
