@@ -2,13 +2,9 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\Scripts\LogsC.cs">
     <Files>
-      <File FileName="Assets\Resources\Scripts\LogsC.cs" Line="34" Column="1" />
-      <File FileName="Assets\Resources\Scripts\TestsManager.cs" Line="103" Column="21" />
-      <File FileName="Assets\Resources\Scripts\CompletedButton.cs" Line="34" Column="38" />
-      <File FileName="Assets\Resources\Scripts\Atom.cs" Line="242" Column="1" />
-      <File FileName="Assets\Resources\Scripts\Molecule.cs" Line="534" Column="1" />
-      <File FileName="Assets\Resources\Scripts\HandController.cs" Line="149" Column="6" />
-      <File FileName="Assets\Resources\Scripts\PivotController.cs" Line="57" Column="33" />
+      <File FileName="Assets\Resources\Scripts\Game\GameManager.cs" Line="60" Column="4" />
+      <File FileName="Assets\Resources\Scripts\Game\LevelManager.cs" Line="31" Column="5" />
+      <File FileName="Assets\Resources\Scripts\LogsC.cs" Line="11" Column="37" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

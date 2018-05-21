@@ -552,6 +552,7 @@ public class Molecule : MonoBehaviour
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
     }
     bondType = 0;
+    numberOfTaps = 1;
   }
 
 

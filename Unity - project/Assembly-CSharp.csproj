@@ -270,6 +270,8 @@
      <Compile Include="Assets\Resources\Scripts\ClearButton.cs" />
      <Compile Include="Assets\Resources\Scripts\CompletedButton.cs" />
      <Compile Include="Assets\Resources\Scripts\FeedbackBondController.cs" />
+     <Compile Include="Assets\Resources\Scripts\Game\GameManager.cs" />
+     <Compile Include="Assets\Resources\Scripts\Game\LevelManager.cs" />
      <Compile Include="Assets\Resources\Scripts\HandController.cs" />
      <Compile Include="Assets\Resources\Scripts\HandleTextFile.cs" />
      <Compile Include="Assets\Resources\Scripts\InterfaceManager.cs" />

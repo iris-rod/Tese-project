@@ -17,7 +17,7 @@ public class TrashBox : MonoBehaviour {
 
   void OnTriggerEnter(Collider col)
   {
-    if (col.CompareTag("Interactable") && col.transform.GetComponent<InteractionBehaviour>().isGrasped)
+    if ((col.CompareTag("Interactable") || col.CompareTag("Pivot")) && col.transform.GetComponent<InteractionBehaviour>().isGrasped)
     {
       if (col.transform.parent == null)
         Destroy(col.transform.gameObject);
