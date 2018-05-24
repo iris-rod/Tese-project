@@ -12,7 +12,6 @@ public class Manager : MonoBehaviour
   public GameObject atomPrefab;
   public GameObject platform;
   public GameObject handController;
-  public BlackBoardManager BBManager;
   public ShelfManager SManager;
 
   public Leap.Unity.Interaction.InteractionManager manager;
@@ -228,11 +227,11 @@ public class Manager : MonoBehaviour
   void Update ()
   {
     if (Input.GetKeyDown ("s") && platform.GetComponent<Platform> ().IsFree ()) {
-      BBManager.SetTexture ("1");
+      //BBManager.SetTexture ("1");
       GetComponent<TestsManager>().CheckReloadTask("partial mol");
       LoadMolecule ("partial mol", false);
     } else if (Input.GetKeyDown ("a") && platform.GetComponent<Platform> ().IsFree ()) {
-      BBManager.SetTexture ("2");
+      //BBManager.SetTexture ("2");
       LoadMolecule ("CO2", false);
       GetComponent<TestsManager>().CheckReloadTask("CO2");
     }

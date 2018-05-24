@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Resources/Scenes/Prototype VR.unity
+- path: Assets/Resources/Scenes/MOJO.unity
   isLoaded: 1
   isActive: 1

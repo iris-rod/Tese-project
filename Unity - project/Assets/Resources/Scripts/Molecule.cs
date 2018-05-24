@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Molecule : MonoBehaviour
 {
-
+  private int ID;
   private int graspedAtoms;
   private int numberOfBonds;
   private bool pivotGrabbed;
@@ -14,6 +14,8 @@ public class Molecule : MonoBehaviour
   private GameObject bond;
   private float bondScale;
   private float pivotOffset;
+  private MoleculeManager MM;
+  private int lastChildCount;
 
   public GameObject simpleBond;
   public GameObject doubleBond;
@@ -50,6 +52,7 @@ public class Molecule : MonoBehaviour
   {
     camera = GameObject.FindGameObjectWithTag("MainCamera");
     shelves = GameObject.Find("shelves");
+    MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
     rotationType = camera.GetComponent<Manager>().rotationType;
     MultipleLines = camera.GetComponent<Manager>().MultipleLines;
     typeOfBonding = camera.GetComponent<Manager>().TypeOfBonding;
@@ -62,6 +65,7 @@ public class Molecule : MonoBehaviour
     numberOfBonds = 1;
     numberOfTaps = 1;
     graspedAtoms = 0;
+    lastChildCount = transform.childCount;
     hitScale = new Vector3 (.15f, .15f, .15f);//desktop -> new Vector3(0.03f, 0.1f, 0.1f);
     pivotGrabbed = false;
     rotate = false;
@@ -85,6 +89,10 @@ public class Molecule : MonoBehaviour
         if(child.CompareTag("Interactable") || child.CompareTag("Pivot"))
           child.GetComponent<InteractionBehaviour>().ignoreGrasping = true;
       }
+      MM.AddMolecule(transform.gameObject,true);
+    }else
+    {
+      MM.AddMolecule(transform.gameObject,false);
     }
     //disable all scripts in atoms of molecules used for testing 
     if (transform.name != "MoleculeV3(Clone)" && !isMini)
@@ -92,6 +100,7 @@ public class Molecule : MonoBehaviour
       pivot.transform.GetComponent<MeshRenderer>().material = Resources.Load("Materials/Pivot Invi", typeof(Material)) as Material;
       DisableScriptsAtoms();
     }
+
   }
   
   private void DisableScriptsAtoms ()
@@ -119,6 +128,16 @@ public class Molecule : MonoBehaviour
   public void SetHandController(GameObject handCtrl)
   {
     handController = handCtrl;
+  }
+
+  public void SetId(int value)
+  {
+    ID = value;
+  }
+
+  public int GetId()
+  {
+    return ID;
   }
 
   void SetManagerPivot()
@@ -566,6 +585,12 @@ public class Molecule : MonoBehaviour
       return;
     }
 
+    if(lastChildCount != transform.childCount)
+    {
+      MM.UpdateMolecule(transform.gameObject);
+      lastChildCount = transform.childCount;
+    }
+
     //update pivot position according to the positions of the existent atoms in the molecule
     if (!isRotating)
     {
@@ -637,20 +662,4 @@ public class Molecule : MonoBehaviour
   }
 
 
-
-  //highlight the mini on the shelf that is being pointed at
-  public void HighlightMini(bool value)
-  {
-    for (int i = 0; i < transform.childCount; i++)
-    {
-      Transform child = transform.GetChild(i);
-      if (child.CompareTag("Interactable"))
-        child.GetComponent<Atom>().Highlight(value);
-      else if (child.CompareTag("Bond"))
-        child.GetComponent<BondController>().Highlight(value);
-      else if (child.CompareTag("Pivot"))
-        child.GetComponent<PivotController>().Highlight(value);
-    }
-    isPointed = value;
-  }
 }

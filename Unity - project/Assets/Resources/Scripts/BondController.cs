@@ -70,6 +70,11 @@ public class BondController : MonoBehaviour
     ballB.GetComponent<Atom>().AddBond(bondType,bondId);
   }
 
+  public int GetBondType()
+  {
+    return bondType;
+  }
+
   public void SetID(int value)
   {
     bondId = value;

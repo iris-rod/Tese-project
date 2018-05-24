@@ -133,38 +133,12 @@ public class ShelfManager : MonoBehaviour {
   {
     waiting = false;
   }
-
-  public void LoadShelf (Vector3 fingerPos, Vector3 fingerDir)
-  {
-    RaycastHit hit;
-    if (Physics.Raycast (fingerPos, fingerDir, out hit, Mathf.Infinity)) {
-      Debug.DrawRay (fingerPos, fingerDir * hit.distance, Color.yellow);
-      
-      if (hit.transform.parent != null) {      
-        string first = hit.transform.parent.name.Split ('_') [0];
-      
-        //if detect the mini molecule (the parent is the shelf)
-        if (first == "shelves" && hit.transform.name != lastPointedMini) {
-          if (lastPointedMini != "")
-            GameObject.Find (lastPointedMini).GetComponent<Molecule> ().HighlightMini (false);  
-          hit.transform.GetComponent<Molecule> ().HighlightMini (true);
-          lastPointedMini = hit.transform.name;
-        }
-      
-        //if detect a atom or other component from the mini molecule      
-        if (first == "Mini" && hit.transform.parent.name != lastPointedMini) { //lastPointedMini != "" &&
-          if (lastPointedMini != "")
-            GameObject.Find (lastPointedMini).GetComponent<Molecule> ().HighlightMini (false);  
-          hit.transform.parent.GetComponent<Molecule> ().HighlightMini (true);//LoadMolecule(hit.transform.gameObject);
-          lastPointedMini = hit.transform.parent.name;   
-        }
-      }
-    }
-  }
   
-  public void CancelLoad ()
+  //return a list of gameobjects of saved molecules
+  public void GetSavedMolecules()
   {
-    if(lastPointedMini != "")
-      GameObject.Find (lastPointedMini).GetComponent<Molecule> ().HighlightMini (false);      
+
   }
+
+  
 }

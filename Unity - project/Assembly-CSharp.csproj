@@ -39,10 +39,10 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
-      <HintPath>C:/Program Files/Unity5/Editor/Data/Managed/UnityEngine.dll</HintPath>
+      <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/Managed/UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
-      <HintPath>C:/Program Files/Unity5/Editor/Data/Managed/UnityEditor.dll</HintPath>
+      <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +268,7 @@
      <Compile Include="Assets\Resources\Scripts\CameraController.cs" />
      <Compile Include="Assets\Resources\Scripts\CapsuleManager.cs" />
      <Compile Include="Assets\Resources\Scripts\ClearButton.cs" />
+     <Compile Include="Assets\Resources\Scripts\CompleteLevelButton.cs" />
      <Compile Include="Assets\Resources\Scripts\CompletedButton.cs" />
      <Compile Include="Assets\Resources\Scripts\FeedbackBondController.cs" />
      <Compile Include="Assets\Resources\Scripts\Game\GameManager.cs" />
@@ -282,10 +283,10 @@
      <Compile Include="Assets\Resources\Scripts\LogsC.cs" />
      <Compile Include="Assets\Resources\Scripts\Manager.cs" />
      <Compile Include="Assets\Resources\Scripts\Molecule.cs" />
+     <Compile Include="Assets\Resources\Scripts\MoleculeManager.cs" />
      <Compile Include="Assets\Resources\Scripts\PivotController.cs" />
      <Compile Include="Assets\Resources\Scripts\Platform.cs" />
      <Compile Include="Assets\Resources\Scripts\SaveButton.cs" />
-     <Compile Include="Assets\Resources\Scripts\SavedBarManager.cs" />
      <Compile Include="Assets\Resources\Scripts\SavedMolecule.cs" />
      <Compile Include="Assets\Resources\Scripts\ShelfManager.cs" />
      <Compile Include="Assets\Resources\Scripts\TestsManager.cs" />
@@ -323,34 +324,34 @@
      <None Include="Assets\Resources\SavedFiles\saved_2.txt" />
      <None Include="Assets\Resources\SavedFiles\Rotation_2.txt" />
  <Reference Include="UnityEngine.UI">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Networking">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.TestRunner">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="nunit.framework">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Analytics">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
- <HintPath>C:/Program Files/Unity5/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+ <HintPath>C:/Program Files/Unity_5.6.5f1/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="LeapCSharp.NET3.5">
- <HintPath>C:/Users/Iris Rodrigues/Documents/GitHub/Tese-project/Unity - project/Assets/LeapMotion/Core/Plugins/LeapCSharp.NET3.5.dll</HintPath>
+ <HintPath>C:/Users/gabri/Documents/Mestrado/TESE/Tese-project/Unity - project/Assets/LeapMotion/Core/Plugins/LeapCSharp.NET3.5.dll</HintPath>
  </Reference>
  <Reference Include="InteractionEngineUtility">
- <HintPath>C:/Users/Iris Rodrigues/Documents/GitHub/Tese-project/Unity - project/Assets/LeapMotion/Modules/InteractionEngine/Plugins/InteractionEngineUtility.dll</HintPath>
+ <HintPath>C:/Users/gabri/Documents/Mestrado/TESE/Tese-project/Unity - project/Assets/LeapMotion/Modules/InteractionEngine/Plugins/InteractionEngineUtility.dll</HintPath>
  </Reference>
  <Reference Include="LitJson">
- <HintPath>C:/Users/Iris Rodrigues/Documents/GitHub/Tese-project/Unity - project/Assets/Resources/Scripts/Dependencies/LitJson.dll</HintPath>
+ <HintPath>C:/Users/gabri/Documents/Mestrado/TESE/Tese-project/Unity - project/Assets/Resources/Scripts/Dependencies/LitJson.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

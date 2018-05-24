@@ -8,10 +8,12 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
   private GameObject overlapGO;
   private Vector3 pos;
   private string task;
+  private MoleculeManager MM;
 
 	// Use this for initialization
 	void Start () {
-		hasOverlap = false;;
+		hasOverlap = false;
+    MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
 	}
 	
   void Update () {
@@ -36,7 +38,8 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
     Collider[] colliders = Physics.OverlapBox (pos, transform.localScale / 10);
     if (colliders.Length > 1) {
       for (int i = 0; i < colliders.Length; i++) {
-        if (colliders [i].transform.CompareTag("Interactable") && colliders[i].transform.parent != null) {
+        if (colliders [i].transform.CompareTag("Interactable") && colliders[i].transform.parent != null ) {//&& CheckMoleculesMatch(colliders[i].transform.parent)) {
+
           overlap = true;
           overlapGO = colliders[i].transform.parent.gameObject;
         }
@@ -44,11 +47,14 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
     }
     hasOverlap = overlap;
   }
-  
-  void OnDrawGizmos ()
+
+  private bool CheckMoleculesMatch(Transform molecule)
   {
-    Gizmos.color = Color.red;
-    Gizmos.DrawWireCube(pos, transform.localScale/3);
+    if (molecule.childCount != transform.childCount)
+      return false;
+
+    return MM.CompareMolecules(molecule.gameObject, transform.gameObject);
+
   }
   
   public bool HasOverlap ()
