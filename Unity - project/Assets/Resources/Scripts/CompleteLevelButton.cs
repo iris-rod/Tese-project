@@ -6,11 +6,13 @@ public class CompleteLevelButton : MonoBehaviour {
 
   private GameManager GM;
   private Animator animator;
+  private bool canPush;
 
   // Use this for initialization
   void Start () {
     GM = GameObject.Find("GameManager").GetComponent<GameManager>();
     animator = GetComponent<Animator>();
+    canPush=true;
   }
 	
 	// Update is called once per frame
@@ -25,8 +27,9 @@ public class CompleteLevelButton : MonoBehaviour {
     {
       for (int i = 0; i < colliders.Length; i++)
       {
-        if (colliders[i].transform.name.Split(' ')[0] == "Contact")
+        if (colliders[i].transform.name.Split(' ')[0] == "Contact" && canPush)
         {
+          canPush = false;
           animator.SetBool("pushed", true);
           Invoke("Reset", .5f);
 
@@ -41,6 +44,12 @@ public class CompleteLevelButton : MonoBehaviour {
         }
       }
     }
+  }
+  
+    void Reset()
+  {
+          canPush = true;
+    animator.SetBool("pushed", false);
   }
 
 }

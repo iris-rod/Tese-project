@@ -1,10 +1,15 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\Scripts\LogsC.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\Scripts\Game\LevelManager.cs">
     <Files>
-      <File FileName="Assets\Resources\Scripts\Game\GameManager.cs" Line="60" Column="4" />
-      <File FileName="Assets\Resources\Scripts\Game\LevelManager.cs" Line="31" Column="5" />
-      <File FileName="Assets\Resources\Scripts\LogsC.cs" Line="11" Column="37" />
+      <File FileName="Assets\Resources\Scripts\Game\GameManager.cs" Line="85" Column="7" />
+      <File FileName="Assets\Resources\Scripts\Game\LevelManager.cs" Line="31" Column="4" />
+      <File FileName="Assets\Resources\Scripts\ShelfManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Resources\Scripts\MoleculeManager.cs" Line="20" Column="19" />
+      <File FileName="Assets\Resources\Scripts\Manager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Resources\Scripts\CompleteLevelButton.cs" Line="51" Column="25" />
+      <File FileName="Assets\Resources\Scripts\HandleTextFile.cs" Line="1" Column="1" />
+      <File FileName="Assets\Resources\Scripts\CompletedButton.cs" Line="44" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

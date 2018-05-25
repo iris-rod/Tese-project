@@ -17,6 +17,8 @@ public class ShelfManager : MonoBehaviour {
   private bool waiting;
   
   private GameObject[] spots;
+  private GameObject[] minis;
+  private int idMinis;
 
   // Use this for initialization
   void Start ()
@@ -24,6 +26,7 @@ public class ShelfManager : MonoBehaviour {
     start = true;
     platform = GameObject.Find ("InviPlatform");
     moleculeID = 1;
+    idMinis = 0;
     newMini = true;
     canSave = true;
     waiting = false;
@@ -37,6 +40,7 @@ public class ShelfManager : MonoBehaviour {
         id++;
       }
     }
+    minis = new GameObject[spots.Length];
 	}
 	
 	// Update is called once per frame
@@ -112,7 +116,8 @@ public class ShelfManager : MonoBehaviour {
   {
     GetComponent<InterfaceManager>().Load(true,"saved_" + moleculeID);
     mini = GameObject.Find("Mini_saved_"+(moleculeID).ToString());
-    //mini.gameObject.AddComponent(typeof(BoxCollider));
+    minis[idMinis] = mini;
+    idMinis++;
     newMini = true;
   }
 
@@ -135,9 +140,9 @@ public class ShelfManager : MonoBehaviour {
   }
   
   //return a list of gameobjects of saved molecules
-  public void GetSavedMolecules()
+  public GameObject[] GetSavedMolecules()
   {
-
+    return minis;
   }
 
   

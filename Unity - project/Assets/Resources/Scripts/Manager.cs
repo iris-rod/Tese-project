@@ -232,8 +232,8 @@ public class Manager : MonoBehaviour
       LoadMolecule ("partial mol", false);
     } else if (Input.GetKeyDown ("a") && platform.GetComponent<Platform> ().IsFree ()) {
       //BBManager.SetTexture ("2");
-      LoadMolecule ("CO2", false);
-      GetComponent<TestsManager>().CheckReloadTask("CO2");
+      LoadMolecule ("CO2_a", false);
+      GetComponent<TestsManager>().CheckReloadTask("CO2_a");
     }
     //invisible final positions for rotations
     else if (Input.GetKeyDown ("z"))
