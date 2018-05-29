@@ -145,5 +145,16 @@ public class ShelfManager : MonoBehaviour {
     return minis;
   }
 
+  public void LevelChecking(bool value)
+  {
+    for (int i = 0; i < transform.childCount; i++)
+    {
+      Transform child = transform.GetChild(i);
+      string[] name = child.name.Split('(');
+      if (name[0].Trim() == "Button")
+        child.GetChild(0).GetComponent<LoadButton>().LevelCheck(value);
+    }
+  }
+
   
 }

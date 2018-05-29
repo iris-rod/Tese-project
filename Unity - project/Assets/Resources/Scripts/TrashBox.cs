@@ -5,9 +5,11 @@ using Leap.Unity.Interaction;
 
 public class TrashBox : MonoBehaviour {
 
+  private MoleculeManager MM;
+
 	// Use this for initialization
 	void Start () {
-		
+    MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
 	}
 	
 	// Update is called once per frame
@@ -22,7 +24,10 @@ public class TrashBox : MonoBehaviour {
       if (col.transform.parent == null)
         Destroy(col.transform.gameObject);
       else
+      {
+        MM.RemoveMolecule(col.transform.parent.gameObject);
         Destroy(col.transform.parent.gameObject);
+      }
     }
   }
 }

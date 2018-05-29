@@ -38,7 +38,7 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
     Collider[] colliders = Physics.OverlapBox (pos, transform.localScale / 10);
     if (colliders.Length > 1) {
       for (int i = 0; i < colliders.Length; i++) {
-        if (colliders [i].transform.CompareTag("Interactable") && colliders[i].transform.parent != null ) {//&& CheckMoleculesMatch(colliders[i].transform.parent)) {
+        if (colliders [i].transform.CompareTag("Interactable") && colliders[i].transform.parent != null && CheckMoleculesMatch(colliders[i].transform.parent)) {
 
           overlap = true;
           overlapGO = colliders[i].transform.parent.gameObject;

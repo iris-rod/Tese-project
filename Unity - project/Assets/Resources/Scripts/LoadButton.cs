@@ -7,11 +7,16 @@ public class LoadButton : MonoBehaviour {
   private Animator animator;
   private GameObject molecule;
   private GameObject capsule;
-  
+
+  private bool levelChecking;
+  private GameManager GM;
+
   // Use this for initialization
   void Start () {
+    levelChecking = false;
     animator = GetComponent<Animator>();
     capsule = GameObject.Find("LoadCapsule");
+    GM = GameObject.Find("GameManager").GetComponent<GameManager>();
   }
   
   // Update is called once per frame
@@ -31,6 +36,8 @@ public class LoadButton : MonoBehaviour {
             capsule.GetComponent<LoadCapsule> ().OpenCapsule (newMol);
             Invoke ("Reset", .5f);
           }
+          if (levelChecking)
+            GM.SetLoadedMolecule(newMol);
           break;
         }
       }
@@ -51,4 +58,10 @@ public class LoadButton : MonoBehaviour {
   {
     return (molecule != null);
   }
+
+  public void LevelCheck(bool value)
+  {
+    levelChecking = value;
+  }
+
 }

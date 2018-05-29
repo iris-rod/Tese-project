@@ -6,6 +6,7 @@ public class ClearButton : MonoBehaviour {
 
   private Animator animator;
   private bool m_Started;
+  private MoleculeManager MM;
   
   public string obj;
 
@@ -13,7 +14,8 @@ public class ClearButton : MonoBehaviour {
 	void Start () {
     m_Started = true;
     animator = GetComponent<Animator>();
-	}
+    MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
+  }
 	
 	// Update is called once per frame
 	void Update () {
@@ -36,6 +38,7 @@ public class ClearButton : MonoBehaviour {
             for (int j = 0; j < invis.Length; j++) {
                 Destroy (invis [j]);
             }
+            MM.Clear();
           } else if (obj.ToLower () == "atom") {
             GameObject[] atoms = GameObject.FindGameObjectsWithTag ("Interactable");
             for (int j = 0; j < atoms.Length; j++) {

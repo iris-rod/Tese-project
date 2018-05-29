@@ -63,8 +63,9 @@ public class Manager : MonoBehaviour
   public GameObject LoadMolecule (string name, bool mini)
   {
     string auxName = name.Split('_')[0];
+    string place = name.Split('_')[1];
     bool invi = false;
-    if (auxName == "Rotation" || auxName == "Move")
+    if (auxName == "Rotation" || auxName == "Move" || place == "place")
       invi = true;
     numberOfBonds = new List<int> ();
     bondsType = new Dictionary<int, int>();
@@ -226,7 +227,7 @@ public class Manager : MonoBehaviour
 
   void Update ()
   {
-    if (Input.GetKeyDown ("s") && platform.GetComponent<Platform> ().IsFree ()) {
+    /*if (Input.GetKeyDown ("s") && platform.GetComponent<Platform> ().IsFree ()) {
       //BBManager.SetTexture ("1");
       GetComponent<TestsManager>().CheckReloadTask("partial mol");
       LoadMolecule ("partial mol", false);
@@ -246,12 +247,12 @@ public class Manager : MonoBehaviour
       LoadMolecule("Move_1", false);
     else if (Input.GetKeyDown("b"))
       LoadMolecule("Move_2", false);
+      */
 
-
-    /*if (Input.GetKeyDown ("s")) {
+    if (Input.GetKeyDown ("s")) {
       GameObject mol = GameObject.Find("MoleculeV3(Clone)");
-      SaveMolecule(mol,"Move_2");
-    }*/
+      SaveMolecule(mol,"CO2_place");
+    }
 
   }
 

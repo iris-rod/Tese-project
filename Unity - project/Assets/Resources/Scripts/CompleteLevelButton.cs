@@ -33,14 +33,9 @@ public class CompleteLevelButton : MonoBehaviour {
           animator.SetBool("pushed", true);
           Invoke("Reset", .5f);
 
-          if (GM.CheckLevelCompletion())
-          {
 
-          }
-          else
-          {
             GM.UpdateLevel();
-          }
+          
         }
       }
     }

@@ -17,13 +17,14 @@ public class MoleculeManager : MonoBehaviour {
     moleculesInShelf = new Dictionary<int, string>();
   }
 
-	public void AddMolecule (GameObject molecule, bool shelf)
+  public void AddMolecule(GameObject molecule, bool shelf)
   {
-    if (!shelf) {
-      numberOfMolecules++;
+    if (!shelf)
+    {
       molecule.GetComponent<Molecule>().SetId(numberOfMolecules);
-    } else {
-      numberOfMinis++;
+    }
+    else
+    {
       molecule.GetComponent<Molecule>().SetId(numberOfMinis);
     }
     string text = "";
@@ -32,25 +33,33 @@ public class MoleculeManager : MonoBehaviour {
       Transform child = molecule.transform.GetChild(i);
       if (child.CompareTag("Bond"))
       {
-        Debug.Log("here");
         Transform[] atoms = child.GetComponent<BondController>().GetAtoms();
         int type = child.GetComponent<BondController>().GetBondType();
-        text += atoms[0].GetComponent<Atom>().GetAtomType() + "-" + type + "-" + atoms[1].GetComponent<Atom>().GetAtomType() + "_"+"\n";
+        text += atoms[0].GetComponent<Atom>().GetAtomType() + "-" + type + "-" + atoms[1].GetComponent<Atom>().GetAtomType() + "_" + "\n";
       }
     }
-    Debug.Log(text);
+
     if (!shelf)
+    {
       moleculesInScene.Add(numberOfMolecules, text);
+      numberOfMolecules++;
+    }
     else
+    {
       moleculesInShelf.Add(numberOfMinis, text);
+      numberOfMinis++;
+    }
   }
 
   public void UpdateMolecule(GameObject molecule)
   {
     int id = molecule.GetComponent<Molecule>().GetId();
-    moleculesInScene.Remove(id);
-    numberOfMolecules--;
-    AddMolecule(molecule,false);
+    if (moleculesInScene.ContainsKey(id))
+    {
+      moleculesInScene.Remove(id);
+      numberOfMolecules--;
+      AddMolecule(molecule, false);
+    }
   }
 
   public bool CompareMolecules(GameObject mol1, GameObject mol2)
@@ -69,52 +78,59 @@ public class MoleculeManager : MonoBehaviour {
     {
       string bond = bonds1[i].Trim();
       bool equal = false;
-      for (int j = 0; j < bonds2.Length; j++)
-      {
-        string bond2 = bonds2[j].Trim();
-        if (bond == bond2)
+      if (bond != "") { 
+        for (int j = 0; j < bonds2.Length; j++)
         {
-          equal = true;
-          break;
+          string bond2 = bonds2[j].Trim();
+          if (bond == bond2)
+          {
+            equal = true;
+            break;
+          }
+          else if (bond.Split('-')[0] == bond2.Split('-')[2] && bond.Split('-')[2] == bond2.Split('-')[0] && (bond.Split('-')[1] == bond2.Split('-')[1]))
+          {
+            equal = true;
+            break;
+          }
         }
-        else if(bond.Split('-')[0] == bond2.Split('-')[2] && bond.Split('-')[2] == bond2.Split('-')[0] && (bond.Split('-')[1] == bond2.Split('-')[1]))
-        {
-          equal = true;
-          break;
-        }
+        if (!equal)
+          return false;
       }
-      if (!equal)
-        return false;
     }
     return true;
   }
   
-  public bool CompareMoleculesString (string struc2)
+  public bool CompareMoleculesString (string struc2, bool inShelf)
   {
-  Debug.Log(moleculesInScene.Count);
-    foreach (var par in moleculesInScene) {
+    Dictionary<int, string> molecules = moleculesInScene;
+    if (inShelf) molecules = moleculesInShelf;
+    foreach (var par in molecules) {
     
-      string struc1 = moleculesInScene [par.Key];
-    Debug.Log(par.Key + " ->" +moleculesInScene [par.Key]);
-      string[] bonds1 = struc1.Split ('_');
-      string[] bonds2 = struc2.Split ('_');
-      Debug.Log(struc1);
-      Debug.Log(struc2);
+      string struc1 = molecules[par.Key];
+      string[] bonds1 = struc1.Trim().Split ('_');
+      string[] bonds2 = struc2.Trim().Split ('_');
+
       if(bonds1.Length != bonds2.Length)
-        return false;
-      
+        continue;
       //compare struct of molecules
       for (int i = 0; i < bonds1.Length; i++) {
         string bond = bonds1 [i].Trim ();
         bool equal = false;
-        for (int j = 0; j < bonds2.Length; j++) {
-          string bond2 = bonds2 [j].Trim ();
-          if (bond == bond2) {
-            equal = true;
-            break;
-          } else if (bond.Split ('-') [0] == bond2.Split ('-') [2] && bond.Split ('-') [2] == bond2.Split ('-') [0] && (bond.Split ('-') [1] == bond2.Split ('-') [1])) {
-            equal = true;
-            break;
+        if (bond != "")
+        {
+          for (int j = 0; j < bonds2.Length; j++)
+          {
+            string bond2 = bonds2[j].Trim();
+            if (bond == bond2)
+            {
+              equal = true;
+              break;
+            }
+            else if (bond.Split('-')[0] == bond2.Split('-')[2] && bond.Split('-')[2] == bond2.Split('-')[0] && (bond.Split('-')[1] == bond2.Split('-')[1]))
+            {
+              equal = true;
+              break;
+            }
           }
         }
         if (equal)
@@ -123,11 +139,68 @@ public class MoleculeManager : MonoBehaviour {
     }
     return false;
   }
-  
+
+  public bool CompareMoleculeString(string struc2, GameObject mol)
+  {
+
+      string struc1 = moleculesInScene[mol.GetComponent<Molecule>().GetId()];
+      string[] bonds1 = struc1.Trim().Split('_');
+      string[] bonds2 = struc2.Trim().Split('_');
+
+    if (bonds1.Length != bonds2.Length)
+      return false;
+      //compare struct of molecules
+      for (int i = 0; i < bonds1.Length; i++)
+      {
+        string bond = bonds1[i].Trim();
+        bool equal = false;
+        if (bond != "")
+        {
+          for (int j = 0; j < bonds2.Length; j++)
+          {
+            string bond2 = bonds2[j].Trim();
+            if (bond == bond2)
+            {
+              equal = true;
+              break;
+            }
+            else if (bond.Split('-')[0] == bond2.Split('-')[2] && bond.Split('-')[2] == bond2.Split('-')[0] && (bond.Split('-')[1] == bond2.Split('-')[1]))
+            {
+              equal = true;
+              break;
+            }
+          }
+        }
+        if (!equal)
+          return false;
+      }
+    return true;
+  }
+
+  public void Clear()
+  {
+    moleculesInShelf = new Dictionary<int, string>();
+    moleculesInScene = new Dictionary<int, string>();
+    numberOfMinis = 0;
+    numberOfMolecules = 0;
+  }
+
+  public void RemoveMolecule(GameObject mol)
+  {
+    int molID = mol.GetComponent<Molecule>().GetId();
+    moleculesInScene.Remove(molID);
+  }
+
   //function to compare molecule to minis to see if it was saved
+
+
 
   void Update()
   {
+    foreach(var par in moleculesInScene)
+    {
+     // Debug.Log("key: " + par.Key + " value: " + par.Value);
+    }
     string t1 = "Carbon-2-Oxygen_" + "\n" + "Hydrogen-1-Carbon_" + "\n";
     string t2 = "Hydrogen-1-Carbon_" + "\n" + "Carbon-2-Oxygen_" + "\n";
   }

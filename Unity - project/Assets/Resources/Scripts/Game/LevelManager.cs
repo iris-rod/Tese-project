@@ -5,6 +5,8 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour {
 
   private int id;
+  private int sublevel;
+  private int maxSubLevels;
 	private bool completed, onGoing;
   private string objective;
   private Dictionary<string, bool> objectives;
@@ -16,11 +18,7 @@ public class LevelManager : MonoBehaviour {
     objectives = new Dictionary<string, bool>();
 		completed = false;
     onGoing = true;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+    sublevel = 1;
 	}
   
   
@@ -38,20 +36,25 @@ public class LevelManager : MonoBehaviour {
     {
       objectives.Add(objs[i],false);
     }
+    maxSubLevels = objectives.Count;
+    sublevel = 1;
   }
   
   public void UpdateObjective(string obj)
   {
     foreach(var par in objectives)
     {
+      Debug.Log(par.Key + " " + obj);
       if (par.Key == obj)
       {
         objectives[par.Key] = true;
+        sublevel++;
         break;
       }
       else if (!par.Value)
         break;
     }
+    Debug.Log(sublevel);
   }
 
   public Dictionary<string, bool> GetObjectives()
@@ -79,13 +82,24 @@ public class LevelManager : MonoBehaviour {
 
   private void CheckCompletion()
   {
-    bool allDone = true;
+    completed = (maxSubLevels < sublevel);
+    /*bool allDone = true;
     foreach (var par in objectives)
     {
       if (!par.Value)
         allDone = false;
     }
-    completed = allDone;
+    completed = allDone;*/
+  }
+
+  public int GetSublevel()
+  {
+    return sublevel;
+  }
+
+  public int GetLevel()
+  {
+    return id;
   }
 
 
