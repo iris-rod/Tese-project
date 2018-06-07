@@ -44,7 +44,6 @@ public class LevelManager : MonoBehaviour {
   {
     foreach(var par in objectives)
     {
-      Debug.Log(par.Key + " " + obj);
       if (par.Key == obj)
       {
         objectives[par.Key] = true;
@@ -54,7 +53,6 @@ public class LevelManager : MonoBehaviour {
       else if (!par.Value)
         break;
     }
-    Debug.Log(sublevel);
   }
 
   public Dictionary<string, bool> GetObjectives()

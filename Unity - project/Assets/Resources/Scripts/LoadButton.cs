@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadButton : MonoBehaviour {
+public class LoadButton : MonoBehaviour
+{
 
   private Animator animator;
   private GameObject molecule;
@@ -12,32 +13,43 @@ public class LoadButton : MonoBehaviour {
   private GameManager GM;
 
   // Use this for initialization
-  void Start () {
+  void Start()
+  {
     levelChecking = false;
     animator = GetComponent<Animator>();
     capsule = GameObject.Find("LoadCapsule");
     GM = GameObject.Find("GameManager").GetComponent<GameManager>();
   }
-  
+
   // Update is called once per frame
-  void Update () {
+  void Update()
+  {
     CheckCollision();
   }
 
-  private void CheckCollision ()
+  private void CheckCollision()
   {
-    Collider[] colliders = Physics.OverlapBox (transform.position, transform.localScale / 10);
-    if (colliders.Length > 1) {
-      for (int i = 0; i < colliders.Length; i++) {
-        if (colliders [i].transform.name.Split (' ') [0] == "Contact" && molecule != null) {
-          GameObject newMol = transform.parent.transform.parent.GetComponent<ShelfManager> ().LoadMolecule (molecule);
-          if (newMol != null) {
-            animator.SetBool ("pushed", true);
-            capsule.GetComponent<LoadCapsule> ().OpenCapsule (newMol);
-            Invoke ("Reset", .5f);
+    Collider[] colliders = Physics.OverlapBox(transform.position, transform.localScale / 10);
+    if (colliders.Length > 1)
+    {
+      for (int i = 0; i < colliders.Length; i++)
+      {
+        if (colliders[i].transform.name.Split(' ')[0] == "Contact" && molecule != null)
+        {
+          GameObject newMol = transform.parent.transform.parent.GetComponent<ShelfManager>().LoadMolecule(molecule);
+          if (newMol != null)
+          {
+            animator.SetBool("pushed", true);
+            capsule.GetComponent<LoadCapsule>().OpenCapsule(newMol);
+            Debug.Log(levelChecking);
+
+            if (levelChecking)
+            {
+              GM.SetLoadedMolecule(newMol);
+            }
+            Invoke("Reset", .5f);
           }
-          if (levelChecking)
-            GM.SetLoadedMolecule(newMol);
+
           break;
         }
       }
@@ -48,13 +60,13 @@ public class LoadButton : MonoBehaviour {
   {
     animator.SetBool("pushed", false);
   }
-  
-  public void SetMolecule (GameObject mol)
+
+  public void SetMolecule(GameObject mol)
   {
     molecule = mol;
   }
-  
-  public bool HasMolecule ()
+
+  public bool HasMolecule()
   {
     return (molecule != null);
   }

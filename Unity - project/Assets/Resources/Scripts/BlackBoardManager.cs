@@ -29,7 +29,7 @@ public class BlackBoardManager : MonoBehaviour {
     l5 = ConvertSpritesToTexture(level5);
 
     currentDisplay = "0_0";
-    transform.GetChild(0).GetComponent<MeshRenderer>().material.mainTexture = l1[1];
+    transform.GetChild(0).GetComponent<MeshRenderer>().material.mainTexture = l3[0];
   }
 	
   private Texture2D[] ConvertSpritesToTexture(Sprite[] sprites)

@@ -152,7 +152,9 @@ public class ShelfManager : MonoBehaviour {
       Transform child = transform.GetChild(i);
       string[] name = child.name.Split('(');
       if (name[0].Trim() == "Button")
+      {
         child.GetChild(0).GetComponent<LoadButton>().LevelCheck(value);
+      }
     }
   }
 

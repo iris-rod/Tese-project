@@ -11,11 +11,11 @@ public class GameManager : MonoBehaviour
   private LevelManager LM;
   private MoleculeManager MM;
   private ShelfManager SM;
-  
+
   private bool correctMolLoaded;
 
   private string path = "";
-  
+
   public BlackBoardManager BBManager;
 
   // Use this for initialization
@@ -72,7 +72,8 @@ public class GameManager : MonoBehaviour
     }
     LM.SetLevelId(level);
     LM.SetObjective(objs);
-    Invoke("NextLevelDisplay",2f);
+    CheckNextObjectiveSetup(LM.GetNextObjective());
+    Invoke("NextLevelDisplay", 2f);
     newLevel = false;
   }
 
@@ -89,8 +90,8 @@ public class GameManager : MonoBehaviour
     switch (type)
     {
       case "build":
-        string text = HandleTextFile.ReadString(objSplit[1]+".txt");
-        if(MM.CompareMoleculesString(text,false))
+        string text = HandleTextFile.ReadString(objSplit[1] + ".txt");
+        if (MM.CompareMoleculesString(text, false))
           completed = true;
         break;
       case "load":
@@ -102,7 +103,7 @@ public class GameManager : MonoBehaviour
         break;
       case "save":
         string savedText = HandleTextFile.ReadString(objSplit[1] + ".txt");
-        if (MM.CompareMoleculesString(savedText, true))  
+        if (MM.CompareMoleculesString(savedText, true))
           completed = true;
         break;
       case "place":
@@ -137,7 +138,7 @@ public class GameManager : MonoBehaviour
         SM.LevelChecking(false);
         break;
       case "place":
-        manager.LoadMolecule(objSplit[1]+"_place", false);
+        manager.LoadMolecule(objSplit[1] + "_place", false);
         SM.LevelChecking(false);
         break;
     }
@@ -150,11 +151,7 @@ public class GameManager : MonoBehaviour
 
   public void SetLoadedMolecule(GameObject mol)
   {
-    string nextObj = LM.GetNextObjective();
-    string[] objSplit = nextObj.Split('-');
-    string text = HandleTextFile.ReadString(objSplit[1] + ".txt");
-    if (MM.CompareMoleculeString(text, mol))
-      correctMolLoaded = true;
+    StartCoroutine(CheckLoadedMolecule(mol, 0.5f));
   }
 
   //for after effects
@@ -168,13 +165,27 @@ public class GameManager : MonoBehaviour
     return levelComplete;
   }
 
-  public void UpdateLevel ()
+  //when a molecule is loaded, there is a small interval to set the id (to not be the default 0) and then when the player presses
+  //the check button, it will only check the bool to see if the mol was loaded
+  IEnumerator CheckLoadedMolecule(GameObject mol, float delay)
   {
-    string nextObj = LM.GetNextObjective ();
+    yield return new WaitForSeconds(delay);
 
-    if (CheckObjectiveComplete (nextObj)) {
-      LM.UpdateObjective (nextObj);
-      CheckLevelCompletion ();
+    string nextObj = LM.GetNextObjective();
+    string[] objSplit = nextObj.Split('-');
+    string text = HandleTextFile.ReadString(objSplit[1] + ".txt");
+    if (MM.CompareMoleculeString(text, mol))
+      correctMolLoaded = true;
+  }
+
+  public void UpdateLevel()
+  {
+    string nextObj = LM.GetNextObjective();
+
+    if (CheckObjectiveComplete(nextObj))
+    {
+      LM.UpdateObjective(nextObj);
+      CheckLevelCompletion();
     }
   }
 

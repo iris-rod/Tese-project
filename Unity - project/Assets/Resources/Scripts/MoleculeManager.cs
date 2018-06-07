@@ -69,7 +69,7 @@ public class MoleculeManager : MonoBehaviour {
 
     string struc1 = moleculesInScene[mol1.GetComponent<Molecule>().GetId()];
     string struc2 = moleculesInScene[mol2.GetComponent<Molecule>().GetId()];
-    
+
 
     string[] bonds1 = struc1.Split('_');
     string[] bonds2 = struc2.Split('_');
@@ -103,14 +103,15 @@ public class MoleculeManager : MonoBehaviour {
   public bool CompareMoleculesString (string struc2, bool inShelf)
   {
     Dictionary<int, string> molecules = moleculesInScene;
+    string[] bonds2 = struc2.Trim().Split('_');
+    Debug.Log(struc2);
     if (inShelf) molecules = moleculesInShelf;
     foreach (var par in molecules) {
     
       string struc1 = molecules[par.Key];
       string[] bonds1 = struc1.Trim().Split ('_');
-      string[] bonds2 = struc2.Trim().Split ('_');
-
-      if(bonds1.Length != bonds2.Length)
+      Debug.Log(struc1);
+      if (bonds1.Length != bonds2.Length)
         continue;
       //compare struct of molecules
       for (int i = 0; i < bonds1.Length; i++) {
@@ -146,7 +147,6 @@ public class MoleculeManager : MonoBehaviour {
       string struc1 = moleculesInScene[mol.GetComponent<Molecule>().GetId()];
       string[] bonds1 = struc1.Trim().Split('_');
       string[] bonds2 = struc2.Trim().Split('_');
-
     if (bonds1.Length != bonds2.Length)
       return false;
       //compare struct of molecules
@@ -169,9 +169,9 @@ public class MoleculeManager : MonoBehaviour {
               equal = true;
               break;
             }
-          }
         }
-        if (!equal)
+        }
+        if (!equal && bond != "")
           return false;
       }
     return true;
