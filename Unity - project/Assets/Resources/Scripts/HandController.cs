@@ -38,6 +38,9 @@ public class HandController : MonoBehaviour
   private bool UpDown = true;
   private int rotationType;
 
+  //rotation variables
+  private bool rightHandGrabbingPivot;
+
   // Use this for initialization
   void Start()
   {
@@ -52,12 +55,12 @@ public class HandController : MonoBehaviour
     translate = false;
     interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
     pivots = GameObject.FindGameObjectsWithTag("Pivot");
-    rotationType = transform.parent.transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
+    rotationType = transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
   }
 
   public void updateCurrentHand (Hand leapHand)
   {
-    rotationType = transform.parent.transform.parent.GetComponent<Manager> ().rotationType;
+    rotationType = transform.parent.GetComponent<Manager> ().rotationType;
     //CheckFingersPosition (leapHand);    
     UpdatePivots();
 
@@ -97,8 +100,6 @@ public class HandController : MonoBehaviour
 
   void Update()
   {
-    //testing 
-    CheckKeyboard();
 
     interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
 
@@ -180,7 +181,6 @@ public class HandController : MonoBehaviour
     for (int i = 0; i < pivots.Length; i++) {
       GameObject pivot = pivots [i];
       if ((hand.IsLeft && pivot.GetComponent<PivotController> ().IsGrasped () == 1) || (hand.IsRight && pivot.GetComponent<PivotController> ().IsGrasped () == 2)) {
-        //Debug.Log(pivot.GetComponent<PivotController>().IsGraspedByLeft());
         if (pivot != null && pivot.GetComponent<InteractionBehaviour> ().isGrasped) {
           if (Vector3.Distance (pivot.transform.position, hand.PalmPosition.ToVector3 ()) > maxDist) {
             pivot.GetComponent<InteractionBehaviour> ().ignoreGrasping = true;
@@ -212,21 +212,13 @@ public class HandController : MonoBehaviour
     grabbedPivot.GetComponent<InteractionBehaviour> ().ignoreGrasping = false;
   }
 
-  void CheckKeyboard()
-  {
-    if (Input.GetKeyDown("u"))
-    {
-      UpDown = true;
-    }
-    if (Input.GetKeyDown("i"))
-    {
-      UpDown = false;
-    }
-  }
-
   void Translate(Hand hand)
   {
-    if (hand.IsLeft)
+    if (hand.IsLeft && !rightHandGrabbingPivot)
+    {
+      movement = lastPalmPosition - hand.PalmPosition.ToVector3();//- lastPalmPosition;
+    }
+    else if (hand.IsRight && rightHandGrabbingPivot)
     {
       movement = lastPalmPosition - hand.PalmPosition.ToVector3();//- lastPalmPosition;
     }
@@ -275,29 +267,6 @@ public class HandController : MonoBehaviour
         X = false;
       }
     }
-    else if(!UpDown) 
-    { 
-        //Debug.Log("x: " + hand.PalmNormal.x + " min: "  +interval);
-       // Debug.Log("y: " + hand.PalmNormal.y + " -.2f - .15f"  );
-      //palma para o lado e virada para tras
-      if(hand.PalmNormal.x >= interval && hand.PalmNormal.x <= 1 && hand.PalmNormal.y >= -.2f && hand.PalmNormal.y <= .15f && hand.PalmNormal.z >= -.35f && hand.PalmNormal.z <= 0.05f) //x 1 y 0.1
-      {
-          leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.05f);
-        Z = true;
-        X = false;
-      }
-      else if (hand.PalmNormal.z <= -interval && hand.PalmNormal.z >= -1) //x 0 y 0.1
-      {
-          leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.05f);
-        Z = false;
-        X = true;
-      }    
-      else{
-          leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.0f);
-        Z = false;
-        X = false;
-      }  
-    }
     else if(!fingerStreched && UpDown){
         leftHandGO.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().materials[1].SetFloat("_Outline", 0.0f);
         Z = false;
@@ -345,10 +314,11 @@ public class HandController : MonoBehaviour
       }
       
     }
-    else if(hand.IsLeft && !rotating)
+    if(!rotating)
     {
       if (!translate && !hand.Fingers[4].IsExtended && !hand.Fingers[3].IsExtended)
       {
+        rightHandGrabbingPivot = hand.IsRight;
         BeginTranslate();
       }
       else if (translate && (hand.Fingers[4].IsExtended || hand.Fingers[3].IsExtended))
@@ -366,7 +336,7 @@ public class HandController : MonoBehaviour
       GameObject obj = pivots[i];
       if (obj != null && obj.CompareTag("Pivot") && obj.GetComponent<InteractionBehaviour>().isGrasped)
       {
-        obj.transform.parent.GetComponent<Molecule>().Translate();
+        obj.transform.parent.GetComponent<Molecule>().Translate(rightHandGrabbingPivot);
         translate = true;
         break;
       }

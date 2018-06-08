@@ -34,19 +34,22 @@ public class Molecule : MonoBehaviour
   //variables picked up from the manager
   private int bondType;
   private int rotationType;
-  private int typeOfBonding;
-  private bool MultipleLines;
 
   //variables used to bond atoms
   private bool bondingAtoms, canUpdateTap;
   private GameObject atom1, atom2;
-  private int distBond, numberOfTaps;
+  private int numberOfTaps;
 
   //variables related to the mini molecules on the shelves
   private GameObject shelves;
   private bool isMini;
-  private bool isPointed;
   private Vector3 hitScale;
+
+  //variables center of the molecule
+  private Vector3 center;
+
+  //variables for rotation
+  private bool rightHandGrabbingPivot;
 
   void Awake()
   {
@@ -54,8 +57,6 @@ public class Molecule : MonoBehaviour
     shelves = GameObject.Find("shelves");
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
     rotationType = camera.GetComponent<Manager>().rotationType;
-    MultipleLines = camera.GetComponent<Manager>().MultipleLines;
-    typeOfBonding = camera.GetComponent<Manager>().TypeOfBonding;
   }
 
   // Use this for initialization
@@ -70,7 +71,6 @@ public class Molecule : MonoBehaviour
     pivotGrabbed = false;
     rotate = false;
     isRotating = false;
-    isPointed = false;
     canUpdateTap = true;
     pivot = Instantiate (rotationToogle, transform.position, transform.rotation);
     pivot.transform.parent = transform;
@@ -165,59 +165,28 @@ public class Molecule : MonoBehaviour
       pivotGrabbed = false;
       CheckRotate();
       CheckTranslate();
-      if (bondingAtoms && typeOfBonding == 1)
-        CheckDistance();
-      else if (bondingAtoms && typeOfBonding == 2)
+      if(bondingAtoms)
         CheckTaps();
     }
   }
 
   void CheckVariables()
   {
-    typeOfBonding = camera.GetComponent<Manager>().TypeOfBonding;
     rotationType = camera.GetComponent<Manager>().rotationType;
-  }
-
-  void CheckDistance()
-  {
-    float dist = Vector3.Distance(atom1.transform.position, atom2.transform.position);
-    SetInvisibleBond(dist, true);
-    if (!atom1.GetComponent<Atom>().IsBonding() && !atom2.GetComponent<Atom>().IsBonding())
-      CreateBondDist(dist);
   }
 
   void CheckTaps()
   {
-    SetInvisibleBond(numberOfTaps, false);
+    SetInvisibleBond(numberOfTaps);
     if (!atom1.GetComponent<Atom>().IsBonding() && !atom2.GetComponent<Atom>().IsBonding())
       CreateBondTaps(numberOfTaps);
   }
 
   //creates the bond according to the distance to guide the user
-  void SetInvisibleBond(float value, bool dist)
+  void SetInvisibleBond(float value)
   {
     bond = simpleBond;
     int bondNumber = 1;
-    if (dist)
-    {
-      if (value <= .15f)
-      {
-        bond = quadrupleBond;
-        bondNumber = 4;
-      }
-      else if (value <= .20f && value > .15f)
-      {
-        bond = tripleBond;
-        bondNumber = 3;
-      }
-      else if (value <= .25f && value > 0.20)
-      {
-        bond = doubleBond;
-        bondNumber = 2;
-      }
-    }
-    else
-    {
       int n = Mathf.RoundToInt(value);
       switch (n)
       {
@@ -238,7 +207,6 @@ public class Molecule : MonoBehaviour
           bondNumber = 4;
           break;
       }
-    }
     if (lastInviBondType != bondNumber)
     {
       if (lastInviBond != null)
@@ -268,23 +236,21 @@ public class Molecule : MonoBehaviour
 
   void CheckRotate ()
   {
-    Vector3 pointRotate = pivot.transform.position;
-    pointRotate.y += pivotOffset;
     for (int i = 0; i < transform.childCount; i++) {
       Transform child = transform.GetChild (i);
       if (child.CompareTag ("Interactable") && rotate) {
         if (rotationType == 1) {
           float a = 80 * Time.deltaTime;
-          child.RotateAround (pointRotate, axis, a);//handController.GetComponent<HandController>().GetHandRotation()
+          child.RotateAround (center, axis, a);//handController.GetComponent<HandController>().GetHandRotation()
         } else if (rotationType == 2)
-          child.RotateAround (pointRotate, axis, (handController.GetComponent<HandController> ().GetHandRotation ()));//forward
+          child.RotateAround (center, axis, (handController.GetComponent<HandController> ().GetHandRotation ()));//forward
         else if (rotationType == 3) {
           isRotating = true;
           child.GetComponent<Atom> ().SetRotating (true);
         }
       } else if (child.CompareTag ("Interactable") && !rotate) {
         if (rotationType == 1 || rotationType == 2)
-          child.RotateAround (pointRotate, axis, 0);
+          child.RotateAround (center, axis, 0);
         else {
           child.GetComponent<Atom> ().SetRotating (false);
           isRotating = false;
@@ -331,7 +297,7 @@ public class Molecule : MonoBehaviour
     {
       rotate = true;
       if(!isRotating)
-      LockDistanceToPivot();
+      LockDistanceToCenter();
     }
 
     //If only one atom is grasped, then you are just moving it, and stop all other actions
@@ -352,15 +318,15 @@ public class Molecule : MonoBehaviour
 
   }
 
-  void LockDistanceToPivot()
+  void LockDistanceToCenter()
   {
     for (int i = 0; i < transform.childCount; i++)
     {
       Transform child = transform.GetChild(i);
       if (child.CompareTag("Interactable"))
       {
-        float dist = Vector3.Distance(pivot.transform.position, child.position);
-        child.GetComponent<Atom>().SetDistanceToPivot(pivot.transform.position);
+        float dist = Vector3.Distance(center, child.position);
+        child.GetComponent<Atom>().SetDistanceToCenter(center);
       }
     }
   }
@@ -386,56 +352,6 @@ public class Molecule : MonoBehaviour
   {
     bondType = type;
       
-    switch (bondType) {
-      case 1:
-        bond=simpleBond;
-        break;
-      case 2:
-        bond = doubleBond;
-        break;
-      case 3:
-        bond = tripleBond;
-        break;
-      case 4:
-        bond = quadrupleBond;
-        break;  
-    }
-  }
-
-  //Check what type of bond must be created
-  void DefineBondTypeDist (GameObject atomA, GameObject atomB, float dist)
-  {
-    int distBond = 0;
-    if (dist < .15f) //.2
-      distBond = 4;
-    else if (dist < .20f && dist >= .15f) //.3 .2
-      distBond = 3;
-    else if (dist < .25f && dist >= 0.20f) //.4 .3
-      distBond = 2;
-    else if (dist >= .25f) //.4
-      distBond = 1;
-
-    //get available bonds from the atoms
-    int availableBondsA = atomA.GetComponent<Atom> ().GetAvailableBonds ();
-    int availableBondsB = atomB.GetComponent<Atom> ().GetAvailableBonds ();
-    if (availableBondsA <= 0 || availableBondsB <= 0)
-      return;
-
-    bondType = 0;
-    //get the smallest bond type possible between the two atoms
-    if (availableBondsA < availableBondsB)
-      bondType = availableBondsA;
-    else
-      bondType = availableBondsB;
-
-    if (distBond <= bondType)
-      bondType = distBond;
-    else {
-      bondType = -1;
-      return;
-    }
-    
-    //define the gameobject of the bond to instantiate
     switch (bondType) {
       case 1:
         bond=simpleBond;
@@ -523,35 +439,16 @@ public class Molecule : MonoBehaviour
       atomA.transform.parent = transform;
       atomB.transform.parent = transform;
     }
-    else if(typeOfBonding == 1 || typeOfBonding == 2)//bonding according to distance and available bonds
+    else //bonding according to distance and available bonds
     {
-      atomA.GetComponent<Atom>().SettingBond(typeOfBonding);
-      atomB.GetComponent<Atom>().SettingBond(typeOfBonding);
+      atomA.GetComponent<Atom>().SettingBond();
+      atomB.GetComponent<Atom>().SettingBond();
       bondingAtoms = true;
       atomA.transform.parent = transform;
       atomB.transform.parent = transform;
       atom1 = atomA;
       atom2 = atomB;
     }
-  }
-
-  private void CreateBondDist (float dist)
-  {
-    DefineBondTypeDist (atom1, atom2, dist);
-    if (bondType != -1) {
-      GameObject newBond = Instantiate (bond, transform.position, transform.rotation);
-      AddBond (newBond);
-      newBond.GetComponent<BondController> ().SetAtoms (atom1, atom2, bondType);
-      newBond.transform.localScale += new Vector3 (bondScale, bondScale, 0);
-      newBond.transform.parent = transform;
-      atom1.transform.parent = transform;
-      atom2.transform.parent = transform;
-      bondingAtoms = false;
-      lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
-    } else {
-      lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
-    }
-    bondType = 0;
   }
 
   private void CreateBondTaps (int taps)
@@ -594,25 +491,32 @@ public class Molecule : MonoBehaviour
     //update pivot position according to the positions of the existent atoms in the molecule
     if (!isRotating)
     {
-      Vector3 center = new Vector3(0, 0, 0);
+      Vector3 molCenter = new Vector3(0, 0, 0);
       Vector3 lastPosition = new Vector3(0, 0, 0);
       int count = 0;
+      float maxX = 0;
       for (int i = 0; i < transform.childCount; i++)
       {
         Transform child = transform.GetChild(i);
         if (child.CompareTag("Interactable"))
         {
           count++;
-          center += (child.transform.position);
+          molCenter += (child.transform.position);
+          if (maxX < child.transform.position.x)
+            maxX = child.transform.position.x;
         }
       }
 
-      Vector3 pivotPosition = center / count;
-      pivotPosition.y -= pivotOffset;
-      pivot.transform.position = pivotPosition;
-
+      Vector3 newPos = molCenter / count;
+      center = newPos;
+      if (!rotate)
+      {
+        newPos.x += maxX + pivotOffset;
+        pivot.transform.position = newPos;
+      }
     }
   }
+
 
   public bool CheckAtomsAreBonded(GameObject atomA, GameObject atomB)
   {
@@ -651,8 +555,9 @@ public class Molecule : MonoBehaviour
     rotate = false;
   }
 
-  public void Translate()
+  public void Translate(bool rightHand)
   {
+    rightHandGrabbingPivot = rightHand;
     translate = true;
   }
 

@@ -17,26 +17,18 @@ public class Atom : MonoBehaviour {
   private bool isAttached;
   private bool toDetach;
   private int numberOfBonds; //bonds that the atom has
-  private GameObject nearAtom;
   private Material highlightMat;
   private Material highlightGrasp;
-  private bool leftPinch;
-  private bool rightPinch;
   private bool canBond;
   private float radiusCollision;
   private Dictionary<int,int> bondIDType; //List<int>
 
-  private Vector3 pointToRotate;
   private bool isRotating;
   private float distanceToPivot;
-  private Vector3 pivotPosition;
+  private Vector3 molCenter;
   private bool toBond;
   private int typeOfBonding;
 
-  //variables to lerp positions
-  private Vector3 initialPos, endPos;
-  private bool start;
-  private float length, startTime;
 
   // Use this for initialization
   void Start ()
@@ -47,7 +39,6 @@ public class Atom : MonoBehaviour {
     isAttached = false;
     toDetach = false;
     toBond = false;
-    start = true;
     highlightMat = transform.GetComponent<MeshRenderer>().materials[1];
     highlightGrasp = transform.GetComponent<MeshRenderer>().materials[2];
     handController = GameObject.FindGameObjectWithTag("HandController");
@@ -116,10 +107,10 @@ public class Atom : MonoBehaviour {
     }
   }
 
-  public void SetDistanceToPivot(Vector3 pivotPos)
+  public void SetDistanceToCenter(Vector3 center)
   {
-    pivotPosition = pivotPos;
-    distanceToPivot = Vector3.Distance(pivotPosition,transform.position);
+    molCenter = center;
+    distanceToPivot = Vector3.Distance(center,transform.position);
   }
 
   public void EnableBond()
@@ -139,7 +130,7 @@ public class Atom : MonoBehaviour {
 
   void Rotate()
   {
-    transform.position = (transform.position - pivotPosition).normalized * distanceToPivot + pivotPosition;
+    transform.position = (transform.position - molCenter).normalized * distanceToPivot + molCenter;
   }
 
   public void SetRotating(bool rotate)
@@ -214,9 +205,8 @@ public class Atom : MonoBehaviour {
     return numberOfBonds < numberOfBondsAllowed;
   }
 
-  public void SettingBond(int bondType)
+  public void SettingBond()
   {
-    typeOfBonding = bondType;
     toBond = true;
   }
 
@@ -227,7 +217,7 @@ public class Atom : MonoBehaviour {
 
   void OnCollisionEnter (Collision col)
   {
-    if (col.transform.CompareTag ("Interactable") && toBond && col.transform.GetComponent<Atom> ().toBond && typeOfBonding == 2) {
+    if (col.transform.CompareTag ("Interactable") && toBond && col.transform.GetComponent<Atom> ().toBond) {
       transform.parent.GetComponent<Molecule> ().UpdateBondType (1);
     } else if (col.transform.CompareTag ("Interactable") && canBond && col.transform.GetComponent<Atom> ().CanBond ()) {
       if (HasFreeBonds () && col.transform.GetComponent<Atom> ().HasFreeBonds ())

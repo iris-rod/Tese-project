@@ -17,7 +17,6 @@ public class Manager : MonoBehaviour
   public Leap.Unity.Interaction.InteractionManager manager;
   public bool VR;
   public bool MultipleLines;
-  public int TypeOfBonding;
   public int rotationType;
   
 
@@ -251,7 +250,7 @@ public class Manager : MonoBehaviour
 
     if (Input.GetKeyDown ("s")) {
       GameObject mol = GameObject.Find("MoleculeV3(Clone)");
-      SaveMolecule(mol,"CO2_place");
+      SaveMolecule(mol,"bla");
     }
 
   }
