@@ -62,7 +62,9 @@ public class Manager : MonoBehaviour
   public GameObject LoadMolecule (string name, bool mini)
   {
     string auxName = name.Split('_')[0];
-    string place = name.Split('_')[1];
+    string place = "";
+    if(name.Split('_').Length > 1)
+      place = name.Split('_')[1];
     bool invi = false;
     if (auxName == "Rotation" || auxName == "Move" || place == "place")
       invi = true;
@@ -226,17 +228,17 @@ public class Manager : MonoBehaviour
 
   void Update ()
   {
-    /*if (Input.GetKeyDown ("s") && platform.GetComponent<Platform> ().IsFree ()) {
+    if (Input.GetKeyDown ("s") && platform.GetComponent<Platform> ().IsFree ()) {
       //BBManager.SetTexture ("1");
-      GetComponent<TestsManager>().CheckReloadTask("partial mol");
+      //GetComponent<TestsManager>().CheckReloadTask("partial mol");
       LoadMolecule ("partial mol", false);
     } else if (Input.GetKeyDown ("a") && platform.GetComponent<Platform> ().IsFree ()) {
       //BBManager.SetTexture ("2");
       LoadMolecule ("CO2_a", false);
-      GetComponent<TestsManager>().CheckReloadTask("CO2_a");
+      //GetComponent<TestsManager>().CheckReloadTask("CO2_a");
     }
     //invisible final positions for rotations
-    else if (Input.GetKeyDown ("z"))
+    /*else if (Input.GetKeyDown ("z"))
       LoadMolecule ("Rotation_1", false);
     else if (Input.GetKeyDown ("x"))
       LoadMolecule ("Rotation_2", false);

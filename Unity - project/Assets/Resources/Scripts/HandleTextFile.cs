@@ -41,4 +41,15 @@ public class HandleTextFile
     File.WriteAllText(path+name,"");
   }
 
+  public static string ReadLevels(string name)
+  {
+    string finalPath = path + "Levels/" + name + ".txt";
+    string text = "";
+    //Read the text from directly from the test.txt file
+    StreamReader reader = new StreamReader(finalPath);
+    text = reader.ReadToEnd();
+    reader.Close();
+    return text;
+  }
+
 }

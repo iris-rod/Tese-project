@@ -49,7 +49,7 @@ public class Molecule : MonoBehaviour
   private Vector3 center;
 
   //variables for rotation
-  private bool rightHandGrabbingPivot;
+  private float rotationOffset;
 
   void Awake()
   {
@@ -62,6 +62,7 @@ public class Molecule : MonoBehaviour
   // Use this for initialization
   void Start ()
   {
+    rotationOffset = 5;
     pivotOffset = 0.1f;
     numberOfBonds = 1;
     numberOfTaps = 1;
@@ -241,9 +242,9 @@ public class Molecule : MonoBehaviour
       if (child.CompareTag ("Interactable") && rotate) {
         if (rotationType == 1) {
           float a = 80 * Time.deltaTime;
-          child.RotateAround (center, axis, a);//handController.GetComponent<HandController>().GetHandRotation()
+          child.RotateAround (center, axis, a);
         } else if (rotationType == 2)
-          child.RotateAround (center, axis, (handController.GetComponent<HandController> ().GetHandRotation ()));//forward
+          child.RotateAround (center, axis, (handController.GetComponent<HandController> ().GetHandRotation ())*rotationOffset);//forward
         else if (rotationType == 3) {
           isRotating = true;
           child.GetComponent<Atom> ().SetRotating (true);
@@ -555,9 +556,8 @@ public class Molecule : MonoBehaviour
     rotate = false;
   }
 
-  public void Translate(bool rightHand)
+  public void Translate()
   {
-    rightHandGrabbingPivot = rightHand;
     translate = true;
   }
 

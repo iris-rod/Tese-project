@@ -2,6 +2,6 @@ Carbon-1-Hydrogen_
 Carbon-1-Hydrogen_
 Carbon-1-Hydrogen_
 Carbon-1-Carbon_
-Carbon-2-Oxygen_
-Carbon-1-Oxygen_
-Oxygen-1-Hydrogen_
+		 Carbon-2-Oxygen_
+		 Carbon-1-Oxygen_
+				  Oxygen-1-Hydrogen_

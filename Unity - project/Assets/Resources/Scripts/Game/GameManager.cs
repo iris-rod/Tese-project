@@ -7,10 +7,14 @@ public class GameManager : MonoBehaviour
 
   private int level;
   private bool levelComplete, newLevel;
+  private string levels;
+  private string levelObjs;
   private Manager manager;
   private LevelManager LM;
   private MoleculeManager MM;
   private ShelfManager SM;
+  private InformationManager IM;
+
 
   private bool correctMolLoaded;
 
@@ -26,10 +30,12 @@ public class GameManager : MonoBehaviour
     SM = GameObject.FindGameObjectWithTag("shelves").GetComponent<ShelfManager>();
     manager = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>();
     BBManager = GameObject.FindGameObjectWithTag("Board").GetComponent<BlackBoardManager>();
+    IM = GameObject.Find("Info").GetComponent<InformationManager>();
     levelComplete = false;
     newLevel = true;
     correctMolLoaded = false;
     level = 1;
+    levels = HandleTextFile.ReadLevels("levels_default");
   }
 
   // Update is called once per frame
@@ -51,6 +57,19 @@ public class GameManager : MonoBehaviour
   {
     Debug.Log("new Level: " + level);
     string objs = "";
+    string[] levelsSplit = levels.Split(';');
+    for(int i = 0; i < levelsSplit.Length; i ++)
+    {
+      string[] levelDescp = levelsSplit[i].Split(':');
+      int levelID = int.Parse(levelDescp[0].Trim());
+      if (level == levelID)
+      {
+        objs = levelDescp[1].Trim();
+        break;
+      }
+    }
+
+    /*
     switch (level)
     {
       case 1:
@@ -69,7 +88,7 @@ public class GameManager : MonoBehaviour
         objs = "build-C2H4O2";
         break;
 
-    }
+    }*/
     LM.SetLevelId(level);
     LM.SetObjective(objs);
     CheckNextObjectiveSetup(LM.GetNextObjective());
@@ -79,7 +98,9 @@ public class GameManager : MonoBehaviour
 
   void NextLevelDisplay()
   {
-    BBManager.UpdateDisplay(LM.GetLevel(), LM.GetSublevel());
+    //BBManager.UpdateDisplay(LM.GetLevel(), LM.GetSublevel());
+    IM.UpdateLevel(LM.GetLevel());
+    IM.UpdateDisplay(LM.GetNextObjective(),true);
   }
 
   private bool CheckObjectiveComplete(string nextObj)
@@ -161,7 +182,8 @@ public class GameManager : MonoBehaviour
     Debug.Log("success: " + levelComplete);
     if (!levelComplete)
       CheckNextObjectiveSetup(LM.GetNextObjective());
-    BBManager.UpdateDisplay(LM.GetLevel(), LM.GetSublevel());
+    //BBManager.UpdateDisplay(LM.GetLevel(), LM.GetSublevel());
+    IM.UpdateDisplay(LM.GetNextObjective(),false);
     return levelComplete;
   }
 

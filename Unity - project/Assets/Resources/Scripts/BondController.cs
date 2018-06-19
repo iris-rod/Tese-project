@@ -22,25 +22,31 @@ public class BondController : MonoBehaviour
   public float distanceToDetach;
   public float distance; //At which they stick together
 
+  private bool AMoved, BMoved;
+
   void Start ()
   {
     switch (bondType) {
     case 1:
       distanceToDetach = 0.25f;
+        distance = .23f;
       break;
     case 2:
       distanceToDetach = 0.30f;
+        distance = .18f;
       break;
     case 3:
       distanceToDetach = 0.35f;
-      break;
+        distance = .13f;
+        break;
     case 4:
       distanceToDetach = 0.40f;
-      break;
+        distance = .1f;
+        break;
 
     }
     string split = transform.parent.name.Split ('_') [0];
-    distance = 0.15f;
+    //distance = 0.15f;
     factor = 60;
     if (split == "Mini") {
       factor = 200f;//300
@@ -157,10 +163,17 @@ public class BondController : MonoBehaviour
         ballA.position = (ballA.transform.position - ballB.transform.position).normalized * distance + ballB.transform.position;
         transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballA, bondId);
       }
-      else
+      else if(BMoved)
+      {
+        ballA.position = (ballA.transform.position - ballB.transform.position).normalized * distance + ballB.transform.position;
+        transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballA, bondId);
+        BMoved = false;
+      }
+      else if (AMoved)
       {
         ballB.position = (ballB.transform.position - ballA.transform.position).normalized * distance + ballA.transform.position;
         transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballB, bondId);
+        AMoved = false;
       }
     }
   }
@@ -178,7 +191,7 @@ public class BondController : MonoBehaviour
       if (dist != distance)
       {
         ballB.position = (ballB.transform.position - ballA.transform.position).normalized * distance + ballA.transform.position;
-
+        AMoved = true;
       }
     }
     else if (atom == ballB)
@@ -186,7 +199,7 @@ public class BondController : MonoBehaviour
       if (dist != distance)
       {
         ballA.position = (ballA.transform.position - ballB.transform.position).normalized * distance + ballB.transform.position;
-
+        BMoved = true;
       }
 
     }

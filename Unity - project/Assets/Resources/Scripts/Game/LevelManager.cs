@@ -81,13 +81,6 @@ public class LevelManager : MonoBehaviour {
   private void CheckCompletion()
   {
     completed = (maxSubLevels < sublevel);
-    /*bool allDone = true;
-    foreach (var par in objectives)
-    {
-      if (!par.Value)
-        allDone = false;
-    }
-    completed = allDone;*/
   }
 
   public int GetSublevel()

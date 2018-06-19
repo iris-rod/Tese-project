@@ -96,30 +96,53 @@
      <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\UI\Editor\InteractionButtonEditor.cs" />
      <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\UI\Editor\InteractionSliderEditor.cs" />
      <Compile Include="Assets\LeapMotion\Modules\InteractionEngine\Scripts\Utility\Editor\InteractionControllerSwitcherEditor.cs" />
+     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
      <None Include="Assets\Resources\SavedFiles\molecule2.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
      <None Include="Assets\Resources\SavedFiles\saved_6.txt" />
      <None Include="Assets\LeapMotion\Core\Resources\LeapCG.cginc" />
+     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
      <None Include="Assets\LeapMotion\Core\README_BEFORE_UPDATING.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
      <None Include="Assets\Resources\Shaders\Outlined-Silhouette Only.shader" />
+     <None Include="Assets\Resources\SavedFiles\bla.txt" />
      <None Include="Assets\Resources\SavedFiles\saved_9.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
      <None Include="Assets\LeapMotion\Core\readme.txt" />
      <None Include="Assets\LeapMotion\Core\Resources\RuntimeGizmos.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\LeapMotionModules\DetectionExamples\Shaders\LeapPinchLine.shader" />
      <None Include="Assets\Resources\SavedFiles\saved_10.txt" />
      <None Include="Assets\Resources\SavedFiles\saved_7.txt" />
+     <None Include="Assets\Resources\SavedFiles\Levels\levels_default.txt" />
      <None Include="Assets\Resources\SavedFiles\saved_1.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
      <None Include="Assets\LeapMotion\Core\Dependencies.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\LeapMotion\Core\Resources\ThresholdOverlay.shader" />
      <None Include="Assets\Resources\SavedFiles\Move_2.txt" />
+     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald Bold - OFL.txt" />
      <None Include="Assets\Resources\SavedFiles\saved_4.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
+     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\NotoSans - License.txt" />
      <None Include="Assets\Resources\SavedFiles\saved_8.txt" />
      <None Include="Assets\LeapMotion\Core\Resources\PassthroughForeground.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
+     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
+     <None Include="Assets\Resources\Fonts\EmojiOne Attribution.txt" />
      <None Include="Assets\Resources\SavedFiles\molecule.txt" />
      <None Include="Assets\Resources\SavedFiles\C2H4O2.txt" />
+     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
      <None Include="Assets\LeapMotion\Core\Resources\PassthroughBackground.shader" />
+     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\LiberationSans - OFL.txt" />
      <None Include="Assets\Resources\SavedFiles\CO2_place.txt" />
      <None Include="Assets\Resources\SavedFiles\CO2_a.txt" />
      <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
+     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
      <None Include="Assets\Resources\SavedFiles\Move_1.txt" />
      <None Include="Assets\Resources\SavedFiles\saved_11.txt" />
      <None Include="Assets\Resources\SavedFiles\Rotation_1.txt" />
@@ -195,6 +218,12 @@
  </Reference>
  <Reference Include="LitJson">
  <HintPath>C:/Users/gabri/Documents/Mestrado/TESE/Tese-project/Unity - project/Assets/Resources/Scripts/Dependencies/LitJson.dll</HintPath>
+ </Reference>
+ <Reference Include="TextMeshPro-5.6-Editor">
+ <HintPath>C:/Users/gabri/Documents/Mestrado/TESE/Tese-project/Unity - project/Assets/TextMesh Pro/Plugins/Editor DLL/TextMeshPro-5.6-Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="TextMeshPro-5.6-Runtime">
+ <HintPath>C:/Users/gabri/Documents/Mestrado/TESE/Tese-project/Unity - project/Assets/TextMesh Pro/Plugins/Editor DLL/TextMeshPro-5.6-Runtime.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
