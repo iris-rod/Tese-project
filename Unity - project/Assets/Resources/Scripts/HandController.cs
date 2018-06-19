@@ -55,13 +55,13 @@ public class HandController : MonoBehaviour
     translate = false;
     interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
     pivots = GameObject.FindGameObjectsWithTag("Pivot");
-    rotationType = transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
+    rotationType = transform.parent.transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
   }
 
   public void updateCurrentHand (Hand leapHand)
   {
 
-    rotationType = transform.parent.GetComponent<Manager> ().rotationType; 
+    rotationType = transform.parent.transform.parent.GetComponent<Manager> ().rotationType; 
     UpdatePivots();
 
 

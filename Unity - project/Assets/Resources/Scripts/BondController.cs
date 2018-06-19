@@ -28,8 +28,8 @@ public class BondController : MonoBehaviour
   {
     switch (bondType) {
     case 1:
-      distanceToDetach = 0.25f;
-        distance = .23f;
+      distanceToDetach = 0.26f;
+        distance = .21f;
       break;
     case 2:
       distanceToDetach = 0.30f;
@@ -37,17 +37,17 @@ public class BondController : MonoBehaviour
       break;
     case 3:
       distanceToDetach = 0.35f;
-        distance = .13f;
+        distance = .15f;
         break;
     case 4:
       distanceToDetach = 0.40f;
-        distance = .1f;
+        distance = .12f;
         break;
 
     }
     string split = transform.parent.name.Split ('_') [0];
     //distance = 0.15f;
-    factor = 60;
+    factor = 75;
     if (split == "Mini") {
       factor = 200f;//300
       distance = 0.09f;//.05

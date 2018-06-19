@@ -515,6 +515,11 @@ public class Molecule : MonoBehaviour
         newPos.x += maxX + pivotOffset;
         pivot.transform.position = newPos;
       }
+      if (bondingAtoms)
+      {
+        newPos.x += .2f;
+        pivot.transform.position = newPos;
+      }
     }
   }
 

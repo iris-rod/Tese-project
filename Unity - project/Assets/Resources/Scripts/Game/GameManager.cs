@@ -69,26 +69,6 @@ public class GameManager : MonoBehaviour
       }
     }
 
-    /*
-    switch (level)
-    {
-      case 1:
-        objs = "build-H2O";
-        break;
-      case 2:
-        objs = "build-CO2_place-CO2";
-        break;
-      case 3:
-        objs = "build-CH4_save-CH4";
-        break;
-      case 4:
-        objs = "load-CH4";
-        break;
-      case 5:
-        objs = "build-C2H4O2";
-        break;
-
-    }*/
     LM.SetLevelId(level);
     LM.SetObjective(objs);
     CheckNextObjectiveSetup(LM.GetNextObjective());
@@ -179,7 +159,6 @@ public class GameManager : MonoBehaviour
   public bool CheckLevelCompletion()
   {
     levelComplete = LM.LevelCompleted();
-    Debug.Log("success: " + levelComplete);
     if (!levelComplete)
       CheckNextObjectiveSetup(LM.GetNextObjective());
     //BBManager.UpdateDisplay(LM.GetLevel(), LM.GetSublevel());

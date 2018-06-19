@@ -29,13 +29,20 @@ public class CompleteLevelButton : MonoBehaviour {
       {
         if (colliders[i].transform.name.Split(' ')[0] == "Contact" && canPush)
         {
-          canPush = false;
-          animator.SetBool("pushed", true);
-          Invoke("Reset", .5f);
+          //canPush = false;
+          //animator.SetBool("pushed", true);
+          //Invoke("Reset", .5f);
+          //GM.UpdateLevel();
+          GameObject invi = GameObject.FindGameObjectWithTag("Invisible");
+          if (invi != null && invi.GetComponent<InvisibleMoleculeBehaviour>().HasOverlap())
+          {
+            canPush = false;
+            animator.SetBool("pushed", true);
+            invi.GetComponent<InvisibleMoleculeBehaviour>().DestroyOverlap();
+            Destroy(invi);
+            Invoke("Reset", .5f);
+          }
 
-
-            GM.UpdateLevel();
-          
         }
       }
     }

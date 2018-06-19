@@ -9,11 +9,15 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
   private Vector3 pos;
   private string task;
   private MoleculeManager MM;
-
+  private Manager M;
+  private int number,test;
 	// Use this for initialization
 	void Start () {
+    number = 0;
+    test = 0;
 		hasOverlap = false;
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
+    M = GameObject.Find("MainCamera").GetComponent<Manager>();
 	}
 	
   void Update () {
@@ -64,6 +68,8 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
   
   public void DestroyOverlap ()
   {
+    M.SaveMolecule(overlapGO,"test_" + test + "mol_" + number );
+    number++;
     Destroy(overlapGO);
   }
 }

@@ -31,6 +31,8 @@ public class Manager : MonoBehaviour
   private Vector3 initialPos = new Vector3(0,0,0);
   private Vector3 moleculePosition, molPreSaved, molPostSaved;
 
+  private string logName = "log1";
+
   void Start()
   {
     molPostSaved = Vector3.zero;// on platform -> new Vector3(.8f,0f,.4f);//molecules saved in runtime
@@ -228,14 +230,37 @@ public class Manager : MonoBehaviour
 
   void Update ()
   {
-    if (Input.GetKeyDown ("s") && platform.GetComponent<Platform> ().IsFree ()) {
+    if (Input.GetKeyDown ("w") && platform.GetComponent<Platform> ().IsFree ()) {
       //BBManager.SetTexture ("1");
       //GetComponent<TestsManager>().CheckReloadTask("partial mol");
       LoadMolecule ("partial mol", false);
-    } else if (Input.GetKeyDown ("a") && platform.GetComponent<Platform> ().IsFree ()) {
+    } else if (Input.GetKeyDown ("q") && platform.GetComponent<Platform> ().IsFree ()) {
       //BBManager.SetTexture ("2");
       LoadMolecule ("CO2_a", false);
       //GetComponent<TestsManager>().CheckReloadTask("CO2_a");
+    } else if (Input.GetKeyDown("a"))
+    {
+      Logs.SaveFile(logName,"pulso" + "\n");
+    }
+    else if (Input.GetKeyDown("b"))
+    {
+      Logs.SaveFile(logName, "pivot" + "\n");
+    }
+    else if (Input.GetKeyDown("1"))
+    {
+      Logs.AddTaskToFile(logName, "1");
+    }
+    else if (Input.GetKeyDown("2"))
+    {
+      Logs.AddTaskToFile(logName, "2");
+    }
+    else if (Input.GetKeyDown("3"))
+    {
+      Logs.AddTaskToFile(logName, "3");
+    }
+    else if (Input.GetKeyDown("4"))
+    {
+      Logs.AddTaskToFile(logName, "4");
     }
     //invisible final positions for rotations
     /*else if (Input.GetKeyDown ("z"))
