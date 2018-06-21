@@ -24,11 +24,13 @@ public class Atom : MonoBehaviour {
   private Dictionary<int,int> bondIDType; //List<int>
 
   private bool isRotating;
-  private float distanceToPivot;
-  private Vector3 molCenter;
+  private float distanceToPivot, distanceToGrabbed;
+  private Vector3 molCenter, grabbedPos;
   private bool toBond;
   private int typeOfBonding;
 
+  private Vector3[] offsets;
+  private GameObject grabbedAtom;
 
   // Use this for initialization
   void Start ()
@@ -113,6 +115,37 @@ public class Atom : MonoBehaviour {
     distanceToPivot = Vector3.Distance(center,transform.position);
   }
 
+  public void SetDistanceToGrabbed(Vector3 pos)
+  {
+    grabbedPos = pos;
+    distanceToGrabbed = Vector3.Distance(pos, transform.position);
+  }
+
+  public void SetDistanceToOtherAtoms(GameObject obj)
+  {
+    grabbedAtom = obj;
+    int number = 0;
+    for (int i = 0; i < transform.parent.childCount; i++)
+    {
+      Transform child = transform.parent.GetChild(i);
+      if (child.CompareTag("Interactable"))
+      {
+        number++;
+      }
+    }
+    offsets = new Vector3[number-2]; //change child
+    int ind = 0;
+    for (int i = 0; i < transform.parent.childCount; i++)
+    {
+      Transform child = transform.parent.GetChild(i);
+      if (child.CompareTag("Interactable") && child != transform && child != obj.transform)
+      {
+        offsets[ind] = transform.position - child.position;
+        ind++;
+      }
+    }
+  }
+
   public void EnableBond()
   {
     canBond = true;
@@ -130,7 +163,28 @@ public class Atom : MonoBehaviour {
 
   void Rotate()
   {
-    transform.position = (transform.position - molCenter).normalized * distanceToPivot + molCenter;
+    float dist = Vector3.Distance(grabbedPos, transform.position);
+    if(dist != distanceToGrabbed && !transform.GetComponent<InteractionBehaviour>().isGrasped)
+    {
+      transform.position = (transform.position - grabbedPos).normalized * distanceToGrabbed + grabbedPos;
+    }
+    float dist1 = Vector3.Distance(molCenter, transform.position);
+    if (dist1 != distanceToPivot)
+    {
+      transform.position = (transform.position - molCenter).normalized * distanceToPivot + molCenter;
+    }
+    int ind = 0;
+    for (int i = 0; i < transform.parent.childCount; i++)
+    {
+      Transform child = transform.parent.GetChild(i);
+      Debug.Log(grabbedAtom.transform);
+      if (child.CompareTag("Interactable") && child != transform && child != grabbedAtom.transform)
+      {
+        transform.position += offsets[ind];
+        ind++;
+      }
+    }
+
   }
 
   public void SetRotating(bool rotate)

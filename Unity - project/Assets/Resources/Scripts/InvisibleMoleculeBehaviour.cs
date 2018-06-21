@@ -60,7 +60,13 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
     return MM.CompareMolecules(molecule.gameObject, transform.gameObject);
 
   }
-  
+
+  private void OnDrawGizmos()
+  {
+    Vector3 sca = new Vector3(.5f,.5f,.3f);
+    Gizmos.DrawWireCube(pos, sca);
+  }
+
   public bool HasOverlap ()
   {
     return hasOverlap;

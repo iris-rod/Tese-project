@@ -50,6 +50,9 @@ public class Molecule : MonoBehaviour
 
   //variables for rotation
   private float rotationOffset;
+  private Transform grabbedChild;
+  private Vector3 lastPosGrabbedChild;
+  private float rotationValue;
 
   void Awake()
   {
@@ -63,7 +66,7 @@ public class Molecule : MonoBehaviour
   void Start ()
   {
     rotationOffset = 5;
-    pivotOffset = 0.1f;
+    pivotOffset = 0.12f;
     numberOfBonds = 1;
     numberOfTaps = 1;
     graspedAtoms = 0;
@@ -247,13 +250,17 @@ public class Molecule : MonoBehaviour
           child.RotateAround (center, axis, (handController.GetComponent<HandController> ().GetHandRotation ())*rotationOffset);//forward
         else if (rotationType == 3) {
           isRotating = true;
+          UpdateValueRotation();
           child.GetComponent<Atom> ().SetRotating (true);
+          //Debug.Log(rotationValue*100 + " " + 80*Time.deltaTime);
+          //child.RotateAround(center, Vector3.up, rotationValue*1000);
         }
       } else if (child.CompareTag ("Interactable") && !rotate) {
         if (rotationType == 1 || rotationType == 2)
           child.RotateAround (center, axis, 0);
         else {
           child.GetComponent<Atom> ().SetRotating (false);
+          child.RotateAround(center, axis, 0);
           isRotating = false;
         }
       }
@@ -268,7 +275,10 @@ public class Molecule : MonoBehaviour
     {
       Transform child = transform.GetChild(i);
       if (child.CompareTag("Interactable") && child.GetComponent<InteractionBehaviour>().isGrasped)
+      {
         graspedAtoms++;
+        grabbedChild = child;
+      }
       else if (child.CompareTag("Pivot") && child.GetComponent<InteractionBehaviour>().isGrasped)
         pivotGrabbed = true;
     }
@@ -326,10 +336,26 @@ public class Molecule : MonoBehaviour
       Transform child = transform.GetChild(i);
       if (child.CompareTag("Interactable"))
       {
-        float dist = Vector3.Distance(center, child.position);
         child.GetComponent<Atom>().SetDistanceToCenter(center);
+        if (child != grabbedChild)
+        {
+          child.GetComponent<Atom>().SetDistanceToGrabbed(grabbedChild.position);
+          child.GetComponent<Atom>().SetDistanceToOtherAtoms(grabbedChild.gameObject);
+        }
       }
     }
+
+    Vector3 dir = grabbedChild.position - center;
+    //Vector3 left = Vector3.Cross(dir, Vector3.up).normalized;
+    axis = Vector3.Cross(dir, Vector3.up).normalized;
+  }
+
+  private void UpdateValueRotation()
+  {
+    rotationValue = Vector3.Distance(lastPosGrabbedChild,grabbedChild.position);
+    Vector3 dir = grabbedChild.position - center;
+    axis = Vector3.Cross(dir, Vector3.up).normalized;
+    lastPosGrabbedChild = grabbedChild.position;
   }
 
   public void SetAxis(bool endZGrabbed, bool endXGrabbed)

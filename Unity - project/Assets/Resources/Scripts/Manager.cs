@@ -130,9 +130,9 @@ public class Manager : MonoBehaviour
       
     BondAtoms (molecule);
     
-    if (!invi)
-      molecule.transform.position += GetMoleculeFinalPos (name);
-    else {
+    //if (!invi)
+      //molecule.transform.position += GetMoleculeFinalPos (name);
+    if(invi) {
       molecule.name = name;
       SetMoleculeTransparent(molecule);
     }
@@ -236,7 +236,7 @@ public class Manager : MonoBehaviour
       LoadMolecule ("partial mol", false);
     } else if (Input.GetKeyDown ("q") && platform.GetComponent<Platform> ().IsFree ()) {
       //BBManager.SetTexture ("2");
-      LoadMolecule ("CO2_a", false);
+      LoadMolecule ("CO2_b", false);
       //GetComponent<TestsManager>().CheckReloadTask("CO2_a");
     } else if (Input.GetKeyDown("a"))
     {
@@ -274,10 +274,14 @@ public class Manager : MonoBehaviour
     else if (Input.GetKeyDown("b"))
       LoadMolecule("Move_2", false);
       */
+    if (Input.GetKeyDown(KeyCode.Space))
+    {
+      LoadMolecule("Move_etanol",false);
+    }
 
     if (Input.GetKeyDown ("s")) {
       GameObject mol = GameObject.Find("MoleculeV3(Clone)");
-      SaveMolecule(mol,"bla");
+      SaveMolecule(mol,"Move_H2O");
     }
 
   }
