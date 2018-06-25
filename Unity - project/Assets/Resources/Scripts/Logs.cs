@@ -44,7 +44,6 @@ public class Logs : MonoBehaviour {
     string finalPath = path + name;
     
     //Write some text to the test.txt file
-    Debug.Log(task + " " + text);
     string toWrite = "";
     if (task == "")
     {

@@ -6,7 +6,7 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
 
   private bool hasOverlap;
   private GameObject overlapGO;
-  private Vector3 pos;
+  private Vector3 pos,sca;
   private string task;
   private MoleculeManager MM;
   private Manager M;
@@ -17,7 +17,7 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
     test = 0;
 		hasOverlap = false;
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
-    M = GameObject.Find("MainCamera").GetComponent<Manager>();
+    M = GameObject.Find("Main Camera").GetComponent<Manager>();
 	}
 	
   void Update () {
@@ -34,6 +34,22 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
     else {
       pos = new Vector3 (transform.position.x, transform.position.y + 2f, transform.position.z + .4f);
     }
+    switch (task)
+    {
+      case "move_etanol":
+        pos = new Vector3(transform.position.x+.1f, transform.position.y + 2.1f, transform.position.z + .36f);
+        sca = new Vector3(.5f, .5f, .19f);
+        break;
+      case "move_co2":
+        pos = new Vector3(transform.position.x, transform.position.y + 2.1f, transform.position.z + .33f);
+        sca = new Vector3(.3f, .3f, .19f);
+        break;
+      case "move_h2o":
+        pos = new Vector3(transform.position.x+.01f, transform.position.y + 2.2f, transform.position.z + .37f);
+        sca = new Vector3(.3f, .3f, .19f);
+        break;
+    }
+
   }
 
   private void CheckCollision ()
@@ -61,12 +77,12 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
 
   }
 
-  private void OnDrawGizmos()
+ /* private void OnDrawGizmos()
   {
-    Vector3 sca = new Vector3(.5f,.5f,.3f);
-    Gizmos.DrawWireCube(pos, sca);
+    Vector3 scal = new Vector3(.3f,.3f,.19f);
+    Gizmos.DrawWireCube(pos, scal);
   }
-
+  */
   public bool HasOverlap ()
   {
     return hasOverlap;

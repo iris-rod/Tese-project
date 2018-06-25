@@ -276,7 +276,12 @@ public class Manager : MonoBehaviour
       */
     if (Input.GetKeyDown(KeyCode.Space))
     {
-      LoadMolecule("Move_etanol",false);
+      LoadMolecule("etanol_b", false);
+    }
+
+    if (Input.GetKeyDown("n"))
+    {
+      LoadMolecule("CO2_b", false);
     }
 
     if (Input.GetKeyDown ("s")) {

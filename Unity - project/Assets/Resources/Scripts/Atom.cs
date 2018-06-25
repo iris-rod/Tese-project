@@ -30,6 +30,7 @@ public class Atom : MonoBehaviour {
   private int typeOfBonding;
 
   private Vector3[] offsets;
+  private float[] dists;
   private GameObject grabbedAtom;
 
   // Use this for initialization
@@ -133,7 +134,8 @@ public class Atom : MonoBehaviour {
         number++;
       }
     }
-    offsets = new Vector3[number-2]; //change child
+    offsets = new Vector3[number-2];
+    dists = new float[number-2];
     int ind = 0;
     for (int i = 0; i < transform.parent.childCount; i++)
     {
@@ -141,6 +143,7 @@ public class Atom : MonoBehaviour {
       if (child.CompareTag("Interactable") && child != transform && child != obj.transform)
       {
         offsets[ind] = transform.position - child.position;
+        dists[ind] = Vector3.Distance(transform.position,child.position);
         ind++;
       }
     }
@@ -163,6 +166,7 @@ public class Atom : MonoBehaviour {
 
   void Rotate()
   {
+    grabbedPos = transform.parent.GetComponent<Molecule>().GetGrabbedAtom().position;
     float dist = Vector3.Distance(grabbedPos, transform.position);
     if(dist != distanceToGrabbed && !transform.GetComponent<InteractionBehaviour>().isGrasped)
     {
@@ -173,18 +177,33 @@ public class Atom : MonoBehaviour {
     {
       transform.position = (transform.position - molCenter).normalized * distanceToPivot + molCenter;
     }
-    int ind = 0;
-    for (int i = 0; i < transform.parent.childCount; i++)
+
+    //check the distances to other atoms if it isnt the grabbed atom
+    if (!transform.GetComponent<InteractionBehaviour>().isGrasped)
     {
-      Transform child = transform.parent.GetChild(i);
-      Debug.Log(grabbedAtom.transform);
-      if (child.CompareTag("Interactable") && child != transform && child != grabbedAtom.transform)
+      int ind = 0;
+      for (int i = 0; i < transform.parent.childCount; i++)
       {
-        transform.position += offsets[ind];
-        ind++;
+        Transform child = transform.parent.GetChild(i);
+        float distAtoms = Vector3.Distance(child.position, transform.position);
+        if (child.CompareTag("Interactable") && child != transform && child != grabbedAtom.transform)
+        {
+          /*Debug.Log(offsets[ind] + "  " + (transform.position - child.transform.position));
+          Debug.Log((transform.position - child.transform.position).x + " " + offsets[ind].x);
+          if ((transform.position - child.transform.position) != offsets[ind])
+          {
+            Debug.Log("here");
+            transform.position += offsets[ind];
+          }*/
+          //Debug.Log(child.GetComponent<Atom>().GetAtomType() + ": " + dists[ind]+  " " + Vector3.Distance(transform.position, child.position));
+          if(dists[ind] != Vector3.Distance(transform.position, child.position))
+          {
+            child.position = (child.position - transform.position).normalized * dists[ind] + transform.position;
+          }
+          ind++;
+        }
       }
     }
-
   }
 
   public void SetRotating(bool rotate)

@@ -21,13 +21,14 @@ public class Molecule : MonoBehaviour
   public GameObject doubleBond;
   public GameObject tripleBond;
   public GameObject quadrupleBond;
+  public GameObject centerGO;
+  public GameObject rotationToogle;
+
+
   private GameObject lastInviBond;
   private int lastInviBondType;
-
   private Vector3 axis;
-
-  public GameObject rotationToogle;
-  private GameObject pivot;
+  private GameObject pivot, centerRep;
   private GameObject handController;
   private GameObject camera;
 
@@ -53,6 +54,7 @@ public class Molecule : MonoBehaviour
   private Transform grabbedChild;
   private Vector3 lastPosGrabbedChild;
   private float rotationValue;
+  private bool canCenterInst;
 
   void Awake()
   {
@@ -76,6 +78,7 @@ public class Molecule : MonoBehaviour
     rotate = false;
     isRotating = false;
     canUpdateTap = true;
+    canCenterInst = true;
     pivot = Instantiate (rotationToogle, transform.position, transform.rotation);
     pivot.transform.parent = transform;
     SetManagerPivot ();
@@ -252,7 +255,8 @@ public class Molecule : MonoBehaviour
           isRotating = true;
           UpdateValueRotation();
           child.GetComponent<Atom> ().SetRotating (true);
-          //Debug.Log(rotationValue*100 + " " + 80*Time.deltaTime);
+          
+          //Debug.Log(rotationValue*100 + " " + );
           //child.RotateAround(center, Vector3.up, rotationValue*1000);
         }
       } else if (child.CompareTag ("Interactable") && !rotate) {
@@ -326,6 +330,18 @@ public class Molecule : MonoBehaviour
 
     if (pivotGrabbed && graspedAtoms == 0)
       canTranslate = true;
+
+    if (rotate && canCenterInst)
+    {
+      centerRep = Instantiate(centerGO, center, transform.rotation);
+      centerRep.transform.parent = transform;
+      canCenterInst = false;
+    }
+    else if(!rotate)
+    {
+      canCenterInst = true;
+      Destroy(centerRep);
+    }
 
   }
 
@@ -516,7 +532,7 @@ public class Molecule : MonoBehaviour
     }
 
     //update pivot position according to the positions of the existent atoms in the molecule
-    if (!isRotating)
+    if (!isRotating && !canTranslate)
     {
       Vector3 molCenter = new Vector3(0, 0, 0);
       Vector3 lastPosition = new Vector3(0, 0, 0);
@@ -597,5 +613,14 @@ public class Molecule : MonoBehaviour
     translate = false;
   }
 
-
+  public Transform GetGrabbedAtom()
+  {
+    for (int i = 0; i < transform.childCount; i++)
+    {
+      Transform child = transform.GetChild(i);
+      if (child.CompareTag("Interactable") && child.GetComponent<InteractionBehaviour>().isGrasped)
+        return child;
+    }
+    return null;
+  }
 }
