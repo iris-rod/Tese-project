@@ -56,6 +56,9 @@ public class Molecule : MonoBehaviour
   private float rotationValue;
   private bool canCenterInst;
 
+  //variables for testing
+  private int numberTesting;
+
   void Awake()
   {
     camera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -67,7 +70,7 @@ public class Molecule : MonoBehaviour
   // Use this for initialization
   void Start ()
   {
-    rotationOffset = 5;
+    rotationOffset = 3.5f;
     pivotOffset = 0.12f;
     numberOfBonds = 1;
     numberOfTaps = 1;
@@ -96,10 +99,10 @@ public class Molecule : MonoBehaviour
         if(child.CompareTag("Interactable") || child.CompareTag("Pivot"))
           child.GetComponent<InteractionBehaviour>().ignoreGrasping = true;
       }
-      MM.AddMolecule(transform.gameObject,true);
+      //MM.AddMolecule(transform.gameObject,true);
     }else
     {
-      MM.AddMolecule(transform.gameObject,false);
+      //MM.AddMolecule(transform.gameObject,false);
     }
     //disable all scripts in atoms of molecules used for testing 
     if (transform.name != "MoleculeV3(Clone)" && !isMini)
@@ -129,7 +132,14 @@ public class Molecule : MonoBehaviour
     }
    transform.gameObject.AddComponent(typeof(InvisibleMoleculeBehaviour));
    transform.GetComponent<InvisibleMoleculeBehaviour>().SetTask(transform.name.ToLower());
-   transform.tag = "Invisible";
+    transform.GetComponent<InvisibleMoleculeBehaviour>().SetNumber(numberTesting);
+
+    transform.tag = "Invisible";
+  }
+
+  public void SetNumber(int n)
+  {
+    numberTesting = n;
   }
 
   public void SetHandController(GameObject handCtrl)
@@ -246,18 +256,24 @@ public class Molecule : MonoBehaviour
     for (int i = 0; i < transform.childCount; i++) {
       Transform child = transform.GetChild (i);
       if (child.CompareTag ("Interactable") && rotate) {
-        if (rotationType == 1) {
+        if (rotationType == 1)
+        {
           float a = 80 * Time.deltaTime;
-          child.RotateAround (center, axis, a);
-        } else if (rotationType == 2)
-          child.RotateAround (center, axis, (handController.GetComponent<HandController> ().GetHandRotation ())*rotationOffset);//forward
-        else if (rotationType == 3) {
+          child.RotateAround(center, axis, a);
+        }
+        else if (rotationType == 2)
+        {
+          float rotation = (handController.GetComponent<HandController>().GetHandRotation()) * rotationOffset;
+          if ((rotation > 0 && rotation < 1.3f) || (rotation < 0 && rotation > -1.3f))
+            rotation = 0;
+          child.RotateAround(center, axis, rotation);//forward
+        }
+        else if (rotationType == 3)
+        {
           isRotating = true;
-          UpdateValueRotation();
-          child.GetComponent<Atom> ().SetRotating (true);
+          //UpdateValueRotation();
+          child.GetComponent<Atom>().SetRotating(true);
           
-          //Debug.Log(rotationValue*100 + " " + );
-          //child.RotateAround(center, Vector3.up, rotationValue*1000);
         }
       } else if (child.CompareTag ("Interactable") && !rotate) {
         if (rotationType == 1 || rotationType == 2)

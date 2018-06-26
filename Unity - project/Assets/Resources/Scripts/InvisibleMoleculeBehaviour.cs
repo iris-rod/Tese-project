@@ -13,17 +13,20 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
   private int number,test;
 	// Use this for initialization
 	void Start () {
-    number = 0;
-    test = 0;
+    test = 5;
 		hasOverlap = false;
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
-    M = GameObject.Find("Main Camera").GetComponent<Manager>();
+    M = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>();
 	}
 	
   void Update () {
     CheckCollision();
   }
-  
+  public void SetNumber(int n)
+  {
+    number = n;
+
+  }
   public void SetTask (string t)
   {
     task = t;
@@ -58,7 +61,7 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
     Collider[] colliders = Physics.OverlapBox (pos, transform.localScale / 10);
     if (colliders.Length > 1) {
       for (int i = 0; i < colliders.Length; i++) {
-        if (colliders [i].transform.CompareTag("Interactable") && colliders[i].transform.parent != null && CheckMoleculesMatch(colliders[i].transform.parent)) {
+        if (colliders [i].transform.CompareTag("Interactable") && colliders[i].transform.parent != null ){//&& CheckMoleculesMatch(colliders[i].transform.parent)) {
 
           overlap = true;
           overlapGO = colliders[i].transform.parent.gameObject;
@@ -91,7 +94,6 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
   public void DestroyOverlap ()
   {
     M.SaveMolecule(overlapGO,"test_" + test + "mol_" + number );
-    number++;
     Destroy(overlapGO);
   }
 }

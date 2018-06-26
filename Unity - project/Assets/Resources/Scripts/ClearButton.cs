@@ -36,7 +36,7 @@ public class ClearButton : MonoBehaviour {
             }
             GameObject[] invis = GameObject.FindGameObjectsWithTag ("Invisible");
             for (int j = 0; j < invis.Length; j++) {
-                Destroy (invis [j]);
+                //Destroy (invis [j]);
             }
             MM.Clear();
           } else if (obj.ToLower () == "atom") {

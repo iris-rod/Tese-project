@@ -1,0 +1,43 @@
+pivot
+
+new task 1
+start time: 32.42308
+reload: 0
+end time: 105.6044
+
+new task 2
+start time: 105.6044
+reload: 0
+end time: 262.6416
+
+new task 3
+start time: 262.6416
+reload: 0
+end time: 8.991588
+
+pivot
+
+new task 3
+start time: 10.51803
+reload: 0
+end time: 107.1149
+
+pulso
+
+new task 1
+start time: 161.8239
+reload: 0
+end time: 653.1315
+
+new task 2
+start time: 653.1315
+reload: 0
+end time: 674.9331
+
+new task 3
+start time: 674.9331
+reload: 1
+end time: 1021.65
+
+new task 2
+start time: 1021.65
