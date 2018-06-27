@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
   private bool levelComplete, newLevel;
   private string levels;
   private string levelObjs;
+  private string correctAnswerMC, pressedAnswer;
   private Manager manager;
   private LevelManager LM;
   private MoleculeManager MM;
@@ -116,6 +117,12 @@ public class GameManager : MonoBehaviour
           Destroy(invi);
         }
         break;
+      case "multiple choice":
+        if(pressedAnswer == correctAnswerMC)
+        {
+          completed = true;
+        }
+        break;
     }
     return completed;
   }
@@ -128,19 +135,21 @@ public class GameManager : MonoBehaviour
     switch (type)
     {
       case "build":
-        //updateBoard
         SM.LevelChecking(false);
         break;
       case "load":
         SM.LevelChecking(true);
         break;
       case "save":
-        //updateBoard
         SM.LevelChecking(false);
         break;
       case "place":
         manager.LoadMolecule(objSplit[1] + "_place", false);
         SM.LevelChecking(false);
+        break;
+      case "multiple choice":
+        SM.LevelChecking(false);
+        correctAnswerMC = IM.GetCorrectAnswer();
         break;
     }
   }
@@ -149,6 +158,7 @@ public class GameManager : MonoBehaviour
   {
     return level;
   }
+
 
   public void SetLoadedMolecule(GameObject mol)
   {

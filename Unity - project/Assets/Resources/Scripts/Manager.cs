@@ -32,7 +32,7 @@ public class Manager : MonoBehaviour
   private Vector3 moleculePosition, molPreSaved, molPostSaved;
 
   //testing variables
-  private string logName = "log5";
+  private string logName = "log8";
   private int currentInput = 0, lastInput = 0, moleculeTestNumber = 0;
   private bool first = true;
 

@@ -1,0 +1,36 @@
+pulso
+
+new task 1
+start time: 67.53667
+reload: 0
+end time: 168.1737
+
+new task 2
+start time: 168.1737
+reload: 0
+end time: 213.779
+
+new task 3
+start time: 213.779
+reload: 0
+end time: 325.3427
+
+pivot
+
+new task 3
+start time: 326.4579
+reload: 0
+end time: 421.6135
+
+new task 2
+start time: 421.6135
+reload: 1
+end time: 500.0786
+
+new task 1
+start time: 500.0786
+reload: 1
+end time: 539.2187
+
+new task 2
+start time: 539.2187
