@@ -5,7 +5,8 @@ using UnityEngine;
 public class AnswerButton : MonoBehaviour {
   private Animator animator;
   private bool m_Started;
-  private MoleculeManager MM;
+
+  private GameManager GM;
 
   public string Button;
 
@@ -14,7 +15,8 @@ public class AnswerButton : MonoBehaviour {
   {
     m_Started = true;
     animator = GetComponent<Animator>();
-    MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
+    GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+    
   }
 
   // Update is called once per frame
@@ -32,6 +34,8 @@ public class AnswerButton : MonoBehaviour {
       {
         if (colliders[i].transform.name.Split(' ')[0] == "Contact")
         {
+          GM.SetPressedAnswer(Button);
+          GM.UpdateLevel();
           animator.SetBool("pushed", true);
           Invoke("Reset", .5f);
           break;

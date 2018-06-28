@@ -31,8 +31,8 @@ public class CompletedButton : MonoBehaviour {
             animator.SetBool ("pushed", true);
             invi.GetComponent<InvisibleMoleculeBehaviour>().DestroyOverlap();
             Destroy(invi);          
-            LogsC.Instance.sessionStopSubTask();
-            TM.StopSubTask();
+            //LogsC.Instance.sessionStopSubTask();
+            //TM.StopSubTask();
             Invoke ("Reset", .5f);  
           }
         }

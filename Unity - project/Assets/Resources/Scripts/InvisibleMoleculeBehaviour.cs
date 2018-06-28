@@ -13,7 +13,7 @@ public class InvisibleMoleculeBehaviour : MonoBehaviour {
   private int number,test;
 	// Use this for initialization
 	void Start () {
-    test = 8;
+    test = 9;
 		hasOverlap = false;
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
     M = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>();

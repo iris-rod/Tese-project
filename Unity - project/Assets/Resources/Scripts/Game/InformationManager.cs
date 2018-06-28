@@ -51,6 +51,7 @@ public class InformationManager : MonoBehaviour {
   {
     string[] split = raw.Split('-');
     string result = "";
+    Debug.Log(split[0]);
     switch (split[0])
     {
       case "build":
@@ -68,11 +69,17 @@ public class InformationManager : MonoBehaviour {
       case "multiple choice":
         result += split[1] + "\n";
         correctAnswer = split[3];
-        string[] answers = split[4].Split('-'); //all the possible answers (a.2, b.4, c.5)
-        for(int i = 0; i < answers.Length; i++)
+        for(int i = 4; i < split.Length; i++)
         {
-          string[] ans = answers[i].Split('.'); 
-          result += ans[0].ToUpper() + ": " + ans[1] + "\n";// a.2 -> A: 2
+          string[] ans = split[i].Split('.'); 
+          if(i == split.Length - 1)
+          {
+            string[] aux = ans[1].Split('\n');
+            result += ans[0].ToUpper() + ": " + aux[0] + "\n";// a.2 -> A: 2
+
+          }
+          else
+            result += ans[0].ToUpper() + ": " + ans[1] + "\n";// a.2 -> A: 2
         }
         break;
     }

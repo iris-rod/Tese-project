@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
   private ShelfManager SM;
   private InformationManager IM;
 
-
+  private bool getAnswer;
   private bool correctMolLoaded;
 
   private string path = "";
@@ -34,9 +34,10 @@ public class GameManager : MonoBehaviour
     IM = GameObject.Find("Info").GetComponent<InformationManager>();
     levelComplete = false;
     newLevel = true;
+    getAnswer = false;
     correctMolLoaded = false;
     level = 1;
-    levels = HandleTextFile.ReadLevels("levels_default");
+    levels = HandleTextFile.ReadLevels("levels_teste");
   }
 
   // Update is called once per frame
@@ -82,6 +83,8 @@ public class GameManager : MonoBehaviour
     //BBManager.UpdateDisplay(LM.GetLevel(), LM.GetSublevel());
     IM.UpdateLevel(LM.GetLevel());
     IM.UpdateDisplay(LM.GetNextObjective(),true);
+    if(getAnswer)
+      correctAnswerMC = IM.GetCorrectAnswer();
   }
 
   private bool CheckObjectiveComplete(string nextObj)
@@ -118,7 +121,7 @@ public class GameManager : MonoBehaviour
         }
         break;
       case "multiple choice":
-        if(pressedAnswer == correctAnswerMC)
+        if(pressedAnswer.ToLower().Trim() == correctAnswerMC.ToLower().Trim())
         {
           completed = true;
         }
@@ -149,7 +152,7 @@ public class GameManager : MonoBehaviour
         break;
       case "multiple choice":
         SM.LevelChecking(false);
-        correctAnswerMC = IM.GetCorrectAnswer();
+        getAnswer = true;
         break;
     }
   }
@@ -159,6 +162,10 @@ public class GameManager : MonoBehaviour
     return level;
   }
 
+  public void SetPressedAnswer(string button)
+  {
+    pressedAnswer = button;
+  }
 
   public void SetLoadedMolecule(GameObject mol)
   {
@@ -197,6 +204,7 @@ public class GameManager : MonoBehaviour
     {
       LM.UpdateObjective(nextObj);
       CheckLevelCompletion();
+      Debug.Log(levelComplete);
     }
   }
 
