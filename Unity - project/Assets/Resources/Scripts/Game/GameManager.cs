@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
   private MoleculeManager MM;
   private ShelfManager SM;
   private InformationManager IM;
+  //private AnswerPanel AP;
 
   private bool getAnswer;
   private bool correctMolLoaded;
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
     manager = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>();
     BBManager = GameObject.FindGameObjectWithTag("Board").GetComponent<BlackBoardManager>();
     IM = GameObject.Find("Info").GetComponent<InformationManager>();
+    //AP = GameObject.Find("ControlPanelAnswers").GetComponent<AnswerPanel>();
     levelComplete = false;
     newLevel = true;
     getAnswer = false;
@@ -124,6 +126,7 @@ public class GameManager : MonoBehaviour
         if(pressedAnswer.ToLower().Trim() == correctAnswerMC.ToLower().Trim())
         {
           completed = true;
+          //AP.Disappear(); //make control panel with buttons disappear
         }
         break;
     }
@@ -152,6 +155,7 @@ public class GameManager : MonoBehaviour
         break;
       case "multiple choice":
         SM.LevelChecking(false);
+        //AP.Appear(); //make control panel with buttons appear
         getAnswer = true;
         break;
     }
@@ -178,7 +182,7 @@ public class GameManager : MonoBehaviour
     levelComplete = LM.LevelCompleted();
     if (!levelComplete)
       CheckNextObjectiveSetup(LM.GetNextObjective());
-    //BBManager.UpdateDisplay(LM.GetLevel(), LM.GetSublevel());
+
     IM.UpdateDisplay(LM.GetNextObjective(),false);
     return levelComplete;
   }

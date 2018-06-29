@@ -51,7 +51,7 @@ public class InformationManager : MonoBehaviour {
   {
     string[] split = raw.Split('-');
     string result = "";
-    Debug.Log(split[0]);
+    Debug.Log(raw);
     switch (split[0])
     {
       case "build":

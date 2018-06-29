@@ -1,5 +1,5 @@
 1 : multiple choice-Quantos átomos de carbono tem a molécula?-etanol-a
 	-a.2
 	-b.3
-	-c.4
+	-c.4;
 2 : build-CO2

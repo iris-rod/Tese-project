@@ -326,6 +326,7 @@
     <Compile Include="Assets\Resources\Scripts\CompletedButton.cs" />
     <Compile Include="Assets\Resources\Scripts\FeedbackBondController.cs" />
     <Compile Include="Assets\Resources\Scripts\Game\AnswerButton.cs" />
+    <Compile Include="Assets\Resources\Scripts\Game\AnswerPanel.cs" />
     <Compile Include="Assets\Resources\Scripts\Game\GameManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Game\InformationManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Game\LevelManager.cs" />
@@ -458,6 +459,12 @@
     <None Include="Assets\Resources\SavedFiles\Tests\test_8mol_3.txt" />
     <None Include="Assets\Resources\SavedFiles\Tests\test_8mol_4.txt" />
     <None Include="Assets\Resources\SavedFiles\Tests\test_8mol_5.txt" />
+    <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_0.txt" />
+    <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_1.txt" />
+    <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_2.txt" />
+    <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_3.txt" />
+    <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_4.txt" />
+    <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_5.txt" />
     <None Include="Assets\Resources\SavedFiles\bla.txt" />
     <None Include="Assets\Resources\SavedFiles\etanol_b.txt" />
     <None Include="Assets\Resources\SavedFiles\molecule.txt" />
@@ -480,12 +487,6 @@
     <None Include="Assets\Resources\SavedFiles\test_10mol_3.txt" />
     <None Include="Assets\Resources\SavedFiles\test_10mol_4.txt" />
     <None Include="Assets\Resources\SavedFiles\test_10mol_5.txt" />
-    <None Include="Assets\Resources\SavedFiles\test_9mol_0.txt" />
-    <None Include="Assets\Resources\SavedFiles\test_9mol_1.txt" />
-    <None Include="Assets\Resources\SavedFiles\test_9mol_2.txt" />
-    <None Include="Assets\Resources\SavedFiles\test_9mol_3.txt" />
-    <None Include="Assets\Resources\SavedFiles\test_9mol_4.txt" />
-    <None Include="Assets\Resources\SavedFiles\test_9mol_5.txt" />
     <None Include="Assets\Resources\Shaders\Outlined-Silhouette Only.shader" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
