@@ -4,7 +4,7 @@ using System.IO;
 
 public class HandleTextFile
 {
-  private static string path = "Assets/Resources/SavedFiles/";
+  private static string path = "Assets/Resources/SavedFiles/Tests/";
 
   public static void SaveFile(string name, string text)
   {
