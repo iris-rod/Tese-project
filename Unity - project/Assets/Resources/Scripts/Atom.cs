@@ -42,6 +42,7 @@ public class Atom : MonoBehaviour {
     isAttached = false;
     toDetach = false;
     toBond = false;
+    grabbed = false;
     highlightMat = transform.GetComponent<MeshRenderer>().materials[1];
     highlightGrasp = transform.GetComponent<MeshRenderer>().materials[2];
     handController = GameObject.FindGameObjectWithTag("HandController");
@@ -71,13 +72,16 @@ public class Atom : MonoBehaviour {
 
     if (transform.parent == null || !(transform.parent.name.Split('_')[0] == "Mini"))
     {
-      if (GetComponent<InteractionBehaviour>().isGrasped)
+      if (GetComponent<InteractionBehaviour>().isGrasped && !grabbed)
       {
         highlightGrasp.SetFloat("_Outline", 0.015f);
+        grabbed = true;
+        SoundEffectsManager.PlaySound("atomGrabbed");
       }
-      else
+      else if(!GetComponent<InteractionBehaviour>().isGrasped)
       {
         highlightGrasp.SetFloat("_Outline", 0.00f);
+        grabbed = false;
         if (toBond) toBond = false;
       }
 
@@ -188,14 +192,6 @@ public class Atom : MonoBehaviour {
         float distAtoms = Vector3.Distance(child.position, transform.position);
         if (child.CompareTag("Interactable") && child != transform && child != grabbedAtom.transform)
         {
-          /*Debug.Log(offsets[ind] + "  " + (transform.position - child.transform.position));
-          Debug.Log((transform.position - child.transform.position).x + " " + offsets[ind].x);
-          if ((transform.position - child.transform.position) != offsets[ind])
-          {
-            Debug.Log("here");
-            transform.position += offsets[ind];
-          }*/
-          //Debug.Log(child.GetComponent<Atom>().GetAtomType() + ": " + dists[ind]+  " " + Vector3.Distance(transform.position, child.position));
           if(dists[ind] != Vector3.Distance(transform.position, child.position))
           {
             child.position = (child.position - transform.position).normalized * dists[ind] + transform.position;

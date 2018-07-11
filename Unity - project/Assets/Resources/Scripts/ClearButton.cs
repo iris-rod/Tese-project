@@ -5,14 +5,14 @@ using UnityEngine;
 public class ClearButton : MonoBehaviour {
 
   private Animator animator;
-  private bool m_Started;
+  private bool canPlay;
   private MoleculeManager MM;
-  
+
   public string obj;
 
 	// Use this for initialization
 	void Start () {
-    m_Started = true;
+    canPlay = true;
     animator = GetComponent<Animator>();
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
   }
@@ -28,6 +28,7 @@ public class ClearButton : MonoBehaviour {
     if (colliders.Length > 1) {
       for (int i = 0; i < colliders.Length; i++) {
         if (colliders [i].transform.name.Split (' ') [0] == "Contact") {
+
           if (obj.ToLower () == "molecule") {
             GameObject[] molecules = GameObject.FindGameObjectsWithTag ("Molecule");
             for (int j = 0; j < molecules.Length; j++) {
@@ -46,6 +47,11 @@ public class ClearButton : MonoBehaviour {
                 Destroy (atoms [j]);
             }
           }
+          if (canPlay)
+          {
+            SoundEffectsManager.PlaySound("button");
+            canPlay = false;
+          }
           animator.SetBool("pushed",true);
           Invoke("Reset", .5f);
           break;
@@ -57,5 +63,6 @@ public class ClearButton : MonoBehaviour {
   void Reset()
   {
     animator.SetBool("pushed", false);
+    canPlay = true;
   }
 }

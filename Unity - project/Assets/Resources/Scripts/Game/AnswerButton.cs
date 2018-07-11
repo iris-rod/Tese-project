@@ -34,6 +34,7 @@ public class AnswerButton : MonoBehaviour {
       {
         if (colliders[i].transform.name.Split(' ')[0] == "Contact")
         {
+          SoundEffectsManager.PlaySound("buttonAnswer");
           GM.SetPressedAnswer(Button);
           GM.UpdateLevel();
           animator.SetBool("pushed", true);

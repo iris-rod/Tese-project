@@ -51,11 +51,11 @@ public class InformationManager : MonoBehaviour {
   {
     string[] split = raw.Split('-');
     string result = "";
-    Debug.Log(raw);
     switch (split[0])
     {
       case "build":
-        result += "Build a " + split[1] + " molecule.";
+        string moleculeDisp = CheckMoleculeRepresentation(split[1]);
+        result += "Build the following molecule: \n" + moleculeDisp;
         break;
       case "place":
         result += "Move the " + split[1] + " molecule to overlap the transparent molecule.";
@@ -69,21 +69,93 @@ public class InformationManager : MonoBehaviour {
       case "multiple choice":
         result += split[1] + "\n";
         correctAnswer = split[3];
+        string tempResult = "";
         for(int i = 4; i < split.Length; i++)
         {
-          string[] ans = split[i].Split('.'); 
-          if(i == split.Length - 1)
+          string[] ans = split[i].Split('.');
+          if (i == split.Length - 1)
           {
             string[] aux = ans[1].Split('\n');
-            result += ans[0].ToUpper() + ": " + aux[0] + "\n";// a.2 -> A: 2
-
+            tempResult = ans[0].ToUpper() + ": " + aux[0] + "\n";// a.2 -> A: 2
+            result += tempResult;
           }
           else
-            result += ans[0].ToUpper() + ": " + ans[1] + "\n";// a.2 -> A: 2
+          {
+            tempResult = ans[0].ToUpper() + ": " + ans[1] + "\n";// a.2 -> A: 2   
+            result += tempResult;
+          }
         }
         break;
     }
-    currentDisplay = result;
+    currentDisplay = GetSpecialCharacters(result);
+    return currentDisplay;
+  }
+
+  private string GetSpecialCharacters(string raw)
+  {
+    if (raw.Length != 0)
+    {
+      string[] a = new string[] { "Ž"  , "ž"  , "Ÿ"  , "¡"  , "¢"  , "£"  , "¤"  , "¥"  , "¦"  , "§"  , "¨"  , "©"  , "ª"  , "À"  , "Á"  , "Â"  , "Ã"  , "Ä"  , "Å"  , "Æ"  , "Ç"  , "È"  , "É"  , "Ê"  , "Ë"  , "Ì"  , "Í"  , "Î"  , "Ï"  , "Ð"  , "Ñ"  , "Ò"  , "Ó"  , "Ô"  , "Õ"  , "Ö"  , "Ù"  , "Ú"  , "Û"  , "Ü"  , "Ý"  , "Þ"  , "ß"  , "à"          , "á"          , "â"  , "ã"          , "ä"  , "å"  , "æ"  , "ç"  , "è"  , "é"          , "ê"  , "ë"  , "ì"  , "í"  , "î"  , "ï"  , "ð"  , "ñ"  , "ò"  , "ó"  , "ô"  , "õ"  , "ö"  , "ù"  , "ú"  , "û"  , "ü"  , "ý"  , "þ"  , "ÿ" };
+      string[] b = new string[] { "%8E", "%9E", "%9F", "%A1", "%A2", "%A3", "%A4", "%A5", "%A6", "%A7", "%A8", "%A9", "%AA", "%C0", "%C1", "%C2", "%C3", "%C4", "%C5", "%C6", "%C7", "%C8", "%C9", "%CA", "%CB", "%CC", "%CD", "%CE", "%CF", "%D0", "%D1", "%D2", "%D3", "%D4", "%D5", "%D6", "%D9", "%DA", "%DB", "%DC", "%DD", "%DE", "%DF", "<sprite=13>", "<sprite=12>", "%E2", "<sprite=14>", "%E4", "%E5", "%E6", "%E7", "%E8", "<sprite=15>", "%EA", "%EB", "%EC", "%ED", "%EE", "%EF", "%F0", "%F1", "%F2", "%F3", "%F4", "%F5", "%F6", "%F9", "%FA", "%FB", "%FC", "%FD", "%FE", "%FF" };
+
+      for (var i = 0; i < a.Length; i++)
+      {
+        raw = raw.Replace(a[i], b[i]);
+      }
+    }
+    return raw;
+  }
+
+  //if it is an structure , the function is going to read the file and get the string to display,
+  //if not it just returns the raw display
+  private string CheckMoleculeRepresentation(string rawDisplay)
+  {
+    string result = rawDisplay;
+    int length = rawDisplay.Length;
+    if (length > 9)
+    {
+      string sub = rawDisplay.Substring(rawDisplay.Length - 9, 9);
+      if(sub == "estrutura")
+      {
+        result = HandleTextFile.ReadMoleculeStructure(rawDisplay);
+        result = result.Replace("=-", " <sprite=1>");
+        result = result.Replace("=", " <sprite=2>");
+        result = result.Replace("|||", " <sprite=4>");
+        result = result.Replace("||", " <sprite=3>");
+        result = result.Replace("|", "<sprite=11>");
+        result = result.Replace("///", " <sprite=5>");
+        result = result.Replace("//", " <sprite=6>");
+        result = result.Replace("/", " <sprite=7>");
+        result = result.Replace("\\\\\\", " <sprite=8>");
+        result = result.Replace("\\\\", "  <sprite=9>");
+        result = result.Replace("\\", " <sprite=10>");
+            
+        string[] split = result.Split('\n');
+        string tempResult = "\n";
+        for (int i = 0; i < split.Length; i++)
+        {
+          string s = split[i];
+          string s1 = split[i];
+          //Debug.Log(s + " " + (s[0] == ' ') + " " + (s.IndexOf("C") == -1));
+          if (s[0] == ' ' && s.IndexOf("H") == -1) //lines with | or \ or / need extra space
+          {
+            s1 = s.Insert(0, " ");
+          }
+          else if(s[0] == ' ' && s.IndexOf("H") != -1) //lines where they have H but not at the start, needs extra space
+          {
+            //s1 = s.Insert(0, " ");
+            s1 = s1.Replace("H", " H");
+          }
+          else if((s[0]== 'H' || s[0] == ' ') && s.IndexOf("C") == -1)  //line with H and no C needs extra space at each H
+          {
+            s1 = s.Replace("H", " H ");
+          }
+          tempResult += s1 + "\n";
+        }
+        //the font doesnt have the | char, the 1 is the replacement
+        result = tempResult;
+      }
+    }
     return result;
   }
 

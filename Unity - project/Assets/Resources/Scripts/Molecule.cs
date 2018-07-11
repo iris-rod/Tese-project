@@ -99,10 +99,10 @@ public class Molecule : MonoBehaviour
         if(child.CompareTag("Interactable") || child.CompareTag("Pivot"))
           child.GetComponent<InteractionBehaviour>().ignoreGrasping = true;
       }
-      //MM.AddMolecule(transform.gameObject,true);
+      MM.AddMolecule(transform.gameObject,true);
     }else
     {
-      //MM.AddMolecule(transform.gameObject,false);
+      MM.AddMolecule(transform.gameObject,false);
     }
     //disable all scripts in atoms of molecules used for testing 
     if (transform.name != "MoleculeV3(Clone)" && !isMini)
@@ -271,6 +271,7 @@ public class Molecule : MonoBehaviour
         else if (rotationType == 3)
         {
           isRotating = true;
+          SoundEffectsManager.PlaySound("rotation");
           //UpdateValueRotation();
           child.GetComponent<Atom>().SetRotating(true);
           
@@ -471,6 +472,7 @@ public class Molecule : MonoBehaviour
     if (canUpdateTap)
     {
       numberOfTaps += value;
+      SoundEffectsManager.PlaySound("atomsTouch");
       if (numberOfTaps > 4)
         numberOfTaps = 1;
       canUpdateTap = false;
@@ -523,6 +525,7 @@ public class Molecule : MonoBehaviour
       atom2.transform.parent = transform;
       bondingAtoms = false;
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
+      SoundEffectsManager.PlaySound("atomsBonded");
     } else {
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
     }

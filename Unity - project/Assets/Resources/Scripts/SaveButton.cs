@@ -30,6 +30,7 @@ public class SaveButton : MonoBehaviour {
         {
           transform.parent.parent.parent.GetComponent<ShelfManager>().SaveMolecule(atom);
           Destroy(atom.transform.parent.gameObject);
+          SoundEffectsManager.PlaySound("button");
           animator.SetBool("pushed",true);
           Invoke("Reset", .5f);
           break;

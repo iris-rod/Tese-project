@@ -4,7 +4,7 @@ using System.IO;
 
 public class HandleTextFile
 {
-  private static string path = "Assets/Resources/SavedFiles/Tests/";
+  private static string path = "Assets/Resources/SavedFiles/";
 
   public static void SaveFile(string name, string text)
   {
@@ -44,6 +44,17 @@ public class HandleTextFile
   public static string ReadLevels(string name)
   {
     string finalPath = path + "Levels/" + name + ".txt";
+    string text = "";
+    //Read the text from directly from the test.txt file
+    StreamReader reader = new StreamReader(finalPath);
+    text = reader.ReadToEnd();
+    reader.Close();
+    return text;
+  }
+
+  public static string ReadMoleculeStructure(string name)
+  {
+    string finalPath = path + "MoleculeStructures/" + name + ".txt";
     string text = "";
     //Read the text from directly from the test.txt file
     StreamReader reader = new StreamReader(finalPath);

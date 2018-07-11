@@ -328,37 +328,21 @@ public class Manager : MonoBehaviour
 
     */
 
-   if (Input.GetKeyDown(KeyCode.Space))
+   /*if (Input.GetKeyDown(KeyCode.Space))
     {
       LoadMolecule("Move_H2O", false);
-    }
+    }*/
 
     if (Input.GetKeyDown("n"))
     {
       LoadMolecule("test_7mol_1", false);
       LoadMolecule("test_9mol_1", false);
     }
-    /**/
-        Debug.Log(Vector3.Distance(new Vector3(-.1f,2.3f,0.4f), new Vector3(-.1f, 2.3f, .5f)));
-        Debug.Log(Vector3.Distance(new Vector3(0.046969696f, 2.126515f, 0.3265153f), new Vector3(0.003923006f, 2.196077f, 0.396077f)));
-        Debug.Log(Vector3.Distance(new Vector3(-.08819069f, 2.010166f, 0.3021306f), new Vector3(-0.128197f, 2.073932f, 0.4010644f)));
-    //Debug.Log(Vector3.Distance(new Vector3(-.1f, 2.2f, 0.4f), new Vector3(-0.1018294f, 2.201045f, .4014373f)));
-    //Debug.Log(Vector3.Distance(new Vector3(0.046969696f, 2.126515f, 0.3265153f), new Vector3(0.02727928f, 2.127279f, .3f)));
-    //Debug.Log(Vector3.Distance(new Vector3(-.08819069f, 2.010166f, 0.3021306f), new Vector3(-0.1f, 2f, .3f)));
-    /*Debug.Log(Vector3.Distance(new Vector3(-.1f, 2.2f, 0.3f), new Vector3(-0.1412613f, 2.2f, 0.3546126f)));
-    Debug.Log(Vector3.Distance(new Vector3(-.006085142f, 2.2f, 0.48782497f), new Vector3(0, 2.2f, 0.51f)));
-    Debug.Log(Vector3.Distance(new Vector3(.0876104f, 2.288321f, 0.321936f), new Vector3(0, 2.2f, .3f)));
-    //Debug.Log(Vector3.Distance(new Vector3(-.006085142f, 2.2f, 0.48782497f), new Vector3(0.1857322f, 2.214268f, 0.1285357f)));
-    /*
-    Debug.Log(Vector3.Distance(new Vector3(.09922352f, 2.266408f, 0.4f), new Vector3(-0.01217026f, 2.093915f, .4f)));
-    Debug.Log(Vector3.Distance(new Vector3(.1735238f, 2.069991f, 0.4f), new Vector3(0.120758f, 1.98262f, 0.2814942f)));
-    Debug.Log(Vector3.Distance(new Vector3(.2868861f, 1.917626f, .3103687f), new Vector3(0.3106398f, 1.895096f, 0.3010985f)));
-    /*
     if (Input.GetKeyDown("s"))
      {
        GameObject mol = GameObject.Find("MoleculeV3(Clone)");
-       SaveMolecule(mol, "Move_H2O");
-     }*/
+       SaveMolecule(mol, "aa");
+     }
 
   }
 
@@ -366,8 +350,4 @@ public class Manager : MonoBehaviour
   {
     canLoad = val;
   }
-
-
-
-
 }

@@ -9,13 +9,17 @@ public class MoleculeManager : MonoBehaviour {
   private int numberOfMolecules;
   private int numberOfMinis;
 
+  private LogManager LM;
+
 	// Use this for initialization
 	void Start () {
     numberOfMolecules = 0;
     numberOfMinis = 0;
     moleculesInScene = new Dictionary<int, string>();
     moleculesInShelf = new Dictionary<int, string>();
+    LM = GameObject.Find("LogSheet").GetComponent<LogManager>();
   }
+
 
   public void AddMolecule(GameObject molecule, bool shelf)
   {
@@ -51,6 +55,22 @@ public class MoleculeManager : MonoBehaviour {
     }
   }
 
+  // to log a molecule created, it has to be a molecule that exists, not an incomplete one
+  // returns true if it can be logged, and false if it can't
+  public void CheckAvailableBonds(GameObject molecule)
+  {
+    for(int i = 0; i < molecule.transform.childCount; i++)
+    {
+      Transform child = molecule.transform.GetChild(i);
+      if (child.gameObject.CompareTag("Interactable"))
+      {
+        if (child.gameObject.GetComponent<Atom>().GetAvailableBonds() > 0)
+          return;
+      }
+    }
+    LM.AddLog("Built "+ GetMoleculeName(molecule)+ " molecule");
+  }
+
   public void UpdateMolecule(GameObject molecule)
   {
     int id = molecule.GetComponent<Molecule>().GetId();
@@ -59,6 +79,7 @@ public class MoleculeManager : MonoBehaviour {
       moleculesInScene.Remove(id);
       numberOfMolecules--;
       AddMolecule(molecule, false);
+      CheckAvailableBonds(molecule);
     }
   }
 
@@ -191,17 +212,38 @@ public class MoleculeManager : MonoBehaviour {
     moleculesInScene.Remove(molID);
   }
 
-  //function to compare molecule to minis to see if it was saved
 
-
-
-  void Update()
+  private string GetMoleculeName(GameObject molecule)
   {
-    foreach(var par in moleculesInScene)
+    string result = "";
+    int C = 0;
+    int H = 0;
+    int O = 0;
+    for (int i = 0; i < molecule.transform.childCount; i++)
     {
-     // Debug.Log("key: " + par.Key + " value: " + par.Value);
+      Transform child = molecule.transform.GetChild(i);
+      if (child.gameObject.CompareTag("Interactable"))
+      {
+        string type = child.gameObject.GetComponent<Atom>().GetAtomType();
+        switch (type)
+        {
+          case "Hydrogen":
+            H++;
+            break;
+          case "Carbon":
+            C++;
+            break;
+          case "Oxygen":
+            O++;
+            break;
+        }
+      }
     }
-    string t1 = "Carbon-2-Oxygen_" + "\n" + "Hydrogen-1-Carbon_" + "\n";
-    string t2 = "Hydrogen-1-Carbon_" + "\n" + "Carbon-2-Oxygen_" + "\n";
+    if(O != 0)
+      result = "C" + C.ToString() + "H" + H.ToString() + "O" + O.ToString();
+    else
+      result = "C" + C.ToString() + "H" + H.ToString();
+    return result;
   }
+
 }

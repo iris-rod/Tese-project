@@ -28,6 +28,7 @@ public class TrashBox : MonoBehaviour {
         MM.RemoveMolecule(col.transform.parent.gameObject);
         Destroy(col.transform.parent.gameObject);
       }
+      SoundEffectsManager.PlaySound("throwTrash");
     }
   }
 }

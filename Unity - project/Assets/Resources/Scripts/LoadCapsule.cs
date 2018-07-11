@@ -53,6 +53,7 @@ public class LoadCapsule : MonoBehaviour {
     animator.SetBool("close", true);
     hasMolecule = false;
     molecule = null;
+    SoundEffectsManager.PlaySound("shelfSlidderClose");
     Invoke("Reset", .5f);
   }
   
@@ -61,6 +62,7 @@ public class LoadCapsule : MonoBehaviour {
     animator.SetBool("open", true);
     hasMolecule = true;
     molecule = mol;
+    SoundEffectsManager.PlaySound("shelfSlidderOpen");
     Invoke("Reset", 0.5f);
   }
 

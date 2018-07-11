@@ -39,7 +39,8 @@ public class GameManager : MonoBehaviour
     getAnswer = false;
     correctMolLoaded = false;
     level = 1;
-    levels = HandleTextFile.ReadLevels("levels_teste");
+    levels = HandleTextFile.ReadLevels("levels_teste2");
+    SoundEffectsManager.SetUp();
   }
 
   // Update is called once per frame
@@ -54,6 +55,11 @@ public class GameManager : MonoBehaviour
       newLevel = true;
       levelComplete = false;
       level++;
+    }
+
+    if (Input.GetKeyDown(KeyCode.Space))
+    {
+      UpdateLevel();
     }
   }
 
@@ -97,7 +103,8 @@ public class GameManager : MonoBehaviour
     switch (type)
     {
       case "build":
-        string text = HandleTextFile.ReadString(objSplit[1] + ".txt");
+        string molFile = CheckMoleculeRepresentation(objSplit[1]);
+        string text = HandleTextFile.ReadString(molFile + ".txt");
         if (MM.CompareMoleculesString(text, false))
           completed = true;
         break;
@@ -161,6 +168,17 @@ public class GameManager : MonoBehaviour
     }
   }
 
+  private string CheckMoleculeRepresentation(string rawObj)
+  {
+    string result = rawObj;
+    int length = rawObj.Length;
+    if (length > 9)
+    {
+      result = rawObj.Substring(0, rawObj.Length - 9);
+    }
+      return result;
+  }
+
   public int GetCurrentLevel()
   {
     return level;
@@ -208,7 +226,6 @@ public class GameManager : MonoBehaviour
     {
       LM.UpdateObjective(nextObj);
       CheckLevelCompletion();
-      Debug.Log(levelComplete);
     }
   }
 
