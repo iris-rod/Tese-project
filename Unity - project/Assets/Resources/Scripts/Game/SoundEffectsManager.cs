@@ -8,16 +8,16 @@ public static class SoundEffectsManager
   private static AudioSource sourceAtoms;
   private static AudioSource sourceHands;
 
-  public static AudioClip AtomsTouch;
-  public static AudioClip MoleculeRotation;
-  public static AudioClip AtomsBonded;
-  public static AudioClip BondBreak;
-  public static AudioClip DefaultButton;
-  public static AudioClip AnswerButton;
-  public static AudioClip AtomGrabbed;
-  public static AudioClip ShelfSlidderOpen;
-  public static AudioClip ShelfSlidderClose;
-  public static AudioClip Trash;
+  private static AudioClip AtomsTouch;
+  private static AudioClip MoleculeRotation;
+  private static AudioClip AtomsBonded;
+  private static AudioClip BondBreak;
+  private static AudioClip DefaultButton;
+  private static AudioClip AnswerButton;
+  private static AudioClip AtomGrabbed;
+  private static AudioClip ShelfSlidderOpen;
+  private static AudioClip ShelfSlidderClose;
+  private static AudioClip Trash;
 
 
   // Use this for initialization

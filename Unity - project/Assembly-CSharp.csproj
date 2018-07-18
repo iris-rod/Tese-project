@@ -265,8 +265,10 @@
      <Compile Include="Assets\Resources\Scripts\BondRepManager.cs" />
      <Compile Include="Assets\Resources\Scripts\Bonds.cs" />
      <Compile Include="Assets\Resources\Scripts\BoxAtoms.cs" />
+     <Compile Include="Assets\Resources\Scripts\BoxAtomsManager.cs" />
      <Compile Include="Assets\Resources\Scripts\CameraController.cs" />
      <Compile Include="Assets\Resources\Scripts\CapsuleManager.cs" />
+     <Compile Include="Assets\Resources\Scripts\ChangeBoxRows.cs" />
      <Compile Include="Assets\Resources\Scripts\ClearButton.cs" />
      <Compile Include="Assets\Resources\Scripts\CompleteLevelButton.cs" />
      <Compile Include="Assets\Resources\Scripts\CompletedButton.cs" />
@@ -277,6 +279,7 @@
      <Compile Include="Assets\Resources\Scripts\Game\InformationManager.cs" />
      <Compile Include="Assets\Resources\Scripts\Game\LevelManager.cs" />
      <Compile Include="Assets\Resources\Scripts\Game\LogManager.cs" />
+     <Compile Include="Assets\Resources\Scripts\Game\Settings.cs" />
      <Compile Include="Assets\Resources\Scripts\Game\SoundEffectsManager.cs" />
      <Compile Include="Assets\Resources\Scripts\HandController.cs" />
      <Compile Include="Assets\Resources\Scripts\HandleTextFile.cs" />
@@ -292,6 +295,7 @@
      <Compile Include="Assets\Resources\Scripts\MoleculeManager.cs" />
      <Compile Include="Assets\Resources\Scripts\PivotController.cs" />
      <Compile Include="Assets\Resources\Scripts\Platform.cs" />
+     <Compile Include="Assets\Resources\Scripts\RetriveLogSheet.cs" />
      <Compile Include="Assets\Resources\Scripts\SaveButton.cs" />
      <Compile Include="Assets\Resources\Scripts\SavedMolecule.cs" />
      <Compile Include="Assets\Resources\Scripts\ShelfManager.cs" />

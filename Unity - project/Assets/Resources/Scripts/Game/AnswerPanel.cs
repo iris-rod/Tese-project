@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AnswerPanel : MonoBehaviour {
   private Animator animator;
-
+  public string Type;
 
   // Use this for initialization
   void Start () {

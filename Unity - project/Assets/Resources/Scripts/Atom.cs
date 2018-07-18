@@ -56,7 +56,7 @@ public class Atom : MonoBehaviour {
     bondIDType = new Dictionary<int,int>();
     atomType = type;
     transform.GetComponent<MeshRenderer>().material = mat;
-    float size = Properties.DESKTOP_SIZES[atomType];
+    float size = Properties.VR_SIZES[atomType];
     transform.localScale = new Vector3(size,size,size);
     if(type == "Hydrogen") radiusCollision = 0.026f;
     else if(type == "Carbon") radiusCollision = 0.055f;

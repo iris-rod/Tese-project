@@ -528,6 +528,7 @@ public class Molecule : MonoBehaviour
       SoundEffectsManager.PlaySound("atomsBonded");
     } else {
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
+      SoundEffectsManager.PlaySound("bondBreak");
     }
     bondType = 0;
     numberOfTaps = 1;

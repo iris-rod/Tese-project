@@ -32,7 +32,6 @@ public class LevelManager : MonoBehaviour {
   {
     objectives = new Dictionary<string, bool>();
     string[] objs = obj.Split('_');
-    Debug.Log(obj);
     for(int i = 0; i < objs.Length; i++)
     {
       objectives.Add(objs[i],false);

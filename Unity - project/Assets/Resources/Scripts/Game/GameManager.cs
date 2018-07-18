@@ -15,7 +15,8 @@ public class GameManager : MonoBehaviour
   private MoleculeManager MM;
   private ShelfManager SM;
   private InformationManager IM;
-  //private AnswerPanel AP;
+  //private AnswerPanel APMultiple;
+  //private AnswerPanel APSingle;
 
   private bool getAnswer;
   private bool correctMolLoaded;
@@ -33,7 +34,8 @@ public class GameManager : MonoBehaviour
     manager = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>();
     BBManager = GameObject.FindGameObjectWithTag("Board").GetComponent<BlackBoardManager>();
     IM = GameObject.Find("Info").GetComponent<InformationManager>();
-    //AP = GameObject.Find("ControlPanelAnswers").GetComponent<AnswerPanel>();
+    //APMultiple = GameObject.Find("ControlPanelAnswers").GetComponent<AnswerPanel>();
+    //APSingle = GameObject.Find("ControlPanelAnswer").GetComponent<AnswerPanel>();
     levelComplete = false;
     newLevel = true;
     getAnswer = false;
@@ -57,10 +59,6 @@ public class GameManager : MonoBehaviour
       level++;
     }
 
-    if (Input.GetKeyDown(KeyCode.Space))
-    {
-      UpdateLevel();
-    }
   }
 
   private void SetLevel()
@@ -106,19 +104,26 @@ public class GameManager : MonoBehaviour
         string molFile = CheckMoleculeRepresentation(objSplit[1]);
         string text = HandleTextFile.ReadString(molFile + ".txt");
         if (MM.CompareMoleculesString(text, false))
+        {
           completed = true;
+          //APSingle.Disappear(); //make control panel with buttons disappear
+        }
         break;
       case "load":
         if (correctMolLoaded)
         {
           correctMolLoaded = false;
           completed = true;
+          //APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "save":
         string savedText = HandleTextFile.ReadString(objSplit[1] + ".txt");
         if (MM.CompareMoleculesString(savedText, true))
+        {
           completed = true;
+          //APSingle.Disappear(); //make control panel with buttons disappear
+        }
         break;
       case "place":
         GameObject invi = GameObject.FindGameObjectWithTag("Invisible");
@@ -133,7 +138,7 @@ public class GameManager : MonoBehaviour
         if(pressedAnswer.ToLower().Trim() == correctAnswerMC.ToLower().Trim())
         {
           completed = true;
-          //AP.Disappear(); //make control panel with buttons disappear
+          //APMultiple.Disappear(); //make control panel with buttons disappear
         }
         break;
     }
@@ -149,12 +154,15 @@ public class GameManager : MonoBehaviour
     {
       case "build":
         SM.LevelChecking(false);
+        //APSingle.Appear(); //make control panel with buttons appear
         break;
       case "load":
         SM.LevelChecking(true);
+        //APSingle.Appear(); //make control panel with buttons appear
         break;
       case "save":
         SM.LevelChecking(false);
+        //APSingle.Appear(); //make control panel with buttons appear
         break;
       case "place":
         manager.LoadMolecule(objSplit[1] + "_place", false);
@@ -162,7 +170,7 @@ public class GameManager : MonoBehaviour
         break;
       case "multiple choice":
         SM.LevelChecking(false);
-        //AP.Appear(); //make control panel with buttons appear
+        //APMultiple.Appear(); //make control panel with buttons appear
         getAnswer = true;
         break;
     }

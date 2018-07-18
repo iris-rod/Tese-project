@@ -16,13 +16,17 @@ public class BoxAtoms : MonoBehaviour {
   private BoxCollider[] colliders;
   private Material atomMaterial;
   private int atomBondsAllowed;
+  private Settings Settings;
+
+  //animator
+  private Animator animator;
+  private bool moving,isUp;
 
   //testing variables
   private Vector3 spawnPoint;
   private bool leftPinched;
   private bool leftClosest;
   private bool spawnNewAtom;
-  private bool TopOfBox;
 
   private bool resumeUpdate;
   public GameObject atom;
@@ -33,30 +37,21 @@ public class BoxAtoms : MonoBehaviour {
     canPickNewAtom = true;
     resumeUpdate = true;
     spawnNewAtom = true;
-    TopOfBox = true;
+    moving = false;
+    isUp = true;
     handController = GameObject.FindGameObjectWithTag("HandController");
     colliders = GetComponents<BoxCollider>();
+    Settings = GameObject.Find("GameManager").GetComponent<Settings>();
+    animator = transform.parent.GetComponent<Animator>();
   }
 	
 	// Update is called once per frame
 	void Update () {
-    CheckManager();
 
-    if (!TopOfBox)
-    {
-      if (resumeUpdate)
-      {
-          Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.01f);
-          if (hitColliders.Length < 1)
-            canPickNewAtom = true;
-        
-      }
-    }
-    else
-    {
+
       spawnNewAtom = false;
       Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.01f);
-      if (hitColliders.Length < 1)
+      if (hitColliders.Length < 1 && !moving && isUp)
         spawnNewAtom = true;
       if (spawnNewAtom)
       {
@@ -66,19 +61,7 @@ public class BoxAtoms : MonoBehaviour {
         newAtom.GetComponent<Atom>().manager = manager;
         newAtom.GetComponent<Atom>().SetProperties(atomType, atomMaterial, atomBondsAllowed);
       }
-    }
-  }
-
-  void CheckManager()
-  {
-    if (Input.GetKeyDown("j"))
-    {
-      TopOfBox = true;
-    }
-    if (Input.GetKeyDown("k"))
-    {
-      TopOfBox = false;
-    }
+    
   }
 
   void CheckCollider()
@@ -102,15 +85,35 @@ public class BoxAtoms : MonoBehaviour {
     {
       case "Oxygen":
         atomMaterial = Resources.Load("Materials/Oxygen 2", typeof(Material)) as Material;
+        atomMaterial.mainTexture = Settings.GetAtomTexture(atomType);
         break;
       case "Hydrogen":
         atomMaterial = Resources.Load("Materials/Hydrogen 2", typeof(Material)) as Material;
+        atomMaterial.mainTexture = Settings.GetAtomTexture(atomType);
         break;
       case "Carbon":
         atomMaterial = Resources.Load("Materials/Carbon 2", typeof(Material)) as Material;
+        atomMaterial.mainTexture = Settings.GetAtomTexture(atomType);
         break;
       case "Nitrogen":
         atomMaterial = Resources.Load("Materials/Nitrogen 2", typeof(Material)) as Material;
+        atomMaterial.mainTexture = Settings.GetAtomTexture(atomType);
+        break;
+      case "Fluorine":
+        atomMaterial = Resources.Load("Materials/Fluorine 2", typeof(Material)) as Material;
+        atomMaterial.mainTexture = Settings.GetAtomTexture(atomType);
+        break;
+      case "Chlorine":
+        atomMaterial = Resources.Load("Materials/Chlorine 2", typeof(Material)) as Material;
+        atomMaterial.mainTexture = Settings.GetAtomTexture(atomType);
+        break;
+      case "Bromine":
+        atomMaterial = Resources.Load("Materials/Bromine 2", typeof(Material)) as Material;
+        atomMaterial.mainTexture = Settings.GetAtomTexture(atomType);
+        break;
+      case "Iodine":
+        atomMaterial = Resources.Load("Materials/Iodine 2", typeof(Material)) as Material;
+        atomMaterial.mainTexture = Settings.GetAtomTexture(atomType);
         break;
     }
     atomBondsAllowed = Properties.BONDS[atomType];
@@ -182,6 +185,37 @@ public class BoxAtoms : MonoBehaviour {
       leftPosition = new Vector3(left.PalmPosition.x, left.PalmPosition.y, left.PalmPosition.z);
       handPosition = leftPosition;
     }
+  }
+
+  public void Move(bool dir)
+  {
+    isUp = !isUp;
+    animator.SetBool("move", true);
+    Invoke("Reset", .5f);
+    moving = true;
+    UpdateAtom();
+  }
+
+  private void UpdateAtom()
+  {
+    Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.01f);
+    if (hitColliders.Length > 0)
+    {
+      Destroy(hitColliders[0].gameObject);
+    }
+    
+  }
+
+  void Reset()
+  {
+    animator.SetBool("move", false);
+    Invoke("AnimationEnd", 0.5f);
+  }
+
+  // prevents from atoms to appear before the animation ends
+  void AnimationEnd()
+  {
+    moving = false;
   }
 
 }

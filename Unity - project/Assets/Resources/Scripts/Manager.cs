@@ -31,6 +31,8 @@ public class Manager : MonoBehaviour
   private Vector3 initialPos = new Vector3(0, 0, 0);
   private Vector3 moleculePosition, molPreSaved, molPostSaved;
 
+  private Settings Settings;
+
   //testing variables
   private string logName = "log10";
   private int currentInput = 0, lastInput = 0, moleculeTestNumber = 0;
@@ -40,6 +42,7 @@ public class Manager : MonoBehaviour
   {
     molPostSaved = Vector3.zero;// on platform -> new Vector3(.8f,0f,.4f);//molecules saved in runtime
     molPreSaved = new Vector3(.5f, -0.1f, .5f); //molecules saved for testing
+    Settings = GameObject.Find("GameManager").GetComponent<Settings>();
   }
 
   public void SaveMolecule(GameObject molecule, string name)
@@ -132,6 +135,7 @@ public class Manager : MonoBehaviour
       Material mat = Resources.Load("Materials/" + atomType + " 2", typeof(Material)) as Material;
       if (invi)
         mat = Resources.Load("Materials/" + atomType + " Invi", typeof(Material)) as Material;
+      mat.mainTexture = Settings.GetAtomTexture(atomType);
       loadedAtom.GetComponent<Atom>().SetProperties(atomType, mat, allowedBonds);
       loadedAtom.transform.parent = molecule.transform;
       atoms.Add(loadedAtom);
@@ -335,8 +339,8 @@ public class Manager : MonoBehaviour
 
     if (Input.GetKeyDown("n"))
     {
-      LoadMolecule("test_7mol_1", false);
-      LoadMolecule("test_9mol_1", false);
+      LoadMolecule("H2O_b", false);
+      //LoadMolecule("test_9mol_1", false);
     }
     if (Input.GetKeyDown("s"))
      {
