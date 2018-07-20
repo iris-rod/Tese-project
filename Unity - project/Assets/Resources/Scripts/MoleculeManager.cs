@@ -6,6 +6,8 @@ public class MoleculeManager : MonoBehaviour {
 
   Dictionary<int, string> moleculesInScene;
   Dictionary<int, string> moleculesInShelf;
+  Dictionary<int, GameObject> molecules;
+
   private int numberOfMolecules;
   private int numberOfMinis;
 
@@ -39,7 +41,8 @@ public class MoleculeManager : MonoBehaviour {
       {
         Transform[] atoms = child.GetComponent<BondController>().GetAtoms();
         int type = child.GetComponent<BondController>().GetBondType();
-        text += atoms[0].GetComponent<Atom>().GetAtomType() + "-" + type + "-" + atoms[1].GetComponent<Atom>().GetAtomType() + "_" + "\n";
+        text += OrderAtoms(atoms[0], atoms[1], type);
+       // text += atoms[0].GetComponent<Atom>().GetAtomType() + "-" + type + "-" + atoms[1].GetComponent<Atom>().GetAtomType() + "_" + "\n";
       }
     }
 
@@ -212,6 +215,23 @@ public class MoleculeManager : MonoBehaviour {
     moleculesInScene.Remove(molID);
   }
 
+  private string OrderAtoms(Transform atom1, Transform atom2, int type)
+  {
+    string name1 = atom1.GetComponent<Atom>().GetAtomType();
+    string name2 = atom2.GetComponent<Atom>().GetAtomType();
+
+    if (name1 == "Hidrogen")
+      return name2 + "-" + type + "-" + name1 + "_" + "\n";
+    else if (name2 == "Hidrogen")
+      return name1 + "-" + type + "-" + name2 + "_" + "\n";
+    else if (name1 == "Carbon")
+      return name1 + "-" + type + "-" + name2 + "_" + "\n";
+    else if (name2 == "Carbon")
+      return name2 + "-" + type + "-" + name1 + "_" + "\n";
+    else
+      return name1 + "-" + type + "-" + name2 + "_" + "\n";
+  }
+
 
   private string GetMoleculeName(GameObject molecule)
   {
@@ -244,6 +264,20 @@ public class MoleculeManager : MonoBehaviour {
     else
       result = "C" + C.ToString() + "H" + H.ToString();
     return result;
+  }
+
+  public bool CheckMoleculesClass(string taskDescription)
+  {
+    foreach(var par in moleculesInScene)
+    {
+      GameObject molecule = molecules[par.Key];
+      if (MoleculesCharacteristics.CheckTheClass(taskDescription, molecule))
+        return true;
+      else
+        if(MoleculesCharacteristics.CheckTheClass(taskDescription, par.Value))
+          return true;
+    }
+    return false;
   }
 
 }

@@ -643,4 +643,18 @@ public class Molecule : MonoBehaviour
     }
     return null;
   }
+
+  public List<GameObject> GetAllBonds(GameObject atom)
+  {
+    List<GameObject> bonds =  new List<GameObject>();
+    for(int i = 0; i < transform.childCount; i++)
+    {
+      Transform child = transform.GetChild(i);
+      if(child.CompareTag("Bond") && child.GetComponent<BondController>().HasAtom(atom))
+      {
+        bonds.Add(child.gameObject);
+      }
+    }
+    return bonds;
+  }
 }

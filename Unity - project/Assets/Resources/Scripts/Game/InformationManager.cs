@@ -7,6 +7,7 @@ public class InformationManager : MonoBehaviour {
 
   private TextMeshPro levelText;
   private TextMeshPro objectivesText;
+  private TextMeshPro pointsText;
   private GameObject check;
   private string currentDisplay;
   private string updatedDisplay;
@@ -17,8 +18,9 @@ public class InformationManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
     levelText = transform.GetChild(0).GetComponent<TextMeshPro>();
-    objectivesText = transform.GetChild(1).GetComponent<TextMeshPro>();
-    check = transform.GetChild(2).gameObject;
+    pointsText = transform.GetChild(1).GetComponent<TextMeshPro>();
+    objectivesText = transform.GetChild(2).GetComponent<TextMeshPro>();
+    check = transform.GetChild(3).gameObject;
     check.SetActive(false);
 	}
 	
@@ -46,6 +48,16 @@ public class InformationManager : MonoBehaviour {
     return correctAnswer;
   }
 
+  public void UpdateTimer(float min, float sec)
+  {
+    pointsText.text = "Timer: " + min + ":" + sec;
+  }
+
+  public void UpdateMoves(int moves)
+  {
+    pointsText.text = "Moves: " + moves;
+  }
+
   //raw -> build-H2O ou place-H2O ou save-
   private string GetDisplayText(string raw) 
   {
@@ -55,7 +67,14 @@ public class InformationManager : MonoBehaviour {
     {
       case "build":
         string moleculeDisp = CheckMoleculeRepresentation(split[1]);
-        result += "Build the following molecule: \n" + moleculeDisp;
+        result += "Cria uma molécula \n" + moleculeDisp;
+        break;
+      case "complete":
+        string moleculeDescr = CheckMoleculeDescription(split[1]);
+        result += "Completa a molécula " + moleculeDescr;
+        break;
+      case "transform":
+        result += "Transforma a molécula em " + split[1];
         break;
       case "place":
         result += "Move the " + split[1] + " molecule to overlap the transparent molecule.";
@@ -104,6 +123,27 @@ public class InformationManager : MonoBehaviour {
       }
     }
     return raw;
+  }
+
+  //check what is the description given for the user to complete the molecule
+  private string CheckMoleculeDescription(string rawDisplay)
+  {
+    string result = "";
+
+    if(rawDisplay.IndexOf("&") != -1)
+    {
+      string[] charc = rawDisplay.Split('&');
+      result = "sabendo que é um " + charc[0] +"\n" +"e o seu nome é " + charc[1];
+    }
+    else if(rawDisplay.Contains("estrutura"))
+    {
+      result = "sabendo a sua estrutura: "+ CheckMoleculeRepresentation(rawDisplay);
+    }
+    else
+    {
+      result = "sabendo que é " + rawDisplay;
+    }
+    return result;
   }
 
   //if it is an structure , the function is going to read the file and get the string to display,

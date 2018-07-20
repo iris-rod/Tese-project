@@ -279,6 +279,11 @@
      <Compile Include="Assets\Resources\Scripts\Game\InformationManager.cs" />
      <Compile Include="Assets\Resources\Scripts\Game\LevelManager.cs" />
      <Compile Include="Assets\Resources\Scripts\Game\LogManager.cs" />
+     <Compile Include="Assets\Resources\Scripts\Game\MainMenuBall.cs" />
+     <Compile Include="Assets\Resources\Scripts\Game\MainMenuBox.cs" />
+     <Compile Include="Assets\Resources\Scripts\Game\MainMenuManager.cs" />
+     <Compile Include="Assets\Resources\Scripts\Game\MainMenuPlatform.cs" />
+     <Compile Include="Assets\Resources\Scripts\Game\PointSystem.cs" />
      <Compile Include="Assets\Resources\Scripts\Game\Settings.cs" />
      <Compile Include="Assets\Resources\Scripts\Game\SoundEffectsManager.cs" />
      <Compile Include="Assets\Resources\Scripts\HandController.cs" />
@@ -293,6 +298,7 @@
      <Compile Include="Assets\Resources\Scripts\Manager.cs" />
      <Compile Include="Assets\Resources\Scripts\Molecule.cs" />
      <Compile Include="Assets\Resources\Scripts\MoleculeManager.cs" />
+     <Compile Include="Assets\Resources\Scripts\MoleculesCharacteristics.cs" />
      <Compile Include="Assets\Resources\Scripts\PivotController.cs" />
      <Compile Include="Assets\Resources\Scripts\Platform.cs" />
      <Compile Include="Assets\Resources\Scripts\RetriveLogSheet.cs" />

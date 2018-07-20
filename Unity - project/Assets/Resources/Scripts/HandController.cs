@@ -41,6 +41,8 @@ public class HandController : MonoBehaviour
   //rotation variables
   private bool rightHandGrabbingPivot;
 
+  private string Scene;
+
   // Use this for initialization
   void Start()
   {
@@ -55,80 +57,84 @@ public class HandController : MonoBehaviour
     translate = false;
     interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
     pivots = GameObject.FindGameObjectsWithTag("Pivot");
-    rotationType = transform.parent.transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
+    //rotationType = transform.parent.transform.parent.GetComponent<Manager>().rotationType;//transform.parent.GetComponent<Manager>().rotationType;
   }
 
   public void updateCurrentHand (Hand leapHand)
   {
-
-    rotationType = transform.parent.transform.parent.GetComponent<Manager> ().rotationType; 
-    UpdatePivots();
-
-
-    CheckGraspingPivot();
-    CheckDistanceToPivot(leapHand);
-    CheckAxis(leapHand);
- 
-
-    if (!leftHandGO.activeSelf || !rightHandGO.activeSelf) {
-      StopRotation ();
-    }
-    if ((!leftHandGO.activeSelf && !rightHandGrabbingPivot) || (!rightHandGO.activeSelf && rightHandGrabbingPivot))
+    if (Scene != "MainMenu")
     {
-      rightHandGrabbingPivot = !rightHandGrabbingPivot;
-      StopTranslate();
-    }
+      rotationType = 3;
+      UpdatePivots();
+      CheckGraspingPivot();
+      CheckDistanceToPivot(leapHand);
+      CheckAxis(leapHand);
 
 
-    //so roda se as duas maos estiverem a aparecer
-    if (leftHandGO.activeSelf && rightHandGO.activeSelf) {
-      if (rotating && !translate)
-        Rotate (leapHand);
-    }
+      if (!leftHandGO.activeSelf || !rightHandGO.activeSelf)
+      {
+        StopRotation();
+      }
+      if ((!leftHandGO.activeSelf && !rightHandGrabbingPivot) || (!rightHandGO.activeSelf && rightHandGrabbingPivot))
+      {
+        rightHandGrabbingPivot = !rightHandGrabbingPivot;
+        StopTranslate();
+      }
+
+
+      //so roda se as duas maos estiverem a aparecer
+      if (leftHandGO.activeSelf && rightHandGO.activeSelf)
+      {
+        if (rotating && !translate)
+          Rotate(leapHand);
+      }
       if (translate && !rotating)
-        Translate (leapHand);
+        Translate(leapHand);
 
-    if (leapHand.IsLeft)
-    {
-      leftHandPosition = leapHand.PalmPosition.ToVector3();
-      leftHand = leapHand;
-    }
-    else
-    {
-      rightHandPosition = leapHand.PalmPosition.ToVector3();
-      rightHand = leapHand;
+      if (leapHand.IsLeft)
+      {
+        leftHandPosition = leapHand.PalmPosition.ToVector3();
+        leftHand = leapHand;
+      }
+      else
+      {
+        rightHandPosition = leapHand.PalmPosition.ToVector3();
+        rightHand = leapHand;
+      }
     }
   }
 
   void Update()
   {
-    
-    interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
+    if (Scene != "MainMenu")
+    {
+      interactableObjs = GameObject.FindGameObjectsWithTag("Interactable");
 
-    int grabbedAtoms = 0;
-    for (int i = 0; i < interactableObjs.Length; i++)
-    {
-      GameObject obj = interactableObjs[i];
-      if (obj.GetComponent<InteractionBehaviour>().isGrasped)
-      {
-        grabbedAtoms++;
-      }
-    }
-    if (grabbedAtoms >= 2)
-    {
+      int grabbedAtoms = 0;
       for (int i = 0; i < interactableObjs.Length; i++)
       {
         GameObject obj = interactableObjs[i];
         if (obj.GetComponent<InteractionBehaviour>().isGrasped)
-          obj.GetComponent<Atom>().EnableBond();
+        {
+          grabbedAtoms++;
+        }
       }
-    }
-    else
-    {
-      for (int i = 0; i < interactableObjs.Length; i++)
+      if (grabbedAtoms >= 2)
       {
-        GameObject obj = interactableObjs[i];
-        obj.GetComponent<Atom>().DisableBond();
+        for (int i = 0; i < interactableObjs.Length; i++)
+        {
+          GameObject obj = interactableObjs[i];
+          if (obj.GetComponent<InteractionBehaviour>().isGrasped)
+            obj.GetComponent<Atom>().EnableBond();
+        }
+      }
+      else
+      {
+        for (int i = 0; i < interactableObjs.Length; i++)
+        {
+          GameObject obj = interactableObjs[i];
+          obj.GetComponent<Atom>().DisableBond();
+        }
       }
     }
     
@@ -396,6 +402,9 @@ public class HandController : MonoBehaviour
     return rightHand;
   }
 
-
+  public void SetScene(string s)
+  {
+    Scene = s;
+  }
 
 }

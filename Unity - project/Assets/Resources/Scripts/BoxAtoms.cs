@@ -83,12 +83,12 @@ public class BoxAtoms : MonoBehaviour {
   {
     switch (atomType)
     {
-      case "Oxygen":
-        atomMaterial = Resources.Load("Materials/Oxygen 2", typeof(Material)) as Material;
+      case "Oxigen":
+        atomMaterial = Resources.Load("Materials/Oxigen 2", typeof(Material)) as Material;
         atomMaterial.mainTexture = Settings.GetAtomTexture(atomType);
         break;
-      case "Hydrogen":
-        atomMaterial = Resources.Load("Materials/Hydrogen 2", typeof(Material)) as Material;
+      case "Hidrogen":
+        atomMaterial = Resources.Load("Materials/Hidrogen 2", typeof(Material)) as Material;
         atomMaterial.mainTexture = Settings.GetAtomTexture(atomType);
         break;
       case "Carbon":

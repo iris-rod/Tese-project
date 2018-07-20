@@ -1,7 +1,7 @@
-Carbon-1-Hydrogen_
-Carbon-1-Hydrogen_
-Carbon-1-Hydrogen_
+Carbon-1-Hidrogen_
+Carbon-1-Hidrogen_
+Carbon-1-Hidrogen_
 Carbon-1-Carbon_
-		 Carbon-2-Oxygen_
-		 Carbon-1-Oxygen_
-				  Oxygen-1-Hydrogen_
+		 Carbon-2-Oxigen_
+		 Carbon-1-Oxigen_
+				  Oxigen-1-Hidrogen_

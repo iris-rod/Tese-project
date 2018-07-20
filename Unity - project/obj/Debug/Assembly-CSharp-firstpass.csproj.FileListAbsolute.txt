@@ -64,3 +64,6 @@ C:\Users\gabri\Documents\Mestrado\TESE\Tese-project\Unity - project\Temp\bin\Deb
 C:\Users\gabri\Documents\Mestrado\TESE\Tese-project\Unity - project\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
 C:\Users\gabri\Documents\Mestrado\TESE\Tese-project\Unity - project\obj\Debug\Assembly-CSharp-firstpass.dll
 C:\Users\gabri\Documents\Mestrado\TESE\Tese-project\Unity - project\obj\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\gabri\Documents\Mestrado\TESE\Tese-project\Unity - project\Temp\bin\Debug\LitJson.dll
+C:\Users\gabri\Documents\Mestrado\TESE\Tese-project\Unity - project\Temp\bin\Debug\TextMeshPro-5.6-Editor.dll
+C:\Users\gabri\Documents\Mestrado\TESE\Tese-project\Unity - project\Temp\bin\Debug\TextMeshPro-5.6-Runtime.dll

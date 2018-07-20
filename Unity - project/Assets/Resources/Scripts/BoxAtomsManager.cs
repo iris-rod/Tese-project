@@ -19,8 +19,6 @@ public class BoxAtomsManager : MonoBehaviour
 
   }
 
-
-
   public void SetUp()
   {
     for (int i = 0; i < SecondRowRef.Length; i++)

@@ -1,12 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+  public string Scene;
+  public BlackBoardManager BBManager;
 
   private int level;
   private bool levelComplete, newLevel;
+  private string levelsFile;
   private string levels;
   private string levelObjs;
   private string correctAnswerMC, pressedAnswer;
@@ -15,15 +19,15 @@ public class GameManager : MonoBehaviour
   private MoleculeManager MM;
   private ShelfManager SM;
   private InformationManager IM;
-  //private AnswerPanel APMultiple;
-  //private AnswerPanel APSingle;
+  private PointSystem PS;
+  private AnswerPanel APMultiple;
+  private AnswerPanel APSingle;
 
   private bool getAnswer;
   private bool correctMolLoaded;
 
   private string path = "";
 
-  public BlackBoardManager BBManager;
 
   // Use this for initialization
   void Start()
@@ -34,14 +38,15 @@ public class GameManager : MonoBehaviour
     manager = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>();
     BBManager = GameObject.FindGameObjectWithTag("Board").GetComponent<BlackBoardManager>();
     IM = GameObject.Find("Info").GetComponent<InformationManager>();
-    //APMultiple = GameObject.Find("ControlPanelAnswers").GetComponent<AnswerPanel>();
-    //APSingle = GameObject.Find("ControlPanelAnswer").GetComponent<AnswerPanel>();
+    PS = GetComponent<PointSystem>();
+    APMultiple = GameObject.Find("ControlPanelAnswers").GetComponent<AnswerPanel>();
+    APSingle = GameObject.Find("ControlPanelAnswer").GetComponent<AnswerPanel>();
     levelComplete = false;
     newLevel = true;
     getAnswer = false;
     correctMolLoaded = false;
     level = 1;
-    levels = HandleTextFile.ReadLevels("levels_teste2");
+    levels = HandleTextFile.ReadLevels(levelsFile);
     SoundEffectsManager.SetUp();
   }
 
@@ -64,24 +69,27 @@ public class GameManager : MonoBehaviour
   private void SetLevel()
   {
     Debug.Log("new Level: " + level);
-    string objs = "";
-    string[] levelsSplit = levels.Split(';');
-    for(int i = 0; i < levelsSplit.Length; i ++)
+    if (levels != "")
     {
-      string[] levelDescp = levelsSplit[i].Split(':');
-      int levelID = int.Parse(levelDescp[0].Trim());
-      if (level == levelID)
+      string objs = "";
+      string[] levelsSplit = levels.Split(';');
+      for (int i = 0; i < levelsSplit.Length; i++)
       {
-        objs = levelDescp[1].Trim();
-        break;
+        string[] levelDescp = levelsSplit[i].Split(':');
+        int levelID = int.Parse(levelDescp[0].Trim());
+        if (level == levelID)
+        {
+          objs = levelDescp[1].Trim();
+          break;
+        }
       }
-    }
 
-    LM.SetLevelId(level);
-    LM.SetObjective(objs);
-    CheckNextObjectiveSetup(LM.GetNextObjective());
-    Invoke("NextLevelDisplay", 2f);
-    newLevel = false;
+      LM.SetLevelId(level);
+      LM.SetObjective(objs);
+      CheckNextObjectiveSetup(LM.GetNextObjective());
+      Invoke("NextLevelDisplay", 2f);
+      newLevel = false;
+    }
   }
 
   void NextLevelDisplay()
@@ -96,17 +104,26 @@ public class GameManager : MonoBehaviour
   private bool CheckObjectiveComplete(string nextObj)
   {
     string[] objSplit = nextObj.Split('-');
+    
     string type = objSplit[0];
     bool completed = false;
     switch (type)
     {
       case "build":
-        string molFile = CheckMoleculeRepresentation(objSplit[1]);
+        string molFile = CheckMoleculeRepresentation(objSplit[1]); //to get the correct name of the file in case the structure is being used
         string text = HandleTextFile.ReadString(molFile + ".txt");
         if (MM.CompareMoleculesString(text, false))
         {
           completed = true;
-          //APSingle.Disappear(); //make control panel with buttons disappear
+          APSingle.Disappear(); //make control panel with buttons disappear
+        }
+        break;
+      case "complete":
+        string molDes = CheckMoleculeDescription(objSplit[2]);
+        if (IsMoleculeComplete(molDes))
+        {
+          completed = true;
+          APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "load":
@@ -114,7 +131,7 @@ public class GameManager : MonoBehaviour
         {
           correctMolLoaded = false;
           completed = true;
-          //APSingle.Disappear(); //make control panel with buttons disappear
+          APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "save":
@@ -122,7 +139,7 @@ public class GameManager : MonoBehaviour
         if (MM.CompareMoleculesString(savedText, true))
         {
           completed = true;
-          //APSingle.Disappear(); //make control panel with buttons disappear
+          APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "place":
@@ -138,7 +155,7 @@ public class GameManager : MonoBehaviour
         if(pressedAnswer.ToLower().Trim() == correctAnswerMC.ToLower().Trim())
         {
           completed = true;
-          //APMultiple.Disappear(); //make control panel with buttons disappear
+          APMultiple.Disappear(); //make control panel with buttons disappear
         }
         break;
     }
@@ -154,15 +171,23 @@ public class GameManager : MonoBehaviour
     {
       case "build":
         SM.LevelChecking(false);
-        //APSingle.Appear(); //make control panel with buttons appear
+        APSingle.Appear(); //make control panel with buttons appear
+        break;
+      case "complete":
+        SM.LevelChecking(false);
+        APSingle.Appear(); //make control panel with buttons appear
+        break;
+      case "transform":
+        SM.LevelChecking(false);
+        APSingle.Appear(); //make control panel with buttons appear
         break;
       case "load":
         SM.LevelChecking(true);
-        //APSingle.Appear(); //make control panel with buttons appear
+        APSingle.Appear(); //make control panel with buttons appear
         break;
       case "save":
         SM.LevelChecking(false);
-        //APSingle.Appear(); //make control panel with buttons appear
+        APSingle.Appear(); //make control panel with buttons appear
         break;
       case "place":
         manager.LoadMolecule(objSplit[1] + "_place", false);
@@ -170,7 +195,8 @@ public class GameManager : MonoBehaviour
         break;
       case "multiple choice":
         SM.LevelChecking(false);
-        //APMultiple.Appear(); //make control panel with buttons appear
+        PS.StartTimer();
+        APMultiple.Appear(); //make control panel with buttons appear
         getAnswer = true;
         break;
     }
@@ -184,7 +210,53 @@ public class GameManager : MonoBehaviour
     {
       result = rawObj.Substring(0, rawObj.Length - 9);
     }
-      return result;
+    return result;
+  }
+  //rawObj can appear in different forms: CH4, CH4estrutura, alcool & etanol, etanol, haloalcano
+  private string CheckMoleculeDescription(string rawObj)
+  {
+    if (rawObj.Contains("&") || !rawObj.Any(char.IsUpper))
+    {
+      return rawObj;
+    }
+    else if(rawObj.Length > 9)
+    {
+      if (rawObj.Substring(9, rawObj.Length) == "estrutura")
+        return CheckMoleculeRepresentation(rawObj);
+      else return rawObj;
+    }
+    return "";
+  }
+  
+
+  private bool IsMoleculeComplete(string description)
+  {
+    if (description.Split(' ').Length <= 1)
+    {
+      string text1 = HandleTextFile.ReadString(description + ".txt");
+      return MM.CompareMoleculesString(text1, false);
+    }
+
+    else if (description.Contains("&"))
+    {
+      string[] info = description.Split('&');
+      string name = info[1];
+      string text1 = HandleTextFile.ReadString(name + ".txt");
+      return MM.CompareMoleculesString(text1, false);
+    }
+
+    else if (description.Any(char.IsUpper))
+    {
+      if (MM.CheckMoleculesClass(description))
+        return true;
+      else
+      {
+        string text1 = HandleTextFile.ReadString(name + ".txt");
+        return MM.CompareMoleculesString(text1, false);
+      }
+    }
+
+    return false;
   }
 
   public int GetCurrentLevel()
@@ -235,6 +307,11 @@ public class GameManager : MonoBehaviour
       LM.UpdateObjective(nextObj);
       CheckLevelCompletion();
     }
+  }
+
+  public void SetLevels(string name)
+  {
+    levelsFile = name;
   }
 
 }

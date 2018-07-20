@@ -217,6 +217,17 @@ public class BondController : MonoBehaviour
     return (((atomA == ballA) && (atomB == ballB)) || (atomA == ballB) && (atomB == ballA));
   }
 
+  public bool HasAtom(GameObject atom)
+  {
+    return ((atom == ballA) || (atom == ballB));
+  }
+
+  public bool HasTypeAtom(string type)
+  {
+    return ((type == ballA.GetComponent<Atom>().GetAtomType()) || (type == ballB.GetComponent<Atom>().GetAtomType()));
+
+  }
+
   public Transform[] GetAtoms()
   {
     Transform[] atoms = new Transform[2] { ballA,ballB};
