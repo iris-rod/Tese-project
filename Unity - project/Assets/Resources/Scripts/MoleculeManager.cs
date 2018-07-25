@@ -19,9 +19,13 @@ public class MoleculeManager : MonoBehaviour {
     numberOfMinis = 0;
     moleculesInScene = new Dictionary<int, string>();
     moleculesInShelf = new Dictionary<int, string>();
-    LM = GameObject.Find("LogSheet").GetComponent<LogManager>();
+    molecules = new Dictionary<int, GameObject>();
   }
 
+  public void SetUp()
+  {
+    LM = GameObject.Find("LogSheet").GetComponent<LogManager>();
+  }
 
   public void AddMolecule(GameObject molecule, bool shelf)
   {
@@ -42,13 +46,13 @@ public class MoleculeManager : MonoBehaviour {
         Transform[] atoms = child.GetComponent<BondController>().GetAtoms();
         int type = child.GetComponent<BondController>().GetBondType();
         text += OrderAtoms(atoms[0], atoms[1], type);
-       // text += atoms[0].GetComponent<Atom>().GetAtomType() + "-" + type + "-" + atoms[1].GetComponent<Atom>().GetAtomType() + "_" + "\n";
       }
     }
 
     if (!shelf)
     {
       moleculesInScene.Add(numberOfMolecules, text);
+      molecules.Add(numberOfMolecules, molecule);
       numberOfMolecules++;
     }
     else
@@ -80,6 +84,7 @@ public class MoleculeManager : MonoBehaviour {
     if (moleculesInScene.ContainsKey(id))
     {
       moleculesInScene.Remove(id);
+      molecules.Remove(id);
       numberOfMolecules--;
       AddMolecule(molecule, false);
       CheckAvailableBonds(molecule);
@@ -128,38 +133,42 @@ public class MoleculeManager : MonoBehaviour {
   {
     Dictionary<int, string> molecules = moleculesInScene;
     string[] bonds2 = struc2.Trim().Split('_');
-    Debug.Log(struc2);
-    if (inShelf) molecules = moleculesInShelf;
-    foreach (var par in molecules) {
-    
-      string struc1 = molecules[par.Key];
-      string[] bonds1 = struc1.Trim().Split ('_');
-      Debug.Log(struc1);
-      if (bonds1.Length != bonds2.Length)
-        continue;
-      //compare struct of molecules
-      for (int i = 0; i < bonds1.Length; i++) {
-        string bond = bonds1 [i].Trim ();
-        bool equal = false;
-        if (bond != "")
+    if (struc2 != "")
+    {
+      if (inShelf) molecules = moleculesInShelf;
+      foreach (var par in molecules)
+      {
+
+        string struc1 = molecules[par.Key];
+        string[] bonds1 = struc1.Trim().Split('_');
+        Debug.Log(struc1);
+        if (bonds1.Length != bonds2.Length)
+          continue;
+        //compare struct of molecules
+        for (int i = 0; i < bonds1.Length; i++)
         {
-          for (int j = 0; j < bonds2.Length; j++)
+          string bond = bonds1[i].Trim();
+          bool equal = false;
+          if (bond != "")
           {
-            string bond2 = bonds2[j].Trim();
-            if (bond == bond2)
+            for (int j = 0; j < bonds2.Length; j++)
             {
-              equal = true;
-              break;
-            }
-            else if (bond.Split('-')[0] == bond2.Split('-')[2] && bond.Split('-')[2] == bond2.Split('-')[0] && (bond.Split('-')[1] == bond2.Split('-')[1]))
-            {
-              equal = true;
-              break;
+              string bond2 = bonds2[j].Trim();
+              if (bond == bond2)
+              {
+                equal = true;
+                break;
+              }
+              else if (bond.Split('-')[0] == bond2.Split('-')[2] && bond.Split('-')[2] == bond2.Split('-')[0] && (bond.Split('-')[1] == bond2.Split('-')[1]))
+              {
+                equal = true;
+                break;
+              }
             }
           }
+          if (equal)
+            return true;
         }
-        if (equal)
-          return true;
       }
     }
     return false;
@@ -205,6 +214,7 @@ public class MoleculeManager : MonoBehaviour {
   {
     moleculesInShelf = new Dictionary<int, string>();
     moleculesInScene = new Dictionary<int, string>();
+    molecules = new Dictionary<int, GameObject>();
     numberOfMinis = 0;
     numberOfMolecules = 0;
   }
@@ -213,6 +223,7 @@ public class MoleculeManager : MonoBehaviour {
   {
     int molID = mol.GetComponent<Molecule>().GetId();
     moleculesInScene.Remove(molID);
+    molecules.Remove(molID);
   }
 
   private string OrderAtoms(Transform atom1, Transform atom2, int type)
@@ -268,6 +279,7 @@ public class MoleculeManager : MonoBehaviour {
 
   public bool CheckMoleculesClass(string taskDescription)
   {
+
     foreach(var par in moleculesInScene)
     {
       GameObject molecule = molecules[par.Key];

@@ -24,20 +24,36 @@ public class Settings : MonoBehaviour {
   private static Material NitrogenBoxPT;
   private static Material IodineBoxPT;
 
-  public GameObject CarbonBox;
-  public GameObject HidrogenBox;
-  public GameObject OxigenBox;
-  public GameObject BromineBox;
-  public GameObject ChlorineBox;
-  public GameObject FluorineBox;
-  public GameObject NitrogenBox;
-  public GameObject IodineBox;
+  private GameObject CarbonBox;
+  private GameObject HidrogenBox;
+  private GameObject OxigenBox;
+  private GameObject BromineBox;
+  private GameObject ChlorineBox;
+  private GameObject FluorineBox;
+  private GameObject NitrogenBox;
+  private GameObject IodineBox;
 
 
   private Texture2D[] AtomsLetters;
 
+  void Start()
+  {
+    Sprite[] allLetters = Resources.LoadAll<Sprite>("Textures/atoms letters");
+    AtomsLetters = ConvertSpritesToTexture(allLetters);
+  }
+
   // Use this for initialization
-  void Start () {
+  public void SetUp () {
+    English = false;
+    CarbonBox = GameObject.Find("CarbonBox");
+    HidrogenBox = GameObject.Find("HidrogenBox");
+    OxigenBox = GameObject.Find("OxigenBox");
+    BromineBox = GameObject.Find("BromineBox");
+    ChlorineBox = GameObject.Find("ChlorineBox");
+    FluorineBox = GameObject.Find("FluorineBox");
+    NitrogenBox = GameObject.Find("NitrogenBox");
+    IodineBox = GameObject.Find("IodineBox");
+
     CarbonBoxEn   = Resources.Load("Materials/Boxes/CarbonBoxEn", typeof(Material)) as Material;
     HidrogenBoxEn = Resources.Load("Materials/Boxes/HydrogenBoxEn", typeof(Material)) as Material;
     OxigenBoxEn   = Resources.Load("Materials/Boxes/OxygenBoxEn", typeof(Material)) as Material;
@@ -56,8 +72,6 @@ public class Settings : MonoBehaviour {
     NitrogenBoxPT = Resources.Load("Materials/Boxes/NitrogenBoxPT", typeof(Material)) as Material;
     IodineBoxPT   = Resources.Load("Materials/Boxes/IodineBoxPT", typeof(Material)) as Material;
 
-    Sprite[] allLetters = Resources.LoadAll<Sprite>("Textures/atoms letters");
-    AtomsLetters = ConvertSpritesToTexture(allLetters);
     SetBoxes(English);
   }
 
@@ -66,10 +80,10 @@ public class Settings : MonoBehaviour {
     Texture2D text = AtomsLetters[0];
     switch (atomType)
     {
-      case "Oxygen":
+      case "Oxigen":
         text = AtomsLetters[0];
         break;
-      case "Hydrogen":
+      case "Hidrogen":
         text = AtomsLetters[7];
         break;
       case "Carbon":
@@ -112,7 +126,7 @@ public class Settings : MonoBehaviour {
     }
     return textures;
   }
-
+  
   private void SetBoxes(bool en)
   {
     if (en)

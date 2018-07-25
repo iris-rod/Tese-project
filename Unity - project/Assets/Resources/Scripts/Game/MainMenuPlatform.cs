@@ -9,7 +9,7 @@ public class MainMenuPlatform : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-    spawnPoint = new Vector3(transform.position.x, transform.position.y + .1f, transform.position.z);//new Vector3(platformPosition.x, platformPosition.y + 0.1f, platformPosition.z);
+    spawnPoint = new Vector3(transform.position.x, transform.position.y + .05f, transform.position.z);//new Vector3(platformPosition.x, platformPosition.y + 0.1f, platformPosition.z);
     MMM = GameObject.Find("MainMenuManager").GetComponent<MainMenuManager>();
   }
 
@@ -22,6 +22,7 @@ public class MainMenuPlatform : MonoBehaviour {
       {
         if (hitColliders[i].CompareTag("Interactable"))
         {
+          
           string nextScene = hitColliders[i].GetComponent<MainMenuBall>().GetNextScene();
           string levels = hitColliders[i].GetComponent<MainMenuBall>().GetLevels();
           MMM.ChangeScene(nextScene, levels);
@@ -30,4 +31,10 @@ public class MainMenuPlatform : MonoBehaviour {
       }
     }
   }
+
+  void OnDrawGizmos()
+  {
+    Gizmos.DrawSphere(spawnPoint, 0.05f);
+  }
+
 }

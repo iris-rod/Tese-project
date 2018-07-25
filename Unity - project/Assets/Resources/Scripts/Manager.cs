@@ -42,7 +42,8 @@ public class Manager : MonoBehaviour
   {
     molPostSaved = Vector3.zero;// on platform -> new Vector3(.8f,0f,.4f);//molecules saved in runtime
     molPreSaved = new Vector3(.5f, -0.1f, .5f); //molecules saved for testing
-    Settings = GameObject.Find("GameManager").GetComponent<Settings>();
+    if(GameObject.Find("GameManager") != null)
+      Settings = GameObject.Find("GameManager").GetComponent<Settings>();
   }
 
   public void SaveMolecule(GameObject molecule, string name)
@@ -339,7 +340,7 @@ public class Manager : MonoBehaviour
 
     if (Input.GetKeyDown("n"))
     {
-      LoadMolecule("H2O_b", false);
+      LoadMolecule("aa", false);
       //LoadMolecule("test_9mol_1", false);
     }
     if (Input.GetKeyDown("s"))

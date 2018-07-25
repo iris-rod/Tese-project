@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 
   private int level;
   private bool levelComplete, newLevel;
-  private string levelsFile;
+  private string levelsFile = "";
   private string levels;
   private string levelObjs;
   private string correctAnswerMC, pressedAnswer;
@@ -34,19 +34,25 @@ public class GameManager : MonoBehaviour
   {
     MM = GetComponent<MoleculeManager>();
     LM = GetComponent<LevelManager>();
-    SM = GameObject.FindGameObjectWithTag("shelves").GetComponent<ShelfManager>();
     manager = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>();
     BBManager = GameObject.FindGameObjectWithTag("Board").GetComponent<BlackBoardManager>();
     IM = GameObject.Find("Info").GetComponent<InformationManager>();
+
     PS = GetComponent<PointSystem>();
-    APMultiple = GameObject.Find("ControlPanelAnswers").GetComponent<AnswerPanel>();
-    APSingle = GameObject.Find("ControlPanelAnswer").GetComponent<AnswerPanel>();
+    GetComponent<Settings>().SetUp();
+    GetComponent<BoxAtomsManager>().SetUp();
+    //APMultiple = GameObject.Find("ControlPanelAnswers").GetComponent<AnswerPanel>();
+    //APSingle = GameObject.Find("ControlPanelAnswer").GetComponent<AnswerPanel>();
     levelComplete = false;
     newLevel = true;
     getAnswer = false;
     correctMolLoaded = false;
     level = 1;
-    levels = HandleTextFile.ReadLevels(levelsFile);
+    if (levelsFile != "")
+    {
+      levels = HandleTextFile.ReadLevels(levelsFile);
+      SM = GameObject.FindGameObjectWithTag("shelves").GetComponent<ShelfManager>();
+    }
     SoundEffectsManager.SetUp();
   }
 
@@ -64,12 +70,17 @@ public class GameManager : MonoBehaviour
       level++;
     }
 
+    /*string molDes = CheckMoleculeDescription("aldeido");
+    if (IsMoleculeComplete(molDes))
+    {
+      Debug.Log("true");
+    }*/
   }
 
   private void SetLevel()
   {
-    Debug.Log("new Level: " + level);
-    if (levels != "")
+
+    if (levels != "" && levels != null)
     {
       string objs = "";
       string[] levelsSplit = levels.Split(';');
@@ -115,7 +126,7 @@ public class GameManager : MonoBehaviour
         if (MM.CompareMoleculesString(text, false))
         {
           completed = true;
-          APSingle.Disappear(); //make control panel with buttons disappear
+          //APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "complete":
@@ -123,7 +134,7 @@ public class GameManager : MonoBehaviour
         if (IsMoleculeComplete(molDes))
         {
           completed = true;
-          APSingle.Disappear(); //make control panel with buttons disappear
+          //APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "load":
@@ -131,7 +142,7 @@ public class GameManager : MonoBehaviour
         {
           correctMolLoaded = false;
           completed = true;
-          APSingle.Disappear(); //make control panel with buttons disappear
+          //APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "save":
@@ -139,7 +150,7 @@ public class GameManager : MonoBehaviour
         if (MM.CompareMoleculesString(savedText, true))
         {
           completed = true;
-          APSingle.Disappear(); //make control panel with buttons disappear
+          //APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "place":
@@ -155,7 +166,8 @@ public class GameManager : MonoBehaviour
         if(pressedAnswer.ToLower().Trim() == correctAnswerMC.ToLower().Trim())
         {
           completed = true;
-          APMultiple.Disappear(); //make control panel with buttons disappear
+          PS.StopTimer();
+          //APMultiple.Disappear(); //make control panel with buttons disappear
         }
         break;
     }
@@ -171,23 +183,23 @@ public class GameManager : MonoBehaviour
     {
       case "build":
         SM.LevelChecking(false);
-        APSingle.Appear(); //make control panel with buttons appear
+        //APSingle.Appear(); //make control panel with buttons appear
         break;
       case "complete":
         SM.LevelChecking(false);
-        APSingle.Appear(); //make control panel with buttons appear
+        //APSingle.Appear(); //make control panel with buttons appear
         break;
       case "transform":
         SM.LevelChecking(false);
-        APSingle.Appear(); //make control panel with buttons appear
+        //APSingle.Appear(); //make control panel with buttons appear
         break;
       case "load":
         SM.LevelChecking(true);
-        APSingle.Appear(); //make control panel with buttons appear
+        //APSingle.Appear(); //make control panel with buttons appear
         break;
       case "save":
         SM.LevelChecking(false);
-        APSingle.Appear(); //make control panel with buttons appear
+        //APSingle.Appear(); //make control panel with buttons appear
         break;
       case "place":
         manager.LoadMolecule(objSplit[1] + "_place", false);
@@ -196,7 +208,7 @@ public class GameManager : MonoBehaviour
       case "multiple choice":
         SM.LevelChecking(false);
         PS.StartTimer();
-        APMultiple.Appear(); //make control panel with buttons appear
+        //APMultiple.Appear(); //make control panel with buttons appear
         getAnswer = true;
         break;
     }
@@ -231,13 +243,8 @@ public class GameManager : MonoBehaviour
 
   private bool IsMoleculeComplete(string description)
   {
-    if (description.Split(' ').Length <= 1)
-    {
-      string text1 = HandleTextFile.ReadString(description + ".txt");
-      return MM.CompareMoleculesString(text1, false);
-    }
 
-    else if (description.Contains("&"))
+    if (description.Contains("&"))
     {
       string[] info = description.Split('&');
       string name = info[1];
@@ -245,16 +252,24 @@ public class GameManager : MonoBehaviour
       return MM.CompareMoleculesString(text1, false);
     }
 
-    else if (description.Any(char.IsUpper))
+    if (!description.Any(char.IsUpper))
     {
       if (MM.CheckMoleculesClass(description))
         return true;
       else
       {
-        string text1 = HandleTextFile.ReadString(name + ".txt");
+        string text1 = HandleTextFile.ReadString(description + ".txt");
         return MM.CompareMoleculesString(text1, false);
       }
     }
+
+    if (description.Split(' ').Length <= 1)
+    {
+      string text1 = HandleTextFile.ReadString(description + ".txt");
+      return MM.CompareMoleculesString(text1, false);
+    }
+
+
 
     return false;
   }
@@ -313,5 +328,9 @@ public class GameManager : MonoBehaviour
   {
     levelsFile = name;
   }
+
+
+
+
 
 }

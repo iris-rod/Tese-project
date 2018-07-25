@@ -94,8 +94,7 @@ public class Atom : MonoBehaviour {
   }
   
   private void CheckCollisions ()
-  {    
-  
+  {
     Collider[] colliders = Physics.OverlapSphere (transform.position, radiusCollision);
     if (colliders.Length > 1) {
       for (int i = 0; i < colliders.Length; i++) {
@@ -284,40 +283,6 @@ public class Atom : MonoBehaviour {
     return toBond;
   }
 
-  void OnCollisionEnter (Collision col)
-  {
-    if (col.transform.CompareTag ("Interactable") && toBond && col.transform.GetComponent<Atom> ().toBond) {
-      transform.parent.GetComponent<Molecule> ().UpdateBondType (1);
-    } else if (col.transform.CompareTag ("Interactable") && canBond && col.transform.GetComponent<Atom> ().CanBond ()) {
-      if (HasFreeBonds () && col.transform.GetComponent<Atom> ().HasFreeBonds ())
-        StickToMolecule (col.gameObject);
-      else
-        highlightMat.SetFloat ("_Outline", 0.02f);
-    }
-  }
-
-  void OnCollisionExit(Collision col)
-  {
-      highlightMat.SetFloat("_Outline", 0.0f);
-  }
-
-  void StickToMolecule (GameObject obj)
-  {
-      if (obj.transform.parent == null && transform.parent == null) {
-        Vector3 platePos = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
-        GameObject mole = Instantiate (molecule, platePos, transform.rotation);
-        mole.GetComponent<Molecule> ().SetHandController (handController);
-        mole.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject, false, 0);
-      } else if (obj.transform.parent != transform.parent) {
-        if (transform.parent == null) {
-          transform.parent = obj.transform.parent;
-        } else if (obj.transform.parent == null) {
-          obj.transform.parent = transform.parent;
-        }
-        transform.parent.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject, false, 0);
-      }
-  }
-
   public void AddBond(int type, int bondId)
   {
     bondIDType.Add(bondId, type);
@@ -335,4 +300,42 @@ public class Atom : MonoBehaviour {
   {
     return numberOfBondsAllowed - numberOfBonds;
   }
+
+  void OnCollisionEnter (Collision col)
+  {
+    if (col.transform.CompareTag ("Interactable") && toBond && col.transform.GetComponent<Atom> ().toBond) {
+      transform.parent.GetComponent<Molecule> ().UpdateBondType (1);
+    } else if (col.transform.CompareTag ("Interactable") && canBond && col.transform.GetComponent<Atom> ().CanBond ()) {
+      if (HasFreeBonds () && col.transform.GetComponent<Atom> ().HasFreeBonds ())
+        StickToMolecule (col.gameObject);
+      else
+        highlightMat.SetFloat ("_Outline", 0.02f);
+
+      TutorialManager.SetAtomsTouched(true);
+    }
+  }
+
+  void OnCollisionExit(Collision col)
+  {
+      highlightMat.SetFloat("_Outline", 0.0f);
+  }
+
+  void StickToMolecule (GameObject obj)
+  {
+    if (obj.transform.parent == null && transform.parent == null) {
+        Vector3 platePos = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
+        GameObject mole = Instantiate (molecule, platePos, transform.rotation);
+        mole.GetComponent<Molecule> ().SetHandController (handController);
+        mole.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject, false, 0);
+      } else if (obj.transform.parent != transform.parent) {
+        if (transform.parent == null) {
+          transform.parent = obj.transform.parent;
+        } else if (obj.transform.parent == null) {
+          obj.transform.parent = transform.parent;
+        }
+        transform.parent.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject, false, 0);
+      }
+  }
+
+
 }

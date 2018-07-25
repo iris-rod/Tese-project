@@ -1,35 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class BlackBoardManager : MonoBehaviour {
 
-  private Texture molecule1;
-  private Texture2D molecule2;
+  private Texture mainMenuText;
+  private Texture2D gameplayText;
+  private GameObject board;
+
   private Sprite[] level1,level2,level3,level4,level5;
   private Texture2D[] l1,l2,l3,l4,l5;
 
-  private string currentDisplay;
-  private string nextDisplay;
+  private string Scene = "MainMenu";
+  private TextMeshPro information;
+  private bool changeScene;
+
   // Use this for initialization
   void Start () {
-    molecule1 = Resources.Load("Textures/board_A_molecule") as Texture;
-    molecule2 = Resources.Load("Textures/board_A_molecule2") as Texture2D;
+    changeScene = true;
+    mainMenuText = Resources.Load("Textures/board_B") as Texture;
+    gameplayText = Resources.Load("Textures/front_board") as Texture2D;
+    board = transform.Find("Board").gameObject;
 
     level1 = Resources.LoadAll<Sprite>("Textures/Levels/board_level1_c");
-    level2 = Resources.LoadAll<Sprite>("Textures/Levels/board_level2_c");
-    level3 = Resources.LoadAll<Sprite>("Textures/Levels/board_level3_c");
-    level4 = Resources.LoadAll<Sprite>("Textures/Levels/board_level4_c");
-    level5 = Resources.LoadAll<Sprite>("Textures/Levels/board_level5_c");
 
     l1 = ConvertSpritesToTexture(level1);
-    l2 = ConvertSpritesToTexture(level2);
-    l3 = ConvertSpritesToTexture(level3);
-    l4 = ConvertSpritesToTexture(level4);
-    l5 = ConvertSpritesToTexture(level5);
+    information = transform.Find("Instructions").GetChild(0).GetComponent<TextMeshPro>();
 
-    currentDisplay = "0_0";
-    //transform.GetChild(0).GetComponent<MeshRenderer>().material.mainTexture = l3[0];
   }
 	
   private Texture2D[] ConvertSpritesToTexture(Sprite[] sprites)
@@ -51,6 +49,43 @@ public class BlackBoardManager : MonoBehaviour {
     return textures;
   }
 
+  public void SetScene(string s)
+  {
+    Scene = s;
+    changeScene = true;
+    Debug.Log("here: " + s);
+  }
+
+  void Update()
+  {
+    Debug.Log(Scene + " " + changeScene);
+    if (changeScene)
+    {
+      if (Scene == "MainMenu")
+      {
+        board.GetComponent<MeshRenderer>().material.mainTexture = mainMenuText;
+        information.text = "Bem vindo!" + "\n" + "Escolhe o modo de jogo que queres jogar colocando a bola que está em cima da caixa na plataforma!";
+      }
+      else if (Scene == "Gameplay")
+      {
+        board.GetComponent<MeshRenderer>().material.mainTexture = gameplayText;
+        information.text = "";
+      }
+      else if (Scene == "TutorialDesk")
+      {
+        board.GetComponent<MeshRenderer>().material.mainTexture = mainMenuText;
+        TutorialManager.CheckObjectiveComplete();
+      }
+      changeScene = false;
+    }
+  }
+
+  public void UpdateText(string s)
+  {
+    information.text = s;
+  }
+
+  /*
   public void SetTexture(string value)
   {
     if (value == "1")
@@ -122,6 +157,6 @@ public class BlackBoardManager : MonoBehaviour {
     Debug.Log("nextDisplay");
     SetTexture(nextDisplay);
   }
-
+  */
 
 }

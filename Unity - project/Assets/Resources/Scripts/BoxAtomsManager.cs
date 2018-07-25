@@ -21,6 +21,17 @@ public class BoxAtomsManager : MonoBehaviour
 
   public void SetUp()
   {
+    FirstRowRef[0] = GameObject.Find("CarbonBox");
+    FirstRowRef[1] = GameObject.Find("HidrogenBox");
+
+    SecondRowRef[0] = GameObject.Find("NitrogenBox");
+    SecondRowRef[1] = GameObject.Find("OxigenBox");
+
+    ThirdRowRef[0] = GameObject.Find("FluorineBox");
+    ThirdRowRef[1] = GameObject.Find("ChlorineBox");
+    ThirdRowRef[2] = GameObject.Find("BromineBox");
+    ThirdRowRef[3] = GameObject.Find("IodineBox");
+
     for (int i = 0; i < SecondRowRef.Length; i++)
     {
       SecondRowRef[i].transform.GetChild(1).GetComponent<BoxAtoms>().Move(true);
@@ -36,7 +47,6 @@ public class BoxAtomsManager : MonoBehaviour
     rowDisplay++;
     if (rowDisplay > 3)
       rowDisplay = 1;
-    Debug.Log(rowDisplay);
     ChangeBoxRow();
   }
 
@@ -80,12 +90,12 @@ public class BoxAtomsManager : MonoBehaviour
 
   void Update()
   {
-    if (start) SetUp();
+   /* if (start) SetUp();
     start = false;
     if (Input.GetKeyDown(KeyCode.Space))
     {
       ChangeRow();
-    }
+    }*/
   }
 
 }

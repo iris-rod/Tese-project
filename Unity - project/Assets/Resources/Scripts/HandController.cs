@@ -11,7 +11,7 @@ public class HandController : MonoBehaviour
   private GameObject[] interactableObjs, pivots, axis;
   private Hand leftHand, rightHand;
 
-  private int atomsGrabbed;
+  private int GrabbedAtoms;
   private bool rotating, translate;
   private Vector3  movement;
   private LeapQuaternion lastRotation;
@@ -50,7 +50,6 @@ public class HandController : MonoBehaviour
     canDetect = true;
     interval = 0.90f;
     handRotation = 0;
-    atomsGrabbed = 0;
     lastPalmX = 0;
     lastPalmZ = 0;
     rotating = false;
@@ -136,7 +135,9 @@ public class HandController : MonoBehaviour
           obj.GetComponent<Atom>().DisableBond();
         }
       }
+      GrabbedAtoms = grabbedAtoms;
     }
+
     
   }
   
@@ -372,10 +373,6 @@ public class HandController : MonoBehaviour
     lastPalmX = 0;
   }
 
-  public void GrabbedAtom()
-  {
-    atomsGrabbed++;
-  }
 
   public int GetRotationSign()
   {
@@ -405,6 +402,16 @@ public class HandController : MonoBehaviour
   public void SetScene(string s)
   {
     Scene = s;
+  }
+
+  public int GetGrabbedAtoms()
+  {
+    return GrabbedAtoms;
+  }
+
+  public bool GetGrabbedPivot()
+  {
+    return grabbedPivot;
   }
 
 }

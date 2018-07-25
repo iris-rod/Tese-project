@@ -194,6 +194,7 @@ public class Molecule : MonoBehaviour
 
   void CheckTaps()
   {
+
     SetInvisibleBond(numberOfTaps);
     if (!atom1.GetComponent<Atom>().IsBonding() && !atom2.GetComponent<Atom>().IsBonding())
       CreateBondTaps(numberOfTaps);
@@ -224,6 +225,7 @@ public class Molecule : MonoBehaviour
           bondNumber = 4;
           break;
       }
+
     if (lastInviBondType != bondNumber)
     {
       if (lastInviBond != null)
@@ -529,9 +531,11 @@ public class Molecule : MonoBehaviour
     } else {
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
       SoundEffectsManager.PlaySound("bondBreak");
+      bondingAtoms = false;
     }
     bondType = 0;
-    numberOfTaps = 1;
+    numberOfTaps = 0;
+    lastInviBondType = 0;
   }
 
 
@@ -650,9 +654,11 @@ public class Molecule : MonoBehaviour
     for(int i = 0; i < transform.childCount; i++)
     {
       Transform child = transform.GetChild(i);
-      if(child.CompareTag("Bond") && child.GetComponent<BondController>().HasAtom(atom))
+      if (child.CompareTag("Bond"))
       {
-        bonds.Add(child.gameObject);
+        Transform[] atoms = child.GetComponent<BondController>().GetAtoms();
+        if((atoms[0].gameObject == atom) || (atoms[1].gameObject == atom) )
+          bonds.Add(child.gameObject);
       }
     }
     return bonds;

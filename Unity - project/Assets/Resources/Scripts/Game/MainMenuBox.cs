@@ -44,6 +44,7 @@ public class MainMenuBox : MonoBehaviour {
       GetMaterial();
       GameObject newBall = Instantiate(Ball, spawnPoint, Quaternion.identity);
       newBall.GetComponent<MainMenuBall>().Settings(handController, manager, type, levels);
+      newBall.GetComponent<MeshRenderer>().material = atomMaterial;
     }
 
   }
@@ -63,10 +64,25 @@ public class MainMenuBox : MonoBehaviour {
     switch (type)
     {
       case "Normal":
-        atomMaterial = Resources.Load("Materials/Normal", typeof(Material)) as Material;
+        atomMaterial = Resources.Load("Materials/Boxes/Nitrogen", typeof(Material)) as Material;
         break;
-      case "Speed Run":
-        atomMaterial = Resources.Load("Materials/SpeedRun", typeof(Material)) as Material;
+      case "SpeedRun":
+        atomMaterial = Resources.Load("Materials/Boxes/Oxygen", typeof(Material)) as Material;
+        break;
+      case "MultipleChoice":
+        atomMaterial = Resources.Load("Materials/Boxes/Fluorine", typeof(Material)) as Material;
+        break;
+      case "Complete":
+        atomMaterial = Resources.Load("Materials/Boxes/Bromine", typeof(Material)) as Material;
+        break;
+      case "Transform":
+        atomMaterial = Resources.Load("Materials/Boxes/Iodine", typeof(Material)) as Material;
+        break;
+      case "Tutorial":
+        atomMaterial = Resources.Load("Materials/Boxes/Hydrogen", typeof(Material)) as Material;
+        break;
+      case "Build":
+        atomMaterial = Resources.Load("Materials/Boxes/Carbon", typeof(Material)) as Material;
         break;
     }
   }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.IO;
+using System;
 
 public class HandleTextFile
 {
@@ -30,9 +31,16 @@ public class HandleTextFile
     string finalPath = path + name;
     string text = "";
     //Read the text from directly from the test.txt file
-    StreamReader reader = new StreamReader(finalPath);
-    text = reader.ReadToEnd();
-    reader.Close();
+    try
+    {
+      StreamReader reader = new StreamReader(finalPath);
+      text = reader.ReadToEnd();
+      reader.Close();
+    }
+    catch(Exception e)
+    {
+
+    }
     return text;
   }
 
@@ -45,10 +53,17 @@ public class HandleTextFile
   {
     string finalPath = path + "Levels/" + name + ".txt";
     string text = "";
-    //Read the text from directly from the test.txt file
-    StreamReader reader = new StreamReader(finalPath);
-    text = reader.ReadToEnd();
-    reader.Close();
+    try
+    {
+      //Read the text from directly from the test.txt file
+      StreamReader reader = new StreamReader(finalPath);
+      text = reader.ReadToEnd();
+      reader.Close();
+    }
+    catch(Exception e)
+    {
+
+    }
     return text;
   }
 
@@ -56,10 +71,17 @@ public class HandleTextFile
   {
     string finalPath = path + "MoleculeStructures/" + name + ".txt";
     string text = "";
-    //Read the text from directly from the test.txt file
-    StreamReader reader = new StreamReader(finalPath);
-    text = reader.ReadToEnd();
-    reader.Close();
+    try
+    {
+      //Read the text from directly from the test.txt file
+      StreamReader reader = new StreamReader(finalPath);
+      text = reader.ReadToEnd();
+      reader.Close();
+    }
+    catch(Exception e)
+    {
+
+    }
     return text;
   }
 

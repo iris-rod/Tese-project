@@ -217,14 +217,15 @@ public class BondController : MonoBehaviour
     return (((atomA == ballA) && (atomB == ballB)) || (atomA == ballB) && (atomB == ballA));
   }
 
-  public bool HasAtom(GameObject atom)
-  {
-    return ((atom == ballA) || (atom == ballB));
-  }
-
   public bool HasTypeAtom(string type)
   {
     return ((type == ballA.GetComponent<Atom>().GetAtomType()) || (type == ballB.GetComponent<Atom>().GetAtomType()));
+
+  }
+
+  public bool HasDoubleTypeAtom(string type)
+  {
+    return ((type == ballA.GetComponent<Atom>().GetAtomType()) && (type == ballB.GetComponent<Atom>().GetAtomType()));
 
   }
 

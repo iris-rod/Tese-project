@@ -8,16 +8,24 @@ public static class MoleculesCharacteristics {
   {
     switch (classe)
     {
-      case "hidrocarbonatos":
+      case "hidrocarbonato":
+        if (CheckOtherClasses("hidrocarbonato", mol)) return false;
         return CheckForHidrocarbonates(mol);
-      case "halocalnos":
+      case "haloalcano":
+        if (CheckOtherClasses("haloalcano", mol)) return false;
         return CheckForHaloalcanes(mol);
-      case "aminas":
+      case "amina":
+        if (CheckOtherClasses("amina", mol)) return false;
         return CheckForAmines(mol);
-      case "cetonas":
+      case "cetona":
+        if (CheckOtherClasses("cetona", mol)) return false;
         return CheckForCetones(mol);
-      case "acidos carbo":
+      case "acido carbo":
+        if (CheckOtherClasses("acido carbo", mol)) return false;
         return CheckForCarboxylicAcids(mol);
+      case "aldeido":
+        if (CheckOtherClasses("aldeido", mol)) return false;
+        return CheckForAldeides(mol);
     }
     return false;
   }
@@ -26,8 +34,6 @@ public static class MoleculesCharacteristics {
   {
     switch (classe)
     {
-      case "aldeidos":
-        return CheckForAldeides(mol);
       case "alcool":
         return CheckForAlcohol(mol);
     }
@@ -36,7 +42,7 @@ public static class MoleculesCharacteristics {
 
   public static bool CheckForHidrocarbonates(GameObject molecule)
   {
-    for(int i = 0; i < molecule.transform.childCount; i++)
+    for (int i = 0; i < molecule.transform.childCount; i++)
     {
       Transform child = molecule.transform.GetChild(i);
       if (child.CompareTag("Interactable"))
@@ -51,13 +57,14 @@ public static class MoleculesCharacteristics {
 
   public static bool CheckForHaloalcanes(GameObject molecule)
   {
+
     for (int i = 0; i < molecule.transform.childCount; i++)
     {
       Transform child = molecule.transform.GetChild(i);
       if (child.CompareTag("Interactable"))
       {
         string type = child.GetComponent<Atom>().GetAtomType();
-        if (type == "Fluorine" && type == "Chlorine" && type == "Bromine" && type == "Iodine")
+        if (type == "Fluorine" || type == "Chlorine" || type == "Bromine" || type == "Iodine")
           return true;
       }
     }
@@ -66,6 +73,7 @@ public static class MoleculesCharacteristics {
 
   public static bool CheckForAmines(GameObject molecule)
   {
+    
     for (int i = 0; i < molecule.transform.childCount; i++)
     {
       Transform child = molecule.transform.GetChild(i);
@@ -79,20 +87,37 @@ public static class MoleculesCharacteristics {
     return false;
   }
 
-  public static bool CheckForAldeides(string moleculeStruc)
+  public static bool CheckForAldeides(GameObject molecule)
   {
-    string[] split = moleculeStruc.Split('_');
-    bool OBond = false;
-    bool HBond = false;
-    for(int i = 0; i < split.Length; i++)
+    
+    for (int i = 0; i < molecule.transform.childCount; i++)
     {
-      string bond = split[i].Trim();
-      if (bond == "Carbon-2-Oxigen") OBond = true;
-      if (OBond && bond == "Carbon-1-Hidrogen") return true;
-
-
-      if (bond == "Carbon-1-Hidrogen") HBond = true;
-      if (HBond && bond == "Carbon-2-Oxigen") return true;
+      Transform child = molecule.transform.GetChild(i);
+      if (child.CompareTag("Interactable") && child.GetComponent<Atom>().GetAtomType() == "Carbon")
+      {
+        List<GameObject> bonds = molecule.GetComponent<Molecule>().GetAllBonds(child.gameObject);
+        int OBonds = 0;
+        int CBonds = 0;
+        int OAtoms = 0;
+        for (int j = 0; j < bonds.Count; j++)
+        {
+          if (bonds[j].GetComponent<BondController>().HasTypeAtom("Oxigen"))
+          {
+            int bondType = bonds[j].GetComponent<BondController>().GetBondType();
+            OBonds += bondType;
+            OAtoms++;
+          }
+          else if (bonds[j].GetComponent<BondController>().HasDoubleTypeAtom("Carbon"))
+          {
+            int bondType = bonds[j].GetComponent<BondController>().GetBondType();
+            CBonds += bondType;
+          }
+        }
+        if (OBonds == 2 && OAtoms == 1 && CBonds <= 1)
+        {
+          return true;
+        }
+      }
     }
     return false;
   }
@@ -103,7 +128,7 @@ public static class MoleculesCharacteristics {
     for (int i = 0; i < split.Length; i++)
     {
       string bond = split[i].Trim();
-      if (bond == "Oxigen-1-Hidrogen") return true;
+      if (bond == "Oxigen-1-Hidrogen" || bond == "Hidrogen-1-Oxigen") return true;
     }
     return false;
   }
@@ -156,7 +181,7 @@ public static class MoleculesCharacteristics {
           {
             int bondType = bonds[j].GetComponent<BondController>().GetBondType();
             OBonds += bondType;
-            if (bondType == 2)
+            if (bondType == 1)
               hasAlcohol = CheckForAlcoholInCA(bonds[j]);
           }
         }
@@ -177,12 +202,43 @@ public static class MoleculesCharacteristics {
     {
       OAtom = atoms[1];
     }
-
     List<GameObject> bonds = OAtom.parent.GetComponent<Molecule>().GetAllBonds(OAtom.gameObject);
     for(int i = 0; i < bonds.Count; i++)
     {
       if (bonds[i].GetComponent<BondController>().HasTypeAtom("Hidrogen"))
         return true;
+    }
+    return false;
+  }
+
+  private static bool CheckOtherClasses(string wantedClass, GameObject mol)
+  {
+    switch (wantedClass)
+    {
+      case "hidrocarbonato":
+        if (CheckForHaloalcanes(mol) || CheckForAmines(mol) || CheckForCetones(mol) || CheckForCarboxylicAcids(mol) || CheckForAldeides(mol))
+          return true;
+        else return false;
+      case "haloalcano":
+        if (CheckForHidrocarbonates(mol) || CheckForAmines(mol) || CheckForCetones(mol) || CheckForCarboxylicAcids(mol) || CheckForAldeides(mol))
+          return true;
+        else return false;
+      case "amina":
+        if (CheckForHaloalcanes(mol) || CheckForHidrocarbonates(mol) || CheckForCetones(mol) || CheckForCarboxylicAcids(mol) || CheckForAldeides(mol))
+          return true;
+        else return false;
+      case "cetona":
+        if (CheckForHaloalcanes(mol) || CheckForAmines(mol) || CheckForHidrocarbonates(mol) || CheckForCarboxylicAcids(mol) || CheckForAldeides(mol))
+          return true;
+        else return false;
+      case "acido carbo":
+        if (CheckForHaloalcanes(mol) || CheckForAmines(mol) || CheckForCetones(mol) || CheckForHidrocarbonates(mol) || CheckForAldeides(mol))
+          return true;
+        else return false;
+      case "aldeido":
+        if (CheckForHaloalcanes(mol) || CheckForAmines(mol) || CheckForCetones(mol) || CheckForCarboxylicAcids(mol) || CheckForHidrocarbonates(mol))
+          return true;
+        else return false;
     }
     return false;
   }
