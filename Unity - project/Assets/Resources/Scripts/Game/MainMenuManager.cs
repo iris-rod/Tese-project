@@ -27,7 +27,7 @@ public class MainMenuManager : MonoBehaviour {
     GameManager.SetActive(true);
     GameManager.GetComponent<GameManager>().SetLevels(levels);
     GameObject.Find("LeapHandController").GetComponent<HandController>().SetScene(scene);
-    if (scene == "TutorialDesk")
+    if (scene == "Tutorial")
     {
       TutorialManager.Start();
       FrontBoard.GetComponent<BlackBoardManager>().SetScene(scene);

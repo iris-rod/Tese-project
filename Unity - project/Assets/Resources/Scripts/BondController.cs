@@ -74,6 +74,10 @@ public class BondController : MonoBehaviour
     bondType = bType;
     ballA.GetComponent<Atom>().AddBond(bondType,bondId);
     ballB.GetComponent<Atom>().AddBond(bondType,bondId);
+    if(ballA.GetComponent<Atom>().GetAtomType() == "Carbon" && ballB.GetComponent<Atom>().GetAtomType() == "Carbon" && bondType == 3)
+    {
+      TutorialManager.SetBondCreated(true);
+    }
   }
 
   public int GetBondType()

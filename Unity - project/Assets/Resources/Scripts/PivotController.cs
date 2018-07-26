@@ -41,6 +41,7 @@ public class PivotController : MonoBehaviour {
     {
       highlightGrasp.SetFloat("_Outline", 0.005f);
       transform.rotation.ToAngleAxis(out currentAngle, out axis);
+      TutorialManager.SetPivotGrabbed(true);
     }
     else
     {

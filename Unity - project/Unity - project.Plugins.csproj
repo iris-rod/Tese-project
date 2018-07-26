@@ -195,6 +195,7 @@
     <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_3.txt" />
     <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_4.txt" />
     <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_5.txt" />
+    <None Include="Assets\Resources\SavedFiles\aa.txt" />
     <None Include="Assets\Resources\SavedFiles\bla.txt" />
     <None Include="Assets\Resources\SavedFiles\etanol_b.txt" />
     <None Include="Assets\Resources\SavedFiles\molecule.txt" />

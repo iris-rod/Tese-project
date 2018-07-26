@@ -53,12 +53,10 @@ public class BlackBoardManager : MonoBehaviour {
   {
     Scene = s;
     changeScene = true;
-    Debug.Log("here: " + s);
   }
 
   void Update()
   {
-    Debug.Log(Scene + " " + changeScene);
     if (changeScene)
     {
       if (Scene == "MainMenu")
@@ -71,13 +69,14 @@ public class BlackBoardManager : MonoBehaviour {
         board.GetComponent<MeshRenderer>().material.mainTexture = gameplayText;
         information.text = "";
       }
-      else if (Scene == "TutorialDesk")
+      else if (Scene == "Tutorial")
       {
         board.GetComponent<MeshRenderer>().material.mainTexture = mainMenuText;
-        TutorialManager.CheckObjectiveComplete();
       }
       changeScene = false;
     }
+    if(Scene=="Tutorial")
+      TutorialManager.CheckObjectiveComplete();
   }
 
   public void UpdateText(string s)

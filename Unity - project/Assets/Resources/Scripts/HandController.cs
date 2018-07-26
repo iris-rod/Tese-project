@@ -135,7 +135,11 @@ public class HandController : MonoBehaviour
           obj.GetComponent<Atom>().DisableBond();
         }
       }
-      GrabbedAtoms = grabbedAtoms;
+      if (grabbedAtoms != GrabbedAtoms)
+      {
+        TutorialManager.SetGrabbedAtoms(grabbedAtoms);
+        GrabbedAtoms = grabbedAtoms;
+      }
     }
 
     
@@ -406,6 +410,7 @@ public class HandController : MonoBehaviour
 
   public int GetGrabbedAtoms()
   {
+    Debug.Log("get: " + GrabbedAtoms);
     return GrabbedAtoms;
   }
 

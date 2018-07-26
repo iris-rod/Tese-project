@@ -319,8 +319,10 @@
     <Compile Include="Assets\Resources\Scripts\BondRepManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Bonds.cs" />
     <Compile Include="Assets\Resources\Scripts\BoxAtoms.cs" />
+    <Compile Include="Assets\Resources\Scripts\BoxAtomsManager.cs" />
     <Compile Include="Assets\Resources\Scripts\CameraController.cs" />
     <Compile Include="Assets\Resources\Scripts\CapsuleManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\ChangeBoxRows.cs" />
     <Compile Include="Assets\Resources\Scripts\ClearButton.cs" />
     <Compile Include="Assets\Resources\Scripts\CompleteLevelButton.cs" />
     <Compile Include="Assets\Resources\Scripts\CompletedButton.cs" />
@@ -331,7 +333,14 @@
     <Compile Include="Assets\Resources\Scripts\Game\InformationManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Game\LevelManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Game\LogManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\Game\MainMenuBall.cs" />
+    <Compile Include="Assets\Resources\Scripts\Game\MainMenuBox.cs" />
+    <Compile Include="Assets\Resources\Scripts\Game\MainMenuManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\Game\MainMenuPlatform.cs" />
+    <Compile Include="Assets\Resources\Scripts\Game\PointSystem.cs" />
+    <Compile Include="Assets\Resources\Scripts\Game\Settings.cs" />
     <Compile Include="Assets\Resources\Scripts\Game\SoundEffectsManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\Game\TutorialManager.cs" />
     <Compile Include="Assets\Resources\Scripts\HandController.cs" />
     <Compile Include="Assets\Resources\Scripts\HandleTextFile.cs" />
     <Compile Include="Assets\Resources\Scripts\InterfaceManager.cs" />
@@ -344,6 +353,7 @@
     <Compile Include="Assets\Resources\Scripts\Manager.cs" />
     <Compile Include="Assets\Resources\Scripts\Molecule.cs" />
     <Compile Include="Assets\Resources\Scripts\MoleculeManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\MoleculesCharacteristics.cs" />
     <Compile Include="Assets\Resources\Scripts\PivotController.cs" />
     <Compile Include="Assets\Resources\Scripts\Platform.cs" />
     <Compile Include="Assets\Resources\Scripts\RetriveLogSheet.cs" />
@@ -482,6 +492,7 @@
     <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_3.txt" />
     <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_4.txt" />
     <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_5.txt" />
+    <None Include="Assets\Resources\SavedFiles\aa.txt" />
     <None Include="Assets\Resources\SavedFiles\bla.txt" />
     <None Include="Assets\Resources\SavedFiles\etanol_b.txt" />
     <None Include="Assets\Resources\SavedFiles\molecule.txt" />

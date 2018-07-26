@@ -33,6 +33,9 @@ public class Atom : MonoBehaviour {
   private float[] dists;
   private GameObject grabbedAtom;
 
+  //tutorial
+  private float totalDist;
+
   // Use this for initialization
   void Start ()
   {
@@ -169,7 +172,9 @@ public class Atom : MonoBehaviour {
 
   void Rotate()
   {
-    grabbedPos = transform.parent.GetComponent<Molecule>().GetGrabbedAtom().position;
+    if(totalDist >= 2)
+      TutorialManager.SetMoleculeRotated(true);
+    grabbedPos = transform.parent.transform.parent.GetComponent<Molecule>().GetGrabbedAtom().position;
     float dist = Vector3.Distance(grabbedPos, transform.position);
     if(dist != distanceToGrabbed && !transform.GetComponent<InteractionBehaviour>().isGrasped)
     {
@@ -199,6 +204,7 @@ public class Atom : MonoBehaviour {
         }
       }
     }
+    totalDist += dist;
   }
 
   public void SetRotating(bool rotate)

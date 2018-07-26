@@ -8,7 +8,7 @@ public class ChangeBoxRows : MonoBehaviour {
   private Quaternion initalRotation;
   private Vector3 initialPos;
   private Animator animator;
-  private bool canPlay;
+  private bool canPlay, canCheckCollision;
 
   // Use this for initialization
   void Start()
@@ -16,6 +16,7 @@ public class ChangeBoxRows : MonoBehaviour {
     BAM = GameObject.Find("GameManager").GetComponent<BoxAtomsManager>();
     animator = GetComponent<Animator>();
     canPlay = true;
+    canCheckCollision = true;
   }
 
   // Update is called once per frame
@@ -32,7 +33,7 @@ public class ChangeBoxRows : MonoBehaviour {
     {
       for (int i = 0; i < colliders.Length; i++)
       {
-        if (colliders[i].transform.name.Split(' ')[0] == "Contact")
+        if (colliders[i].transform.name.Split(' ')[0] == "Contact" && canCheckCollision)
         {
           BAM.ChangeRow();
           if (canPlay)
@@ -42,6 +43,7 @@ public class ChangeBoxRows : MonoBehaviour {
           }
           animator.SetBool("pushed", true);
           Invoke("Reset", .5f);
+          canCheckCollision = false;
           break;
         }
       }
@@ -52,5 +54,12 @@ public class ChangeBoxRows : MonoBehaviour {
   {
     animator.SetBool("pushed", false);
     canPlay = true;
+    Invoke("ResetCollision", 0.5f);
   }
+
+  void ResetCollision()
+  {
+    canCheckCollision = true;
+  }
+
 }
