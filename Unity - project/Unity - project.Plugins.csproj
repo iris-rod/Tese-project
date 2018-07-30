@@ -123,6 +123,7 @@
     <None Include="Assets\Resources\SavedFiles\Levels\levels_default.txt" />
     <None Include="Assets\Resources\SavedFiles\Levels\levels_teste.txt" />
     <None Include="Assets\Resources\SavedFiles\Levels\levels_teste2.txt" />
+    <None Include="Assets\Resources\SavedFiles\Levels\levels_teste3.txt" />
     <None Include="Assets\Resources\SavedFiles\MoleculeStructures\C2H6estrutura.txt" />
     <None Include="Assets\Resources\SavedFiles\MoleculeStructures\CH4estrutura.txt" />
     <None Include="Assets\Resources\SavedFiles\MoleculeStructures\Etanalestrutura.txt" />
@@ -195,12 +196,12 @@
     <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_3.txt" />
     <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_4.txt" />
     <None Include="Assets\Resources\SavedFiles\Tests\test_9mol_5.txt" />
-    <None Include="Assets\Resources\SavedFiles\aa.txt" />
     <None Include="Assets\Resources\SavedFiles\bla.txt" />
     <None Include="Assets\Resources\SavedFiles\etanol_b.txt" />
     <None Include="Assets\Resources\SavedFiles\molecule.txt" />
     <None Include="Assets\Resources\SavedFiles\molecule2.txt" />
     <None Include="Assets\Resources\SavedFiles\partial mol.txt" />
+    <None Include="Assets\Resources\SavedFiles\partial_default.txt" />
     <None Include="Assets\Resources\SavedFiles\saved_1.txt" />
     <None Include="Assets\Resources\SavedFiles\saved_10.txt" />
     <None Include="Assets\Resources\SavedFiles\saved_11.txt" />

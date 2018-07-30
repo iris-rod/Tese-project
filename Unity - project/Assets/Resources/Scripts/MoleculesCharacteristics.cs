@@ -4,6 +4,14 @@ using UnityEngine;
 
 public static class MoleculesCharacteristics {
 
+  private static List<string> classes = new List<string>() {"hidrocarbonato", "haloalcano", "amina", "cetona", "acido carbo", "aldeido", "alcool" };
+
+  public static bool CheckIfIsClass(string value)
+  {
+    if (classes.Contains(value.ToLower())) return true;
+    return false;
+  }
+
   public static bool CheckTheClass(string classe, GameObject mol)
   {
     switch (classe)

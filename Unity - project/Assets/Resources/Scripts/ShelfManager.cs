@@ -41,14 +41,15 @@ public class ShelfManager : MonoBehaviour {
       }
     }
     minis = new GameObject[spots.Length];
-	}
+    GameObject.Find("GameManager").GetComponent<GameManager>().SetShelves(transform.gameObject);
+  }
 	
 	// Update is called once per frame
 	void Update ()
   {
     if (start)
     {
-      VR = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>().VR;
+      VR = GameObject.FindGameObjectWithTag("GameManager").GetComponent<Manager>().VR;
       start = false;
     }
     if (mini != null && newMini) {

@@ -61,7 +61,7 @@ public class Molecule : MonoBehaviour
 
   void Awake()
   {
-    camera = GameObject.FindGameObjectWithTag("MainCamera");
+    camera = GameObject.FindGameObjectWithTag("GameManager");
     shelves = GameObject.Find("shelves");
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
     rotationType = camera.GetComponent<Manager>().rotationType;

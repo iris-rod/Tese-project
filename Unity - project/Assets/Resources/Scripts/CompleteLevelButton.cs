@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CompleteLevelButton : MonoBehaviour {
 
   private GameManager GM;
+  private MainMenuManager MM;
   private Animator animator;
   private bool canPush;
+
+  private string Scene;
 
   // Use this for initialization
   void Start () {
     GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+    MM = GameObject.Find("MainMenuManager").GetComponent<MainMenuManager>();
     animator = GetComponent<Animator>();
     canPush=true;
   }
@@ -29,11 +34,18 @@ public class CompleteLevelButton : MonoBehaviour {
       {
         if (colliders[i].transform.name.Split(' ')[0] == "Contact" && canPush)
         {
-          //canPush = false;
-          //animator.SetBool("pushed", true);
-          //Invoke("Reset", .5f);
-          //GM.UpdateLevel();
-          GameObject invi = GameObject.FindGameObjectWithTag("Invisible");
+          if(Scene.ToLower() == "tutorial")
+          {
+            MM.ChangeToMainMenu();
+          }
+          canPush = false;
+          animator.SetBool("pushed", true);
+          Invoke("Reset", .5f);
+
+
+
+          GM.UpdateLevel();
+          /*GameObject invi = GameObject.FindGameObjectWithTag("Invisible");
           if (invi != null && invi.GetComponent<InvisibleMoleculeBehaviour>().HasOverlap())
           {
             canPush = false;
@@ -42,16 +54,20 @@ public class CompleteLevelButton : MonoBehaviour {
             Destroy(invi);
             Invoke("Reset", .5f);
           }
-
+          */
         }
       }
     }
   }
   
-    void Reset()
+  void Reset()
   {
-          canPush = true;
+    canPush = true;
     animator.SetBool("pushed", false);
   }
 
+  public void SetScene(string s)
+  {
+    Scene = s;
+  }
 }

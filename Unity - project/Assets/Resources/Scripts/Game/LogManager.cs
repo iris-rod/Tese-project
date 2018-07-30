@@ -13,6 +13,7 @@ public class LogManager : MonoBehaviour {
   {
     logIndex = 1;
     logText = transform.GetChild(0).GetComponent<TextMeshPro>();
+    GameObject.Find("GameManager").GetComponent<MoleculeManager>().SetUp();
   }
 
   public void AddLog(string newEntry)
@@ -20,5 +21,6 @@ public class LogManager : MonoBehaviour {
     logText.text += logIndex.ToString() +"- " + newEntry + "\n";
     logIndex++;
   }
+
 
 }

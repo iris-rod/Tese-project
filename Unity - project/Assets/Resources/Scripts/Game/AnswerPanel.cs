@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class AnswerPanel : MonoBehaviour {
   private Animator animator;
-  public string Type;
+  private bool isUp;
+  public bool Multiple;
+
 
   // Use this for initialization
   void Start () {
-
+    GameObject.Find("GameManager").GetComponent<GameManager>().SetPanelAnswer(transform.gameObject, Multiple);
     animator = GetComponent<Animator>();
   }
 	
-	// Update is called once per frame
-	void Update () {
-  }
-
   public void Appear()
   {
+    isUp = true;
     animator.SetBool("push", true);
   }
 
@@ -26,8 +25,14 @@ public class AnswerPanel : MonoBehaviour {
     Invoke("Down",1f);
   }
 
+  public bool IsPanelActive()
+  {
+    return isUp;
+  }
+
   private void Down()
   {
+    isUp = false;
     animator.SetBool("push", false);
   }
 }

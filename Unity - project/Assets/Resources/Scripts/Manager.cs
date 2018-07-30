@@ -46,6 +46,11 @@ public class Manager : MonoBehaviour
       Settings = GameObject.Find("GameManager").GetComponent<Settings>();
   }
 
+  public void SetPlatform()
+  {
+    platform = GameObject.Find("InviPlatform");
+  }
+
   public void SaveMolecule(GameObject molecule, string name)
   {
     HandleTextFile.ClearFile(name + ".txt");
@@ -155,7 +160,7 @@ public class Manager : MonoBehaviour
       molecule.name = name;
       SetMoleculeTransparent(molecule);
     }
-    molecule.transform.position = moleculePosition;
+    //molecule.transform.position = moleculePosition;
     return molecule;
   }
 

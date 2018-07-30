@@ -15,8 +15,10 @@ public class MainMenuManager : MonoBehaviour {
     GameManager = transform.GetChild(0).gameObject;
     FrontBoard = GameObject.Find("FrontBoard");
     GameManager.SetActive(false);
+    DontDestroyOnLoad(GameObject.FindGameObjectWithTag("headset"));
     DontDestroyOnLoad(GameManager);
     DontDestroyOnLoad(FrontBoard);
+    DontDestroyOnLoad(GameObject.Find("MenuBoard_simple"));
     DontDestroyOnLoad(transform.gameObject);
     GameObject.Find("LeapHandController").GetComponent<HandController>().SetScene("MainMenu");
 	}
@@ -27,18 +29,29 @@ public class MainMenuManager : MonoBehaviour {
     GameManager.SetActive(true);
     GameManager.GetComponent<GameManager>().SetLevels(levels);
     GameObject.Find("LeapHandController").GetComponent<HandController>().SetScene(scene);
-    if (scene == "Tutorial")
+    if (scene.ToLower() == "tutorial")
     {
       TutorialManager.Start();
-      FrontBoard.GetComponent<BlackBoardManager>().SetScene(scene);
     }
+    FrontBoard.GetComponent<BlackBoardManager>().SetScene(scene);
+    nextScene = scene;
     Invoke("SetUpScene", .5f);
+  }
+
+  public void ChangeToMainMenu()
+  {
+    SceneManager.LoadScene("MainMenu");
+    GameManager.GetComponent<GameManager>().SetLevels("");
+    GameManager.SetActive(false);
+    GameObject.Find("LeapHandController").GetComponent<HandController>().SetScene("MainMenu");
+    FrontBoard.GetComponent<BlackBoardManager>().SetScene("MainMenu");
   }
 
   void SetUpScene()
   {
     GameManager.GetComponent<Settings>().SetUp();
     GameManager.GetComponent<BoxAtomsManager>().SetUp();
+    GameObject.Find("ControlPanelAnswer").transform.GetChild(0).GetChild(0).GetComponent<CompleteLevelButton>().SetScene(nextScene);
   }
 
 }

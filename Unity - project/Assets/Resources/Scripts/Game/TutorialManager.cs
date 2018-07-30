@@ -8,7 +8,7 @@ public static class TutorialManager {
   private static int objective;
   private static string lastObjective;
   private static bool atomsTouched;
-  private static bool bondCreated;
+  private static bool bondCreated, bondBroken;
   private static bool pivotGrabbed;
   private static bool moleculeRotated;
   private static int atomsGrabbed;
@@ -26,6 +26,7 @@ public static class TutorialManager {
     atomsTouched = false;
     moleculeRotated = false;
     pivotGrabbed = false;
+    bondBroken = false;
     atomsGrabbed = 0;
     phase = 1;
     objective = 0;
@@ -35,7 +36,7 @@ public static class TutorialManager {
     List<string> obj3 = new List<string>() { "grab atoms", "separate"};
     phasesObjectives = new Dictionary<int, List<string>>() { { 1, obj1 }, { 2, obj2 }, { 3, obj3 } };
 
-    List<string> objB1 = new List<string>() { "Agarra em dois átomos de carbono, um em cada mão", "Toca os átomos um no outro enquanto os agarras", "Continua a dar toques até teres uma ligação dupla", "Larga os átomos" };
+    List<string> objB1 = new List<string>() { "Agarra em dois átomos de carbono, um em cada mão", "Toca os átomos um no outro enquanto os agarras", "Continua a dar toques até teres uma ligação tripla", "Larga os átomos" };
     List<string> objB2 = new List<string>() { "Agarra na roda dentada com a mão direita","Agarra num átomo com a mão esquerda. Não largues a roda dentada!", "Mexe o átomo à volta do ponto central da molécula (bola vermelha)" };
     List<string> objB3 = new List<string>() { "Agarra nos dois átomos, um em cada mão", "Afasta os átomos um do outro até a ligação desaparecer" };
     phasesObjectivesBoard = new Dictionary<int, List<string>>() { { 1, objB1 }, { 2, objB2 }, { 3, objB3 } };
@@ -91,18 +92,31 @@ public static class TutorialManager {
         if (bondCreated)
           objective++;
         break;
+      case "separate":
+        if (bondBroken)
+          objective++;
+        break;
     }
     if (objective >= phasesObjectives[phase].Count)
     {
       phase++;
       objective = 0;
     }
-    UpdateBoard();
     if (atomsTouched) atomsTouched = false;
     if (bondCreated) bondCreated = false;
     if (pivotGrabbed) pivotGrabbed = false;
     if (moleculeRotated) moleculeRotated = false;
+    if (bondBroken) bondBroken = false;
+
+    if (phase > phasesObjectives.Count) {
+
+      string space = "\n" + "\n" + "\n";
+      BBM.UpdateText(space + "Parabéns, terminaste o tutorial com sucesso!" + "\n" + "Carrega no botão que está em cima da mesa no lado esquerdo para voltares ao menu principal");
+    }
+    else
+      UpdateBoard();
   }
+
 
   private static void UpdateBoard()
   {
@@ -139,4 +153,21 @@ public static class TutorialManager {
   {
     moleculeRotated = value;
   }
+
+
+  public static void SetBondBroken(bool value)
+  {
+    bondBroken = value;
+  }
+
+  public static void Reset()
+  {
+    atomsTouched = false;
+    moleculeRotated = false;
+    pivotGrabbed = false;
+    atomsGrabbed = 0;
+    phase = 1;
+    objective = 0;
+  }
+
 }

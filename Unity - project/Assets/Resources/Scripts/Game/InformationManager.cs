@@ -34,7 +34,7 @@ public class InformationManager : MonoBehaviour {
     }
     else
     {
-      objectivesText.text = GetDisplayText(newObj);
+      objectivesText.text = GetDisplayText(newObj).ToString();
     }
   }
 
@@ -63,6 +63,7 @@ public class InformationManager : MonoBehaviour {
   {
     string[] split = raw.Split('-');
     string result = "";
+
     switch (split[0])
     {
       case "build":
@@ -204,5 +205,6 @@ public class InformationManager : MonoBehaviour {
     check.SetActive(false);
     objectivesText.text = updatedDisplay;
   }
+
 
 }

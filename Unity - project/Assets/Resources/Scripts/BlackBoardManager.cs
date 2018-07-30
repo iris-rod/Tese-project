@@ -64,7 +64,7 @@ public class BlackBoardManager : MonoBehaviour {
         board.GetComponent<MeshRenderer>().material.mainTexture = mainMenuText;
         information.text = "Bem vindo!" + "\n" + "Escolhe o modo de jogo que queres jogar colocando a bola que está em cima da caixa na plataforma!";
       }
-      else if (Scene == "Gameplay")
+      else if (Scene == "Normal")
       {
         board.GetComponent<MeshRenderer>().material.mainTexture = gameplayText;
         information.text = "";

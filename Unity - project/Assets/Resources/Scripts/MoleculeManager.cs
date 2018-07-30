@@ -141,7 +141,6 @@ public class MoleculeManager : MonoBehaviour {
 
         string struc1 = molecules[par.Key];
         string[] bonds1 = struc1.Trim().Split('_');
-        Debug.Log(struc1);
         if (bonds1.Length != bonds2.Length)
           continue;
         //compare struct of molecules

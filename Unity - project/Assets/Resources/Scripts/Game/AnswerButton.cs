@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class AnswerButton : MonoBehaviour {
   private Animator animator;
-  private bool m_Started;
 
   private GameManager GM;
+  private bool panelIsActive;
 
   public string Button;
 
   // Use this for initialization
   void Start()
   {
-    m_Started = true;
     animator = GetComponent<Animator>();
     GM = GameObject.Find("GameManager").GetComponent<GameManager>();
-    
+    panelIsActive = transform.parent.transform.parent.GetComponent<AnswerPanel>().IsPanelActive();
   }
 
   // Update is called once per frame
   void Update()
   {
+    panelIsActive = transform.parent.transform.parent.GetComponent<AnswerPanel>().IsPanelActive();
     CheckCollision();
   }
 
@@ -32,7 +32,7 @@ public class AnswerButton : MonoBehaviour {
     {
       for (int i = 0; i < colliders.Length; i++)
       {
-        if (colliders[i].transform.name.Split(' ')[0] == "Contact")
+        if (colliders[i].transform.name.Split(' ')[0] == "Contact" && panelIsActive)
         {
           SoundEffectsManager.PlaySound("buttonAnswer");
           GM.SetPressedAnswer(Button);

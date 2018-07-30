@@ -28,38 +28,53 @@ public class GameManager : MonoBehaviour
 
   private string path = "";
 
+  //partial molecule
+  private GameObject partialGO;
+  private string partialName;
+  private bool partialCreated;
+
 
   // Use this for initialization
   void Start()
   {
     MM = GetComponent<MoleculeManager>();
     LM = GetComponent<LevelManager>();
-    manager = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Manager>();
+    manager = GetComponent<Manager>();
     BBManager = GameObject.FindGameObjectWithTag("Board").GetComponent<BlackBoardManager>();
     IM = GameObject.Find("Info").GetComponent<InformationManager>();
 
     PS = GetComponent<PointSystem>();
-    GetComponent<Settings>().SetUp();
-    GetComponent<BoxAtomsManager>().SetUp();
+    if (levelsFile != "")
+    {
+      levels = HandleTextFile.ReadLevels(levelsFile);
+
+    }
     //APMultiple = GameObject.Find("ControlPanelAnswers").GetComponent<AnswerPanel>();
     //APSingle = GameObject.Find("ControlPanelAnswer").GetComponent<AnswerPanel>();
     levelComplete = false;
     newLevel = true;
     getAnswer = false;
     correctMolLoaded = false;
+    partialCreated = false;
     level = 1;
-    if (levelsFile != "")
-    {
-      levels = HandleTextFile.ReadLevels(levelsFile);
-      SM = GameObject.FindGameObjectWithTag("shelves").GetComponent<ShelfManager>();
-    }
+
     SoundEffectsManager.SetUp();
+  }
+
+  public void SetShelves(GameObject obj)
+  {
+    SM = obj.GetComponent<ShelfManager>();
+  }
+
+  public void SetPanelAnswer(GameObject panel, bool mul)
+  {
+    if (mul) APMultiple = panel.GetComponent<AnswerPanel>();
+    else APSingle = panel.GetComponent<AnswerPanel>();
   }
 
   // Update is called once per frame
   void Update()
   {
-    //Debug.Log("level: " + level);
     if (newLevel)
       SetLevel();
 
@@ -70,6 +85,9 @@ public class GameManager : MonoBehaviour
       level++;
     }
 
+    if (partialCreated && partialGO == null)
+      Invoke("RestorePartial",3f);
+    
     /*string molDes = CheckMoleculeDescription("aldeido");
     if (IsMoleculeComplete(molDes))
     {
@@ -105,11 +123,15 @@ public class GameManager : MonoBehaviour
 
   void NextLevelDisplay()
   {
-    //BBManager.UpdateDisplay(LM.GetLevel(), LM.GetSublevel());
     IM.UpdateLevel(LM.GetLevel());
     IM.UpdateDisplay(LM.GetNextObjective(),true);
     if(getAnswer)
       correctAnswerMC = IM.GetCorrectAnswer();
+  }
+
+  private void RestorePartial()
+  {
+    partialGO = manager.LoadMolecule(partialName, false);
   }
 
   private bool CheckObjectiveComplete(string nextObj)
@@ -126,15 +148,20 @@ public class GameManager : MonoBehaviour
         if (MM.CompareMoleculesString(text, false))
         {
           completed = true;
-          //APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "complete":
-        string molDes = CheckMoleculeDescription(objSplit[2]);
+        string molDes = CheckMoleculeDescription(objSplit[1]);
         if (IsMoleculeComplete(molDes))
         {
           completed = true;
-          //APSingle.Disappear(); //make control panel with buttons disappear
+        }
+        break;
+      case "transform":
+        string molDes1 = CheckMoleculeDescription(objSplit[1]);
+        if (IsMoleculeComplete(molDes1))
+        {
+          completed = true;
         }
         break;
       case "load":
@@ -142,7 +169,6 @@ public class GameManager : MonoBehaviour
         {
           correctMolLoaded = false;
           completed = true;
-          //APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "save":
@@ -150,7 +176,6 @@ public class GameManager : MonoBehaviour
         if (MM.CompareMoleculesString(savedText, true))
         {
           completed = true;
-          //APSingle.Disappear(); //make control panel with buttons disappear
         }
         break;
       case "place":
@@ -167,7 +192,6 @@ public class GameManager : MonoBehaviour
         {
           completed = true;
           PS.StopTimer();
-          //APMultiple.Disappear(); //make control panel with buttons disappear
         }
         break;
     }
@@ -182,36 +206,80 @@ public class GameManager : MonoBehaviour
     switch (type)
     {
       case "build":
+        partialCreated = false;
         SM.LevelChecking(false);
-        //APSingle.Appear(); //make control panel with buttons appear
+        APMultiple.Disappear();
+        APSingle.Appear(); //make control panel with buttons appear
         break;
       case "complete":
+        partialCreated = true;
         SM.LevelChecking(false);
-        //APSingle.Appear(); //make control panel with buttons appear
+        partialName = GetPartialMolecule(objSplit[1]);
+        partialGO = manager.LoadMolecule(partialName, false);
+        APMultiple.Disappear();
+        APSingle.Appear(); //make control panel with buttons appear
         break;
       case "transform":
+        partialCreated = true;
         SM.LevelChecking(false);
-        //APSingle.Appear(); //make control panel with buttons appear
+        partialName = GetPartialMolecule(objSplit[1]);
+        partialGO = manager.LoadMolecule(partialName, false);
+        APMultiple.Disappear();
+        APSingle.Appear(); //make control panel with buttons appear
         break;
       case "load":
+        partialCreated = false;
         SM.LevelChecking(true);
-        //APSingle.Appear(); //make control panel with buttons appear
+        APMultiple.Disappear();
+        APSingle.Appear(); //make control panel with buttons appear
         break;
       case "save":
+        partialCreated = false;
         SM.LevelChecking(false);
-        //APSingle.Appear(); //make control panel with buttons appear
+        APMultiple.Disappear();
+        APSingle.Appear(); //make control panel with buttons appear
         break;
       case "place":
+        partialCreated = false;
         manager.LoadMolecule(objSplit[1] + "_place", false);
         SM.LevelChecking(false);
         break;
       case "multiple choice":
+        partialCreated = true;
+        partialName = objSplit[2];
+        partialGO = manager.LoadMolecule(partialName, false);
         SM.LevelChecking(false);
         PS.StartTimer();
-        //APMultiple.Appear(); //make control panel with buttons appear
+        APSingle.Disappear();
+        APMultiple.Appear(); //make control panel with buttons appear
         getAnswer = true;
         break;
     }
+  }
+
+  //for tasks that require a partial molecule to be displayed, that partial has to be loaded
+  //if the description is name&class, we get the name and add "_partial"
+  //if it has upper case it means it is a structure or formule
+  private string GetPartialMolecule(string description)
+  {
+    string result = description;
+    if (description.Contains("&"))
+    {
+      string[] info = description.Split('&');
+      return info[1] + "_partial";
+    }
+    else if (MoleculesCharacteristics.CheckIfIsClass(description))
+      return "partial_default";
+    else if (description.Any(char.IsUpper))
+    {
+      if (description.Length > 9)
+      {
+        if (description.Substring(9, description.Length) == "estrutura")
+          return description.Substring(0, description.Length - 9) + "_partial";
+      }
+    }
+    return result;
+
   }
 
   private string CheckMoleculeRepresentation(string rawObj)
@@ -243,7 +311,7 @@ public class GameManager : MonoBehaviour
 
   private bool IsMoleculeComplete(string description)
   {
-
+    //with two names describing the molecule, the first has to be the name and the second the class (it only really needs the name)
     if (description.Contains("&"))
     {
       string[] info = description.Split('&');
@@ -252,6 +320,8 @@ public class GameManager : MonoBehaviour
       return MM.CompareMoleculesString(text1, false);
     }
 
+    //with no upper case letters, it could be used just the name or the class.
+    //for the class, it is called CheckMoleculesClass, and for the name just read the text file
     if (!description.Any(char.IsUpper))
     {
       if (MM.CheckMoleculesClass(description))
@@ -263,6 +333,7 @@ public class GameManager : MonoBehaviour
       }
     }
 
+    //with upper case letters and no spaces, it means it is the formule of the molecule (Ex. CH4)
     if (description.Split(' ').Length <= 1)
     {
       string text1 = HandleTextFile.ReadString(description + ".txt");

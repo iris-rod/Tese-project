@@ -172,9 +172,9 @@ public class Atom : MonoBehaviour {
 
   void Rotate()
   {
-    if(totalDist >= 2)
+    if(totalDist >= 60)
       TutorialManager.SetMoleculeRotated(true);
-    grabbedPos = transform.parent.transform.parent.GetComponent<Molecule>().GetGrabbedAtom().position;
+    grabbedPos = transform.parent.GetComponent<Molecule>().GetGrabbedAtom().position;
     float dist = Vector3.Distance(grabbedPos, transform.position);
     if(dist != distanceToGrabbed && !transform.GetComponent<InteractionBehaviour>().isGrasped)
     {
@@ -300,6 +300,7 @@ public class Atom : MonoBehaviour {
     bondIDType.Remove(bondId);
     numberOfBonds -= type;
     toDetach = false;
+    TutorialManager.SetBondBroken(true);
   }
 
   public int GetAvailableBonds()
