@@ -345,7 +345,7 @@ public class Manager : MonoBehaviour
 
     if (Input.GetKeyDown("n"))
     {
-      LoadMolecule("aa", false);
+      LoadMolecule("CO2_a", false);
       //LoadMolecule("test_9mol_1", false);
     }
     if (Input.GetKeyDown("s"))

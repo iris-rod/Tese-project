@@ -11,11 +11,15 @@ public class PointSystem : MonoBehaviour {
   private float time;
   private float initTime;
   private bool countingTimer;
+  private int min, sec;
+
+  private InformationManager IM;
 
 	// Use this for initialization
 	void Start () {
     countingTimer = false;
     countingMoves = false;
+    IM = GameObject.FindGameObjectWithTag("Board").transform.GetChild(0).GetComponent<InformationManager>();
 	}
 	
 	// Update is called once per frame
@@ -24,8 +28,9 @@ public class PointSystem : MonoBehaviour {
     {
       float currentTime = Time.realtimeSinceStartup;
       float timePassed = currentTime - initTime;
-      int min = Mathf.FloorToInt(timePassed / 60);
-      int sec = Mathf.FloorToInt(timePassed % 60);
+      min = Mathf.FloorToInt(timePassed / 60);
+      sec = Mathf.FloorToInt(timePassed % 60);
+      IM.UpdateTimer(min,sec);
     }
 	}
 
@@ -37,6 +42,7 @@ public class PointSystem : MonoBehaviour {
 
   public void StartMovesCounter()
   {
+    moves = 0;
     countingMoves = true;
   }
 
@@ -47,7 +53,6 @@ public class PointSystem : MonoBehaviour {
 
   public void StopMovesCounter()
   {
-    moves = 0;
     countingMoves = false;
   }
 
@@ -55,6 +60,13 @@ public class PointSystem : MonoBehaviour {
   {
     if (countingMoves)
       moves++;
+    IM.UpdateMoves(moves);
+  }
+
+  public void StopAll()
+  {
+    StopMovesCounter();
+    StopTimer();
   }
 
 }

@@ -56,6 +56,9 @@ public class Molecule : MonoBehaviour
   private float rotationValue;
   private bool canCenterInst;
 
+  //variables for information
+  private PointSystem PS;
+
   //variables for testing
   private int numberTesting;
 
@@ -64,6 +67,7 @@ public class Molecule : MonoBehaviour
     camera = GameObject.FindGameObjectWithTag("GameManager");
     shelves = GameObject.Find("shelves");
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
+    PS = GameObject.FindGameObjectWithTag("GameManager").GetComponent<PointSystem>();
     rotationType = camera.GetComponent<Manager>().rotationType;
   }
 
@@ -194,7 +198,6 @@ public class Molecule : MonoBehaviour
 
   void CheckTaps()
   {
-
     SetInvisibleBond(numberOfTaps);
     if (!atom1.GetComponent<Atom>().IsBonding() && !atom2.GetComponent<Atom>().IsBonding())
       CreateBondTaps(numberOfTaps);
@@ -466,7 +469,7 @@ public class Molecule : MonoBehaviour
         bond = quadrupleBond;
         break;  
     }
-    
+    PS.UpdateMoves();
   }
 
   public void UpdateBondType(int value)

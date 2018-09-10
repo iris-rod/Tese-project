@@ -148,6 +148,7 @@ public class GameManager : MonoBehaviour
         if (MM.CompareMoleculesString(text, false))
         {
           completed = true;
+          PS.StopMovesCounter();
         }
         break;
       case "complete":
@@ -155,6 +156,7 @@ public class GameManager : MonoBehaviour
         if (IsMoleculeComplete(molDes))
         {
           completed = true;
+          PS.StopMovesCounter();
         }
         break;
       case "transform":
@@ -162,6 +164,7 @@ public class GameManager : MonoBehaviour
         if (IsMoleculeComplete(molDes1))
         {
           completed = true;
+          PS.StopMovesCounter();
         }
         break;
       case "load":
@@ -188,7 +191,7 @@ public class GameManager : MonoBehaviour
         }
         break;
       case "multiple choice":
-        if(pressedAnswer.ToLower().Trim() == correctAnswerMC.ToLower().Trim())
+        if (pressedAnswer.ToLower().Trim() == correctAnswerMC.ToLower().Trim())
         {
           completed = true;
           PS.StopTimer();
@@ -210,6 +213,7 @@ public class GameManager : MonoBehaviour
         SM.LevelChecking(false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
+        PS.StartMovesCounter();
         break;
       case "complete":
         partialCreated = true;
@@ -218,6 +222,7 @@ public class GameManager : MonoBehaviour
         partialGO = manager.LoadMolecule(partialName, false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
+        PS.StartMovesCounter();
         break;
       case "transform":
         partialCreated = true;
@@ -226,6 +231,7 @@ public class GameManager : MonoBehaviour
         partialGO = manager.LoadMolecule(partialName, false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
+        PS.StartMovesCounter();
         break;
       case "load":
         partialCreated = false;
@@ -253,6 +259,7 @@ public class GameManager : MonoBehaviour
         APSingle.Disappear();
         APMultiple.Appear(); //make control panel with buttons appear
         getAnswer = true;
+        PS.StartTimer();
         break;
     }
   }
