@@ -345,13 +345,13 @@ public class Manager : MonoBehaviour
 
     if (Input.GetKeyDown("n"))
     {
-      LoadMolecule("CO2_a", false);
+      LoadMolecule("etanol_b", false);
       //LoadMolecule("test_9mol_1", false);
     }
     if (Input.GetKeyDown("s"))
      {
        GameObject mol = GameObject.Find("MoleculeV3(Clone)");
-       SaveMolecule(mol, "aa");
+       SaveMolecule(mol, "etanolP");
      }
 
   }

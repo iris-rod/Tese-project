@@ -161,6 +161,7 @@ public class Molecule : MonoBehaviour
     return ID;
   }
 
+
   void SetManagerPivot()
   {
     for (int i = 0; i < transform.childCount; i++)

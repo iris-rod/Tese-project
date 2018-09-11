@@ -212,7 +212,7 @@ public class Atom : MonoBehaviour {
     isRotating = rotate;
   }
 
-  void Dettach()
+  public void Dettach()
   {
     transform.parent = null;
     isAttached = false;

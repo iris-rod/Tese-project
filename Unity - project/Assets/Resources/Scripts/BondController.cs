@@ -100,9 +100,9 @@ public class BondController : MonoBehaviour
       {
         ballB.GetComponent<Atom>().RemoveBond(bondType, bondId);
         ballA.GetComponent<Atom>().RemoveBond(bondType, bondId);
-        Destroy(transform.gameObject);
         SoundEffectsManager.PlaySound("bondBreak");
-        Invoke("StopSound",1.2f);
+        Invoke("StopSound", 1.2f);
+        Destroy(transform.gameObject);
       }
     }
     else

@@ -7,12 +7,10 @@ public class CompletedButton : MonoBehaviour {
   private Animator animator;
   private GameObject molecule;
   private GameObject capsule;
-  private TestsManager TM;
   
   // Use this for initialization
   void Start () {
     animator = GetComponent<Animator>();
-    TM = Camera.main.GetComponent<TestsManager>();
   }
   
   // Update is called once per frame

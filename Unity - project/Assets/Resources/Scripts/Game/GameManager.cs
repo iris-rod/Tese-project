@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
       case "complete":
         partialCreated = true;
         SM.LevelChecking(false);
-        partialName = GetPartialMolecule(objSplit[1]);
+        partialName = GetPartialMolecule(objSplit[2]);
         partialGO = manager.LoadMolecule(partialName, false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
@@ -227,7 +227,7 @@ public class GameManager : MonoBehaviour
       case "transform":
         partialCreated = true;
         SM.LevelChecking(false);
-        partialName = GetPartialMolecule(objSplit[1]);
+        partialName = GetPartialMolecule(objSplit[2]);
         partialGO = manager.LoadMolecule(partialName, false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear

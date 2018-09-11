@@ -1,6 +1,6 @@
 1 : build-H2O;
-2 : complete-hidrocarbonato;
-3 : transform-haloalcano;
+2 : complete-hidrocarbonato-etanolP;
+3 : transform-haloalcano-CO2a;
 4 : multiple choice-Quantos átomos de carbono tem a molécula?-etanol-a
 	-a.2
 	-b.3
