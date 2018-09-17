@@ -136,15 +136,15 @@ public class GameManager : MonoBehaviour
 
   private bool CheckObjectiveComplete(string nextObj)
   {
-    string[] objSplit = nextObj.Split('-');
+    string[] objSplit = nextObj.Split('>');
     
-    string type = objSplit[0];
+    string type = objSplit[0].Trim();
     bool completed = false;
     switch (type)
     {
       case "build":
-        string molFile = CheckMoleculeRepresentation(objSplit[1]); //to get the correct name of the file in case the structure is being used
-        string text = HandleTextFile.ReadString(molFile + ".txt");
+        string molFile = CheckMoleculeRepresentation(objSplit[1].Trim()); //to get the correct name of the file in case the structure is being used
+        string text = HandleTextFile.ReadString(molFile + "Bonds.txt");
         if (MM.CompareMoleculesString(text, false))
         {
           completed = true;
@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour
         }
         break;
       case "complete":
-        string molDes = CheckMoleculeDescription(objSplit[1]);
+        string molDes = CheckMoleculeDescription(objSplit[1].Trim());
         if (IsMoleculeComplete(molDes))
         {
           completed = true;
@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviour
         }
         break;
       case "transform":
-        string molDes1 = CheckMoleculeDescription(objSplit[1]);
+        string molDes1 = CheckMoleculeDescription(objSplit[1].Trim());
         if (IsMoleculeComplete(molDes1))
         {
           completed = true;
@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviour
         }
         break;
       case "save":
-        string savedText = HandleTextFile.ReadString(objSplit[1] + ".txt");
+        string savedText = HandleTextFile.ReadString(objSplit[1].Trim() + ".txt");
         if (MM.CompareMoleculesString(savedText, true))
         {
           completed = true;
@@ -204,8 +204,8 @@ public class GameManager : MonoBehaviour
   private void CheckNextObjectiveSetup(string nextObj)
   {
     Debug.Log("new sublevel");
-    string[] objSplit = nextObj.Split('-');
-    string type = objSplit[0];
+    string[] objSplit = nextObj.Split('>');
+    string type = objSplit[0].Trim();
     switch (type)
     {
       case "build":
@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
       case "complete":
         partialCreated = true;
         SM.LevelChecking(false);
-        partialName = GetPartialMolecule(objSplit[2]);
+        partialName = GetPartialMolecule(objSplit[1].Trim());
         partialGO = manager.LoadMolecule(partialName, false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
@@ -227,8 +227,8 @@ public class GameManager : MonoBehaviour
       case "transform":
         partialCreated = true;
         SM.LevelChecking(false);
-        partialName = GetPartialMolecule(objSplit[2]);
-        partialGO = manager.LoadMolecule(partialName, false);
+        //partialName = GetPartialMolecule(objSplit[2].Trim());
+        partialGO = manager.LoadMolecule(objSplit[2].Trim(), false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
         PS.StartMovesCounter();
@@ -247,12 +247,12 @@ public class GameManager : MonoBehaviour
         break;
       case "place":
         partialCreated = false;
-        manager.LoadMolecule(objSplit[1] + "_place", false);
+        manager.LoadMolecule(objSplit[1].Trim() + "_place", false);
         SM.LevelChecking(false);
         break;
       case "multiple choice":
         partialCreated = true;
-        partialName = objSplit[2];
+        partialName = objSplit[2].Trim();
         partialGO = manager.LoadMolecule(partialName, false);
         SM.LevelChecking(false);
         PS.StartTimer();
@@ -273,7 +273,7 @@ public class GameManager : MonoBehaviour
     if (description.Contains("&"))
     {
       string[] info = description.Split('&');
-      return info[1] + "_partial";
+      return info[1] + "Partial";
     }
     else if (MoleculesCharacteristics.CheckIfIsClass(description))
       return "partial_default";
@@ -282,7 +282,7 @@ public class GameManager : MonoBehaviour
       if (description.Length > 9)
       {
         if (description.Substring(9, description.Length) == "estrutura")
-          return description.Substring(0, description.Length - 9) + "_partial";
+          return description.Substring(0, description.Length - 9) + "Partial";
       }
     }
     return result;

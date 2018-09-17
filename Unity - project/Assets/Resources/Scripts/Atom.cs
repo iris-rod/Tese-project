@@ -340,6 +340,10 @@ public class Atom : MonoBehaviour {
         } else if (obj.transform.parent == null) {
           obj.transform.parent = transform.parent;
         }
+        else if(transform.parent != null && obj.transform.parent != null)
+        {
+         //switch all to the same molecule
+        }
         transform.parent.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject, false, 0);
       }
   }

@@ -98,6 +98,7 @@ public class BondController : MonoBehaviour
     {
       if (dist >= distanceToDetach)
       {
+        SplitMolecule.Split(transform.parent.gameObject, transform.gameObject);
         ballB.GetComponent<Atom>().RemoveBond(bondType, bondId);
         ballA.GetComponent<Atom>().RemoveBond(bondType, bondId);
         SoundEffectsManager.PlaySound("bondBreak");
@@ -136,7 +137,7 @@ public class BondController : MonoBehaviour
     if (dist != distance)
     {
       ballB.position = (ballB.transform.position - ballA.transform.position).normalized * distance + ballA.transform.position;
-      transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballB, bondId);
+      transform.parent.GetComponent<Molecule>().CheckOtherBondsDistance(ballB, bondId);
     }
   }
 
@@ -167,23 +168,23 @@ public class BondController : MonoBehaviour
       if (ballA.GetComponent<InteractionBehaviour>().isGrasped)
       {
         ballB.position = (ballB.transform.position - ballA.transform.position).normalized * distance + ballA.transform.position;
-        transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballB, bondId);
+        transform.parent.GetComponent<Molecule>().CheckOtherBondsDistance(ballB, bondId);
       }
       else if (ballB.GetComponent<InteractionBehaviour>().isGrasped)
       {
         ballA.position = (ballA.transform.position - ballB.transform.position).normalized * distance + ballB.transform.position;
-        transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballA, bondId);
+        transform.parent.GetComponent<Molecule>().CheckOtherBondsDistance(ballA, bondId);
       }
       else if(BMoved)
       {
         ballA.position = (ballA.transform.position - ballB.transform.position).normalized * distance + ballB.transform.position;
-        transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballA, bondId);
+        transform.parent.GetComponent<Molecule>().CheckOtherBondsDistance(ballA, bondId);
         BMoved = false;
       }
       else if (AMoved)
       {
         ballB.position = (ballB.transform.position - ballA.transform.position).normalized * distance + ballA.transform.position;
-        transform.parent.GetComponent<Molecule>().CheckOtherBonds(ballB, bondId);
+        transform.parent.GetComponent<Molecule>().CheckOtherBondsDistance(ballB, bondId);
         AMoved = false;
       }
     }
@@ -194,7 +195,7 @@ public class BondController : MonoBehaviour
     return bondId;
   }
 
-  public void CompareAtom(Transform atom)
+  public void MaintainDistanceToAtom(Transform atom)
   {
     float dist = Vector3.Distance(ballA.position, ballB.position);
     if (atom == ballA)
@@ -215,6 +216,16 @@ public class BondController : MonoBehaviour
 
     }
   }
+
+
+  public bool CompareAtom(Transform atom)
+  {
+    if (atom == ballA || atom == ballB)
+      return true;
+    
+    return false;
+  }
+
 
   public bool CheckAtomsBond(GameObject atomA, GameObject atomB)
   {
@@ -245,6 +256,13 @@ public class BondController : MonoBehaviour
       highlightGrasp.SetFloat("_Outline", 0.01f);
     else
       highlightGrasp.SetFloat("_Outline", 0.0f);
+  }
+
+  public void Dettach()
+  {
+    ballB.GetComponent<Atom>().RemoveBond(bondType, bondId);
+    ballA.GetComponent<Atom>().RemoveBond(bondType, bondId);
+    transform.parent = null;
   }
 
 }

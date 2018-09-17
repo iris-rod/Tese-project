@@ -609,16 +609,32 @@ public class Molecule : MonoBehaviour
     return bonded;
   }
 
-  public void CheckOtherBonds(Transform atom, int bondID)
+  public void CheckOtherBondsDistance(Transform atom, int bondID)
   {
     for (int i = 0; i < transform.childCount; i++)
     {
       Transform child = transform.GetChild(i);
       if (child.CompareTag("Bond") && child.GetComponent<BondController>().getBondID() != bondID)
       {
-        child.GetComponent<BondController>().CompareAtom(atom);
+        child.GetComponent<BondController>().MaintainDistanceToAtom(atom);
       }
     }
+  }
+
+  //get all bonds that begin from atom A, branching out to the bonds of the atoms attached to it
+  public List<GameObject> GetAllBonds(Transform atom, int bondID)
+  {
+    List<GameObject> allBonds = new List<GameObject>();
+    for (int i = 0; i < transform.childCount; i++)
+    {
+      Transform child = transform.GetChild(i);
+      if (child.CompareTag("Bond") && child.GetComponent<BondController>().getBondID() != bondID)
+      {
+        if (child.GetComponent<BondController>().CompareAtom(atom))
+          allBonds.Add(child.gameObject);
+      }
+    }
+    return allBonds;
   }
 
   public void Rotate()
@@ -666,5 +682,15 @@ public class Molecule : MonoBehaviour
       }
     }
     return bonds;
+  }
+
+  //used when a molecule is split, it adds bonds from the previous molecule to the new one
+  public void AddExistingBond(GameObject bond)
+  {
+    Transform[] atoms = bond.GetComponent<BondController>().GetAtoms();
+    atoms[0].parent = transform;
+    atoms[1].parent = transform;
+    bond.transform.parent = transform;
+    numberOfBonds++;
   }
 }

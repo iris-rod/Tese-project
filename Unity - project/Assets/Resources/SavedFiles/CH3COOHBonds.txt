@@ -1,0 +1,7 @@
+Hidrogen-1-Carbon_
+Hidrogen-1-Carbon_
+Hidrogen-1-Carbon_
+Carbon-1-Carbon_
+	 Carbon-2-Oxigen_
+	 Carbon-1-Oxigen_
+		  Oxigen-1-Hidrogen_

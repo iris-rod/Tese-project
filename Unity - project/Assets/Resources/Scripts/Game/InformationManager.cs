@@ -61,30 +61,30 @@ public class InformationManager : MonoBehaviour {
   //raw -> build-H2O ou place-H2O ou save-
   private string GetDisplayText(string raw) 
   {
-    string[] split = raw.Split('-');
+    string[] split = raw.Split('>');
     string result = "";
 
-    switch (split[0])
+    switch (split[0].Trim())
     {
       case "build":
-        string moleculeDisp = CheckMoleculeRepresentation(split[1]);
+        string moleculeDisp = CheckMoleculeRepresentation(split[1].Trim());
         result += "Cria uma molécula \n" + moleculeDisp;
         break;
       case "complete":
-        string moleculeDescr = CheckMoleculeDescription(split[1]);
+        string moleculeDescr = CheckMoleculeDescription(split[1].Trim());
         result += "Completa a molécula " + moleculeDescr;
         break;
       case "transform":
-        result += "Transforma a molécula em " + split[1];
+        result += "Transforma a molécula em " + split[1].Trim();
         break;
       case "place":
-        result += "Move the " + split[1] + " molecule to overlap the transparent molecule.";
+        result += "Move the " + split[1].Trim() + " molecule to overlap the transparent molecule.";
         break;
       case "save":
-        result += "Put the " + split[1] + " molecule in the shelf.";
+        result += "Put the " + split[1].Trim() + " molecule in the shelf.";
         break;
       case "load":
-        result += "Get the " + split[1] + " molecule from the shelf.";
+        result += "Get the " + split[1].Trim() + " molecule from the shelf.";
         break;
       case "multiple choice":
         result += split[1] + "\n";
@@ -95,7 +95,7 @@ public class InformationManager : MonoBehaviour {
           string[] ans = split[i].Split('.');
           if (i == split.Length - 1)
           {
-            string[] aux = ans[1].Split('\n');
+            string[] aux = ans[1].Trim().Split('\n');
             tempResult = ans[0].ToUpper() + ": " + aux[0] + "\n";// a.2 -> A: 2
             result += tempResult;
           }
@@ -136,7 +136,7 @@ public class InformationManager : MonoBehaviour {
       string[] charc = rawDisplay.Split('&');
       result = "sabendo que é um " + charc[0] +"\n" +"e o seu nome é " + charc[1];
     }
-    else if(rawDisplay.Contains("estrutura"))
+    else if(rawDisplay.ToLower().Contains("estrutura"))
     {
       result = "sabendo a sua estrutura: "+ CheckMoleculeRepresentation(rawDisplay);
     }
