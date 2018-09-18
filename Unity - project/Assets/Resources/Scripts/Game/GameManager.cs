@@ -31,8 +31,10 @@ public class GameManager : MonoBehaviour
   //partial molecule
   private GameObject partialGO;
   private string partialName;
-  private bool partialCreated;
+  private bool partialCreated, canCreateNew;
 
+  //teste
+  private string currentTask;
 
   // Use this for initialization
   void Start()
@@ -56,8 +58,10 @@ public class GameManager : MonoBehaviour
     getAnswer = false;
     correctMolLoaded = false;
     partialCreated = false;
+    canCreateNew = true;
     level = 1;
-
+    string[] info = new string[2] {"1","multiple choice" };
+    Logs.BeginFile("teste", info);
     SoundEffectsManager.SetUp();
   }
 
@@ -85,19 +89,17 @@ public class GameManager : MonoBehaviour
       level++;
     }
 
-    if (partialCreated && partialGO == null)
-      Invoke("RestorePartial",3f);
-    
-    /*string molDes = CheckMoleculeDescription("aldeido");
-    if (IsMoleculeComplete(molDes))
+    if (partialCreated && partialGO == null && canCreateNew)
     {
-      Debug.Log("true");
-    }*/
+      canCreateNew = false;
+      Invoke("RestorePartial", 3f);
+    }
+    
   }
 
   private void SetLevel()
   {
-
+    bool hasNewLevel = false;
     if (levels != "" && levels != null)
     {
       string objs = "";
@@ -109,29 +111,47 @@ public class GameManager : MonoBehaviour
         if (level == levelID)
         {
           objs = levelDescp[1].Trim();
+          hasNewLevel = true;
           break;
         }
       }
-
-      LM.SetLevelId(level);
-      LM.SetObjective(objs);
-      CheckNextObjectiveSetup(LM.GetNextObjective());
-      Invoke("NextLevelDisplay", 2f);
-      newLevel = false;
+      string[] info = new string[4] { level.ToString(), currentTask, PS.GetMoves().ToString(), PS.GetTime() };
+      Logs.EndLevel("teste", info);
+      if (hasNewLevel)
+      {
+        LM.SetLevelId(level);
+        LM.SetObjective(objs);
+        CheckNextObjectiveSetup(LM.GetNextObjective());
+        Invoke("NextLevelDisplay", 2f);
+        newLevel = false;
+      }
+      else
+        IM.SetFinalDisplay();
     }
+
   }
 
   void NextLevelDisplay()
   {
     IM.UpdateLevel(LM.GetLevel());
     IM.UpdateDisplay(LM.GetNextObjective(),true);
-    if(getAnswer)
+    RemoveAllMolecules();
+    //if the next task is multiple choice, the correct answer is fetched from the info to compare when the player choses an answer
+    if (getAnswer)
       correctAnswerMC = IM.GetCorrectAnswer();
+    Invoke("PlacePartialMolecule", 1f);
+  }
+
+  private void PlacePartialMolecule()
+  {
+    if (partialCreated && partialGO == null)
+      partialGO = manager.LoadMolecule(partialName, false);
   }
 
   private void RestorePartial()
   {
     partialGO = manager.LoadMolecule(partialName, false);
+    canCreateNew = true;
   }
 
   private bool CheckObjectiveComplete(string nextObj)
@@ -149,6 +169,7 @@ public class GameManager : MonoBehaviour
         {
           completed = true;
           PS.StopMovesCounter();
+          //RemoveAllMolecules();
         }
         break;
       case "complete":
@@ -157,6 +178,7 @@ public class GameManager : MonoBehaviour
         {
           completed = true;
           PS.StopMovesCounter();
+          //RemoveAllMolecules();
         }
         break;
       case "transform":
@@ -165,6 +187,7 @@ public class GameManager : MonoBehaviour
         {
           completed = true;
           PS.StopMovesCounter();
+          //RemoveAllMolecules();
         }
         break;
       case "load":
@@ -195,10 +218,21 @@ public class GameManager : MonoBehaviour
         {
           completed = true;
           PS.StopTimer();
+          RemoveAllMolecules();
         }
         break;
     }
     return completed;
+  }
+
+  private void RemoveAllMolecules()
+  {
+    GameObject[] molecules = GameObject.FindGameObjectsWithTag("Molecule");
+    for(int i = 0; i < molecules.Length; i++)
+    {
+      MM.RemoveMolecule(molecules[i]);
+      Destroy(molecules[i]);
+    }
   }
 
   private void CheckNextObjectiveSetup(string nextObj)
@@ -206,6 +240,7 @@ public class GameManager : MonoBehaviour
     Debug.Log("new sublevel");
     string[] objSplit = nextObj.Split('>');
     string type = objSplit[0].Trim();
+    currentTask = type;
     switch (type)
     {
       case "build":
@@ -219,7 +254,7 @@ public class GameManager : MonoBehaviour
         partialCreated = true;
         SM.LevelChecking(false);
         partialName = GetPartialMolecule(objSplit[1].Trim());
-        partialGO = manager.LoadMolecule(partialName, false);
+        //partialGO = manager.LoadMolecule(partialName, false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
         PS.StartMovesCounter();
@@ -228,7 +263,8 @@ public class GameManager : MonoBehaviour
         partialCreated = true;
         SM.LevelChecking(false);
         //partialName = GetPartialMolecule(objSplit[2].Trim());
-        partialGO = manager.LoadMolecule(objSplit[2].Trim(), false);
+        partialName = objSplit[2].Trim();
+        //partialGO = manager.LoadMolecule(objSplit[2].Trim(), false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
         PS.StartMovesCounter();
@@ -253,7 +289,7 @@ public class GameManager : MonoBehaviour
       case "multiple choice":
         partialCreated = true;
         partialName = objSplit[2].Trim();
-        partialGO = manager.LoadMolecule(partialName, false);
+        //partialGO = manager.LoadMolecule(partialName, false);
         SM.LevelChecking(false);
         PS.StartTimer();
         APSingle.Disappear();
@@ -265,7 +301,7 @@ public class GameManager : MonoBehaviour
   }
 
   //for tasks that require a partial molecule to be displayed, that partial has to be loaded
-  //if the description is name&class, we get the name and add "_partial"
+  //if the description is name&class, we get the name and add "Partial"
   //if it has upper case it means it is a structure or formule
   private string GetPartialMolecule(string description)
   {
@@ -281,7 +317,7 @@ public class GameManager : MonoBehaviour
     {
       if (description.Length > 9)
       {
-        if (description.Substring(9, description.Length) == "estrutura")
+        if (description.Substring(description.Length-9).ToLower() == "estrutura")
           return description.Substring(0, description.Length - 9) + "Partial";
       }
     }
@@ -308,7 +344,7 @@ public class GameManager : MonoBehaviour
     }
     else if(rawObj.Length > 9)
     {
-      if (rawObj.Substring(9, rawObj.Length) == "estrutura")
+      if (rawObj.Substring(rawObj.Length-9).ToLower() == "estrutura")
         return CheckMoleculeRepresentation(rawObj);
       else return rawObj;
     }
@@ -323,7 +359,7 @@ public class GameManager : MonoBehaviour
     {
       string[] info = description.Split('&');
       string name = info[1];
-      string text1 = HandleTextFile.ReadString(name + ".txt");
+      string text1 = HandleTextFile.ReadString(name + "Bonds.txt");
       return MM.CompareMoleculesString(text1, false);
     }
 
@@ -335,7 +371,7 @@ public class GameManager : MonoBehaviour
         return true;
       else
       {
-        string text1 = HandleTextFile.ReadString(description + ".txt");
+        string text1 = HandleTextFile.ReadString(description + "Bonds.txt");
         return MM.CompareMoleculesString(text1, false);
       }
     }
@@ -343,12 +379,9 @@ public class GameManager : MonoBehaviour
     //with upper case letters and no spaces, it means it is the formule of the molecule (Ex. CH4)
     if (description.Split(' ').Length <= 1)
     {
-      string text1 = HandleTextFile.ReadString(description + ".txt");
+      string text1 = HandleTextFile.ReadString(description + "Bonds.txt");
       return MM.CompareMoleculesString(text1, false);
     }
-
-
-
     return false;
   }
 
@@ -372,7 +405,13 @@ public class GameManager : MonoBehaviour
   {
     levelComplete = LM.LevelCompleted();
     if (!levelComplete)
+    {
+      string moves = PS.GetMoves().ToString();
+      string time = PS.GetTime();
       CheckNextObjectiveSetup(LM.GetNextObjective());
+      string[] info = new string[4] { level.ToString(), currentTask, moves, time };
+      Logs.EndTask("teste", info);
+    }
 
     IM.UpdateDisplay(LM.GetNextObjective(),false);
     return levelComplete;
@@ -407,7 +446,10 @@ public class GameManager : MonoBehaviour
     levelsFile = name;
   }
 
-
+  public void UpdatePointSystem()
+  {
+    PS.UpdateMoves();
+  }
 
 
 

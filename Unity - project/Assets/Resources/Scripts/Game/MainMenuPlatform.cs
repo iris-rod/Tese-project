@@ -15,7 +15,7 @@ public class MainMenuPlatform : MonoBehaviour {
 
   // Update is called once per frame
   void Update () {
-    Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.01f);
+    Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.02f);
     if (hitColliders.Length > 1)
     {
       for (int i = 0; i < hitColliders.Length; i++)

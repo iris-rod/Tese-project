@@ -40,7 +40,7 @@ public class InformationManager : MonoBehaviour {
 
   public void UpdateLevel(int level)
   {
-    levelText.text = "LEVEL " + level;
+    levelText.text = "NÍVEL " + level;
   }
 
   public string GetCorrectAnswer()
@@ -50,12 +50,17 @@ public class InformationManager : MonoBehaviour {
 
   public void UpdateTimer(float min, float sec)
   {
-    pointsText.text = "Timer: " + min + ":" + sec;
+    pointsText.text = "Tempo: " + min + ":" + sec;
   }
 
   public void UpdateMoves(int moves)
   {
-    pointsText.text = "Moves: " + moves;
+    pointsText.text = "Movmentos: " + moves;
+  }
+
+  public void SetFinalDisplay()
+  {
+    levelText.text = "COMPLETO!";
   }
 
   //raw -> build-H2O ou place-H2O ou save-
@@ -155,7 +160,7 @@ public class InformationManager : MonoBehaviour {
     int length = rawDisplay.Length;
     if (length > 9)
     {
-      string sub = rawDisplay.Substring(rawDisplay.Length - 9, 9);
+      string sub = rawDisplay.Substring(rawDisplay.Length - 9, 9).ToLower();
       if(sub == "estrutura")
       {
         result = HandleTextFile.ReadMoleculeStructure(rawDisplay);

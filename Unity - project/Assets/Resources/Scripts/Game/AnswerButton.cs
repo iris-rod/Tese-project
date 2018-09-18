@@ -6,7 +6,7 @@ public class AnswerButton : MonoBehaviour {
   private Animator animator;
 
   private GameManager GM;
-  private bool panelIsActive;
+  private bool panelIsActive, canPush;
 
   public string Button;
 
@@ -16,6 +16,7 @@ public class AnswerButton : MonoBehaviour {
     animator = GetComponent<Animator>();
     GM = GameObject.Find("GameManager").GetComponent<GameManager>();
     panelIsActive = transform.parent.transform.parent.GetComponent<AnswerPanel>().IsPanelActive();
+    canPush = true;
   }
 
   // Update is called once per frame
@@ -32,13 +33,14 @@ public class AnswerButton : MonoBehaviour {
     {
       for (int i = 0; i < colliders.Length; i++)
       {
-        if (colliders[i].transform.name.Split(' ')[0] == "Contact" && panelIsActive)
+        if (colliders[i].transform.name.Split(' ')[0] == "Contact" && panelIsActive && canPush)
         {
+          canPush = false;
           SoundEffectsManager.PlaySound("buttonAnswer");
           GM.SetPressedAnswer(Button);
           GM.UpdateLevel();
           animator.SetBool("pushed", true);
-          Invoke("Reset", .5f);
+          Invoke("Reset", 1f);
           break;
         }
       }
@@ -47,6 +49,7 @@ public class AnswerButton : MonoBehaviour {
 
   void Reset()
   {
+    canPush = true;
     animator.SetBool("pushed", false);
   }
 }

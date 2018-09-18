@@ -12,6 +12,7 @@ public class AnswerPanel : MonoBehaviour {
   void Start () {
     GameObject.Find("GameManager").GetComponent<GameManager>().SetPanelAnswer(transform.gameObject, Multiple);
     animator = GetComponent<Animator>();
+    isUp = false;
   }
 	
   public void Appear()

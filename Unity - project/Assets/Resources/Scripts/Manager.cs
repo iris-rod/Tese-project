@@ -101,7 +101,6 @@ public class Manager : MonoBehaviour
       Debug.Log(e);
       text = "";
     }
-    Debug.Log(name);
     //molecule position
     string[] firsSplit = text.Split('M');
     Vector3 moleculePosition = StringToVector3(firsSplit[1]);
@@ -345,13 +344,13 @@ public class Manager : MonoBehaviour
 
     if (Input.GetKeyDown("n"))
     {
-      LoadMolecule("dimetilbutanoPartial", false);
+      LoadMolecule("dimetilbutano1", false);
       //LoadMolecule("test_9mol_1", false);
     }
     if (Input.GetKeyDown("s"))
      {
        GameObject mol = GameObject.Find("MoleculeV3(Clone)");
-       SaveMolecule(mol, "dimetilbutano");
+       SaveMolecule(mol, "dimetilbutano1");
      }
 
   }

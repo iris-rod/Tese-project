@@ -7,9 +7,11 @@ using UnityEngine;
 
 public class Logs : MonoBehaviour {
 
-  private static string path = "Assets/Resources/SavedFiles/Tests/";
+  private static string path = "Assets/Resources/SavedFiles/";
   private static string task = "";
   private static int reloads = 0;
+
+  private static string level = "";
 
   public static bool AddMethodToFile(string name, string text)
   {
@@ -124,4 +126,73 @@ public class Logs : MonoBehaviour {
   {
     File.WriteAllText(path + name, "");
   }
+
+
+  public static void BeginFile(string name, string[] info)
+  {
+    string finalPath = path + name;
+
+    //Write some text to the test.txt file
+    StreamWriter writer = new StreamWriter(finalPath, true);
+    string toWrite = "";
+    toWrite += "Level: " + info[0] + "\n";
+    toWrite += "Task: " + info[1] + "\n";
+    writer.WriteLine(toWrite);
+    writer.Close();
+    //Re-import the file to update the reference in the editor
+    AssetDatabase.ImportAsset(finalPath);
+    TextAsset asset = Resources.Load(name) as TextAsset;
+  }
+
+  public static bool EndLevel(string name, string[] info)
+  {
+    string s = ReadString(name);
+    if (s == "") return false;
+
+    string finalPath = path + name;
+
+    //Write some text to the test.txt file
+    StreamWriter writer = new StreamWriter(finalPath, true);
+    string toWrite = "";
+    toWrite += "Moves: " + info[2] + "\n";
+    toWrite += "Time: " + info[3] + "\n";
+    toWrite += "---------------------------------------" + "\n";
+    toWrite += "Level: " + info[0]+"\n";
+    toWrite += "Task: " + info[1] + "\n";
+    level = info[0];
+    task = info[1];
+    writer.WriteLine(toWrite);
+    writer.Close();
+
+    //Re-import the file to update the reference in the editor
+    AssetDatabase.ImportAsset(finalPath);
+    TextAsset asset = Resources.Load(name) as TextAsset;
+
+    return true;
+  }
+
+  public static bool EndTask(string name, string[] info)
+  {
+    string s = ReadString(name);
+    if (s == "") return false;
+
+    string finalPath = path + name;
+
+    //Write some text to the test.txt file
+    string toWrite = "";
+
+      StreamWriter writer = new StreamWriter(finalPath, true);
+      toWrite += "Moves: " + info[2] + "\n";
+      toWrite += "Time: " + info[3] + "\n";
+      toWrite += "Task " + info[1] + "\n";
+      writer.WriteLine(toWrite);
+      writer.Close();
+      AssetDatabase.ImportAsset(finalPath);
+      TextAsset asset = Resources.Load(name) as TextAsset;
+    //Re-import the file to update the reference in the editor
+
+
+    return true;
+  }
+
 }

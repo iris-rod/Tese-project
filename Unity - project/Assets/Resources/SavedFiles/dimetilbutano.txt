@@ -1,80 +1,80 @@
-M(0.0, 0.0, 0.0)M
-N atom: Carbon_4 _(0.2, 2.2, 0.4)
+M(-0.1, 0.0, 0.0)M
+N atom: Carbon_4 _(0.1, 2.1, 0.5)
     _1_1
     _2_1
     _3_1
     _4_1
 
-N atom: Hidrogen_1 _(0.2, 2.4, 0.4)
+N atom: Carbon_4 _(0.3, 2.2, 0.4)
     _1_1
+    _5_1
+    _6_1
+    _7_1
 
-N atom: Hidrogen_1 _(0.3, 2.0, 0.3)
+N atom: Carbon_4 _(-0.1, 2.1, 0.4)
     _2_1
-
-N atom: Hidrogen_1 _(0.1, 2.0, 0.3)
-    _3_1
-
-N atom: Carbon_4 _(0.1, 2.2, 0.5)
-    _4_1
-    _5_1
-    _6_1
-    _7_1
-
-N atom: Hidrogen_1 _(0.0, 2.0, 0.4)
-    _5_1
-
-N atom: Hidrogen_1 _(0.0, 2.4, 0.5)
-    _6_1
-
-N atom: Carbon_4 _(-0.1, 2.3, 0.5)
-    _7_1
-    _3_1
-    _4_1
-    _5_1
-
-N atom: Carbon_4 _(-0.2, 2.5, 0.4)
-    _3_1
+    _8_1
     _9_1
     _10_1
-    _11_1
 
-N atom: Carbon_4 _(-0.1, 2.1, 0.3)
-    _4_1
-    _6_1
-    _7_1
+N atom: Carbon_4 _(-0.3, 2.1, 0.4)
     _8_1
-
-N atom: Carbon_4 _(-0.3, 2.3, 0.3)
-    _5_1
+    _11_1
     _12_1
     _13_1
+
+N atom: Carbon_4 _(0.1, 2.0, 0.4)
+    _3_1
     _14_1
+    _15_1
+    _16_1
 
-N atom: Hidrogen_1 _(0.0, 1.9, 0.3)
-    _6_1
+N atom: Carbon_4 _(0.0, 2.3, 0.4)
+    _4_1
+    _17_1
+    _18_1
+    _19_1
 
-N atom: Hidrogen_1 _(0.0, 1.9, 0.3)
-    _7_1
+N atom: Hidrogen_1 _(-0.3, 1.9, 0.3)
+    _11_1
 
-N atom: Hidrogen_1 _(-0.1, 1.9, 0.2)
-    _8_1
+N atom: Hidrogen_1 _(-0.4, 2.1, 0.2)
+    _12_1
 
-N atom: Hidrogen_1 _(0.0, 2.5, 0.3)
+N atom: Hidrogen_1 _(-0.3, 2.3, 0.3)
+    _13_1
+
+N atom: Hidrogen_1 _(-0.1, 1.9, 0.3)
     _9_1
 
-N atom: Hidrogen_1 _(-0.2, 2.6, 0.3)
+N atom: Hidrogen_1 _(-0.1, 2.3, 0.3)
     _10_1
 
-N atom: Hidrogen_1 _(-0.1, 2.5, 0.3)
-    _11_1
-
-N atom: Hidrogen_1 _(-0.2, 2.1, 0.3)
-    _12_1
-
-N atom: Hidrogen_1 _(-0.4, 2.2, 0.2)
-    _13_1
-
-N atom: Hidrogen_1 _(-0.3, 2.4, 0.2)
+N atom: Hidrogen_1 _(0.1, 1.9, 0.2)
     _14_1
+
+N atom: Hidrogen_1 _(0.0, 1.9, 0.2)
+    _15_1
+
+N atom: Hidrogen_1 _(0.2, 1.9, 0.3)
+    _16_1
+
+N atom: Hidrogen_1 _(0.1, 2.4, 0.2)
+    _17_1
+
+N atom: Hidrogen_1 _(0.0, 2.4, 0.3)
+    _18_1
+
+N atom: Hidrogen_1 _(-0.1, 2.3, 0.3)
+    _19_1
+
+N atom: Hidrogen_1 _(0.2, 2.2, 0.2)
+    _5_1
+
+N atom: Hidrogen_1 _(0.3, 2.2, 0.2)
+    _6_1
+
+N atom: Hidrogen_1 _(0.3, 2.1, 0.3)
+    _7_1
 
 

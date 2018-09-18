@@ -30,14 +30,12 @@ public class PointSystem : MonoBehaviour {
       float timePassed = currentTime - initTime;
       min = Mathf.FloorToInt(timePassed / 60);
       sec = Mathf.FloorToInt(timePassed % 60);
-      Debug.Log("here");
       IM.UpdateTimer(min,sec);
     }
 	}
 
   public void StartTimer()
   {
-    Debug.Log("start time");
     initTime = Time.realtimeSinceStartup;
     countingTimer = true;
     IM.UpdateTimer(0, 0);
@@ -45,7 +43,6 @@ public class PointSystem : MonoBehaviour {
 
   public void StartMovesCounter()
   {
-    Debug.Log("start moves");
     moves = 0;
     countingMoves = true;
     IM.UpdateMoves(moves);
@@ -64,14 +61,26 @@ public class PointSystem : MonoBehaviour {
   public void UpdateMoves()
   {
     if (countingMoves)
+    {
       moves++;
-    IM.UpdateMoves(moves);
+      IM.UpdateMoves(moves);
+    }
   }
 
   public void StopAll()
   {
     StopMovesCounter();
     StopTimer();
+  }
+
+  public int GetMoves()
+  {
+    return moves;
+  }
+
+  public string GetTime()
+  {
+    return min + ":" + sec;
   }
 
 }

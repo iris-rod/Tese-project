@@ -17,6 +17,7 @@ public class BoxAtoms : MonoBehaviour {
   private Material atomMaterial;
   private int atomBondsAllowed;
   private Settings Settings;
+  private GameManager GM;
 
   //animator
   private Animator animator;
@@ -43,6 +44,7 @@ public class BoxAtoms : MonoBehaviour {
     colliders = GetComponents<BoxCollider>();
     Settings = GameObject.Find("GameManager").GetComponent<Settings>();
     animator = transform.parent.GetComponent<Animator>();
+    GM = GameObject.Find("GameManager").GetComponent<GameManager>();
   }
 	
 	// Update is called once per frame
@@ -60,7 +62,8 @@ public class BoxAtoms : MonoBehaviour {
         newAtom.GetComponent<Atom>().handController = handController;
         newAtom.GetComponent<Atom>().manager = manager;
         newAtom.GetComponent<Atom>().SetProperties(atomType, atomMaterial, atomBondsAllowed);
-      }
+        GM.UpdatePointSystem();
+    }
     
   }
 

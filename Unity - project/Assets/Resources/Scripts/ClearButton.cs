@@ -7,6 +7,7 @@ public class ClearButton : MonoBehaviour {
   private Animator animator;
   private bool canPlay;
   private MoleculeManager MM;
+  private GameManager GM;
 
   public string obj;
 
@@ -15,11 +16,13 @@ public class ClearButton : MonoBehaviour {
     canPlay = true;
     animator = GetComponent<Animator>();
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
+    GM = GameObject.Find("GameManager").GetComponent<GameManager>();
   }
 	
 	// Update is called once per frame
 	void Update () {
     CheckCollision();
+    ResetTask();
 	}
 
   private void CheckCollision ()
@@ -35,10 +38,7 @@ public class ClearButton : MonoBehaviour {
               if (molecules [j].name.Split ('_') [0] != "Mini")
                 Destroy (molecules [j]);
             }
-            GameObject[] invis = GameObject.FindGameObjectsWithTag ("Invisible");
-            for (int j = 0; j < invis.Length; j++) {
-                //Destroy (invis [j]);
-            }
+            GM.UpdatePointSystem();
             MM.Clear();
           } else if (obj.ToLower () == "atom") {
             GameObject[] atoms = GameObject.FindGameObjectsWithTag ("Interactable");
@@ -46,6 +46,7 @@ public class ClearButton : MonoBehaviour {
               if (atoms [j].transform.parent == null)
                 Destroy (atoms [j]);
             }
+            GM.UpdatePointSystem();
           }
           if (canPlay)
           {
@@ -58,6 +59,11 @@ public class ClearButton : MonoBehaviour {
         }
       }
     }
+  }
+
+  void ResetTask()
+  {
+
   }
 
   void Reset()
