@@ -1,65 +1,58 @@
 Level: 1
+Task: multiple choice
 
+Moves: 0
+Time: 0:0
+---------------------------------------
+Level: 1
 Task: build
 
-Moves: 0
-
-Time: 0:0
-
----------------------------------------
-
 Level: 1
-
-Task: 
-
-Moves: 0
-
-Time: 0:6
-
-Task multiple choice
-
-Moves: 0
-
-Time: 0:6
-
----------------------------------------
-
-Level: 2
-
 Task: multiple choice
 
 Moves: 0
+Time: 0:0
+---------------------------------------
+Level: 1
+Task: build
 
-Time: 0:6
+Moves: 10
+Time: 0:0
+Task multiple choice
 
+Moves: 10
+Time: 0:2
+---------------------------------------
+Level: 2
+Task: complete
+
+Moves: 24
+Time: 0:2
+Task build
+
+Moves: 15
+Time: 0:2
+---------------------------------------
+Level: 3
+Task: complete
+
+Moves: 6
+Time: 0:2
 Task transform
 
-Moves: 13
-
-Time: 0:6
-
+Moves: 5
+Time: 0:2
 ---------------------------------------
-
-Level: 3
-
+Level: 4
 Task: transform
 
-Level: 1
-Task: multiple choice
-
-Moves: 0
-Time: 0:0
----------------------------------------
-Level: 1
-Task: 
-
-Moves: 0
-Time: 0:8
+Moves: 13
+Time: 0:2
 Task multiple choice
 
-Moves: 0
-Time: 0:6
+Moves: 13
+Time: 0:5
 ---------------------------------------
-Level: 2
+Level: 5
 Task: multiple choice
 

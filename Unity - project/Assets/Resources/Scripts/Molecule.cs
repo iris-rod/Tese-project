@@ -8,7 +8,7 @@ public class Molecule : MonoBehaviour
 {
   private int ID;
   private int graspedAtoms;
-  private int numberOfBonds;
+  private int numberOfBonds = 1;
   private bool pivotGrabbed;
   private bool canTranslate, rotate, translate, isRotating;
   private GameObject bond;
@@ -57,7 +57,7 @@ public class Molecule : MonoBehaviour
   private bool canCenterInst;
 
   //variables for information
-  private PointSystem PS;
+  private GameManager GM;
 
   //variables for testing
   private int numberTesting;
@@ -67,7 +67,7 @@ public class Molecule : MonoBehaviour
     camera = GameObject.FindGameObjectWithTag("GameManager");
     shelves = GameObject.Find("shelves");
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
-    PS = GameObject.FindGameObjectWithTag("GameManager").GetComponent<PointSystem>();
+    GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     rotationType = camera.GetComponent<Manager>().rotationType;
   }
 
@@ -76,8 +76,7 @@ public class Molecule : MonoBehaviour
   {
     rotationOffset = 3.5f;
     pivotOffset = 0.12f;
-    numberOfBonds = 1;
-    numberOfTaps = 1;
+    numberOfTaps = 0;
     graspedAtoms = 0;
     lastChildCount = transform.childCount;
     hitScale = new Vector3 (.15f, .15f, .15f);//desktop -> new Vector3(0.03f, 0.1f, 0.1f);
@@ -454,7 +453,7 @@ public class Molecule : MonoBehaviour
       bondType = -1;
       return;
     }
-    
+    Debug.Log("define bond: " + bondType);
     //define the gameobject of the bond to instantiate
     switch (bondType) {
       case 1:
@@ -470,7 +469,7 @@ public class Molecule : MonoBehaviour
         bond = quadrupleBond;
         break;  
     }
-    PS.UpdateMoves();
+    GM.UpdatePointSystem();
   }
 
   public void UpdateBondType(int value)

@@ -137,6 +137,7 @@ public class Logs : MonoBehaviour {
     string toWrite = "";
     toWrite += "Level: " + info[0] + "\n";
     toWrite += "Task: " + info[1] + "\n";
+    //Debug.Log("begin: " + toWrite);
     writer.WriteLine(toWrite);
     writer.Close();
     //Re-import the file to update the reference in the editor
@@ -159,6 +160,7 @@ public class Logs : MonoBehaviour {
     toWrite += "---------------------------------------" + "\n";
     toWrite += "Level: " + info[0]+"\n";
     toWrite += "Task: " + info[1] + "\n";
+    //Debug.Log("end level: " + toWrite);
     level = info[0];
     task = info[1];
     writer.WriteLine(toWrite);
@@ -185,7 +187,8 @@ public class Logs : MonoBehaviour {
       toWrite += "Moves: " + info[2] + "\n";
       toWrite += "Time: " + info[3] + "\n";
       toWrite += "Task " + info[1] + "\n";
-      writer.WriteLine(toWrite);
+    //Debug.Log("end task: " + toWrite);
+    writer.WriteLine(toWrite);
       writer.Close();
       AssetDatabase.ImportAsset(finalPath);
       TextAsset asset = Resources.Load(name) as TextAsset;

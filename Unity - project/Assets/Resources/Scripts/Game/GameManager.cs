@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,7 +32,7 @@ public class GameManager : MonoBehaviour
   //partial molecule
   private GameObject partialGO;
   private string partialName;
-  private bool partialCreated, canCreateNew;
+  private bool partialCreated, canCreateNew, restore;
 
   //teste
   private string currentTask;
@@ -59,6 +60,7 @@ public class GameManager : MonoBehaviour
     correctMolLoaded = false;
     partialCreated = false;
     canCreateNew = true;
+    restore = false;
     level = 1;
     string[] info = new string[2] {"1","multiple choice" };
     Logs.BeginFile("teste", info);
@@ -89,12 +91,12 @@ public class GameManager : MonoBehaviour
       level++;
     }
 
-    if (partialCreated && partialGO == null && canCreateNew)
+    if (restore && partialGO == null)
     {
-      canCreateNew = false;
-      Invoke("RestorePartial", 3f);
+      partialGO = manager.LoadMolecule(partialName, false);
+      restore = false;
     }
-    
+
   }
 
   private void SetLevel()
@@ -107,7 +109,12 @@ public class GameManager : MonoBehaviour
       for (int i = 0; i < levelsSplit.Length; i++)
       {
         string[] levelDescp = levelsSplit[i].Split(':');
-        int levelID = int.Parse(levelDescp[0].Trim());
+        int levelID = 0;
+        try
+        {
+          levelID = int.Parse(levelDescp[0].Trim());
+        }
+        catch (Exception e) { }
         if (level == levelID)
         {
           objs = levelDescp[1].Trim();
@@ -115,18 +122,29 @@ public class GameManager : MonoBehaviour
           break;
         }
       }
-      string[] info = new string[4] { level.ToString(), currentTask, PS.GetMoves().ToString(), PS.GetTime() };
-      Logs.EndLevel("teste", info);
+
       if (hasNewLevel)
       {
+        string moves = PS.GetMoves().ToString();
+        string time = PS.GetTime();
         LM.SetLevelId(level);
         LM.SetObjective(objs);
         CheckNextObjectiveSetup(LM.GetNextObjective());
         Invoke("NextLevelDisplay", 2f);
         newLevel = false;
+        //log
+        string[] info = new string[4] { level.ToString(), currentTask, moves, time };
+        Logs.EndLevel("teste", info);
       }
       else
+      {
         IM.SetFinalDisplay();
+        string moves = PS.GetMoves().ToString();
+        string time = PS.GetTime();
+        string[] info = new string[4] { level.ToString(), currentTask, moves, time };
+        Logs.EndLevel("teste", info);
+        newLevel = false;
+      }
     }
 
   }
@@ -135,24 +153,20 @@ public class GameManager : MonoBehaviour
   {
     IM.UpdateLevel(LM.GetLevel());
     IM.UpdateDisplay(LM.GetNextObjective(),true);
-    RemoveAllMolecules();
+    SetupNextObjective();
     //if the next task is multiple choice, the correct answer is fetched from the info to compare when the player choses an answer
     if (getAnswer)
       correctAnswerMC = IM.GetCorrectAnswer();
-    Invoke("PlacePartialMolecule", 1f);
   }
 
   private void PlacePartialMolecule()
   {
     if (partialCreated && partialGO == null)
+    {
       partialGO = manager.LoadMolecule(partialName, false);
+    }
   }
 
-  private void RestorePartial()
-  {
-    partialGO = manager.LoadMolecule(partialName, false);
-    canCreateNew = true;
-  }
 
   private bool CheckObjectiveComplete(string nextObj)
   {
@@ -169,7 +183,6 @@ public class GameManager : MonoBehaviour
         {
           completed = true;
           PS.StopMovesCounter();
-          //RemoveAllMolecules();
         }
         break;
       case "complete":
@@ -178,7 +191,6 @@ public class GameManager : MonoBehaviour
         {
           completed = true;
           PS.StopMovesCounter();
-          //RemoveAllMolecules();
         }
         break;
       case "transform":
@@ -187,7 +199,6 @@ public class GameManager : MonoBehaviour
         {
           completed = true;
           PS.StopMovesCounter();
-          //RemoveAllMolecules();
         }
         break;
       case "load":
@@ -225,7 +236,7 @@ public class GameManager : MonoBehaviour
     return completed;
   }
 
-  private void RemoveAllMolecules()
+  public void RemoveAllMolecules()
   {
     GameObject[] molecules = GameObject.FindGameObjectsWithTag("Molecule");
     for(int i = 0; i < molecules.Length; i++)
@@ -237,7 +248,6 @@ public class GameManager : MonoBehaviour
 
   private void CheckNextObjectiveSetup(string nextObj)
   {
-    Debug.Log("new sublevel");
     string[] objSplit = nextObj.Split('>');
     string type = objSplit[0].Trim();
     currentTask = type;
@@ -262,7 +272,6 @@ public class GameManager : MonoBehaviour
       case "transform":
         partialCreated = true;
         SM.LevelChecking(false);
-        //partialName = GetPartialMolecule(objSplit[2].Trim());
         partialName = objSplit[2].Trim();
         //partialGO = manager.LoadMolecule(objSplit[2].Trim(), false);
         APMultiple.Disappear();
@@ -385,6 +394,12 @@ public class GameManager : MonoBehaviour
     return false;
   }
 
+  private void SetupNextObjective()
+  {
+    RemoveAllMolecules();
+    Invoke("PlacePartialMolecule", .5f);
+  }
+
   public int GetCurrentLevel()
   {
     return level;
@@ -409,11 +424,14 @@ public class GameManager : MonoBehaviour
       string moves = PS.GetMoves().ToString();
       string time = PS.GetTime();
       CheckNextObjectiveSetup(LM.GetNextObjective());
+      SetupNextObjective();
+
       string[] info = new string[4] { level.ToString(), currentTask, moves, time };
       Logs.EndTask("teste", info);
     }
-
     IM.UpdateDisplay(LM.GetNextObjective(),false);
+    if (getAnswer)
+      correctAnswerMC = IM.GetCorrectAnswer();
     return levelComplete;
   }
 
@@ -451,6 +469,15 @@ public class GameManager : MonoBehaviour
     PS.UpdateMoves();
   }
 
-
+  //used when all the molecules are removed from the scene
+  //if the current task has a partial molecule to be displayed, then when
+  //the molecules are removed from the scene, this one must be replaced
+  public void RestorePartial()
+  {
+    if (partialCreated)
+    {
+      restore = true;
+    }
+  }
 
 }

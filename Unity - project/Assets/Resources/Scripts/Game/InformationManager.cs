@@ -55,12 +55,13 @@ public class InformationManager : MonoBehaviour {
 
   public void UpdateMoves(int moves)
   {
-    pointsText.text = "Movmentos: " + moves;
+    pointsText.text = "Movimentos: " + moves;
   }
 
   public void SetFinalDisplay()
   {
     levelText.text = "COMPLETO!";
+    pointsText.text = "";
   }
 
   //raw -> build-H2O ou place-H2O ou save-

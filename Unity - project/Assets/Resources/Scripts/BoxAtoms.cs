@@ -5,7 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoxAtoms : MonoBehaviour {
+public class BoxAtoms : MonoBehaviour
+{
 
   public string atomType;
   public Leap.Unity.Interaction.InteractionManager manager;
@@ -13,6 +14,7 @@ public class BoxAtoms : MonoBehaviour {
   private GameObject handController;
   private Vector3 handPosition;
   private bool canPickNewAtom;
+  private bool setupAtom;
   private BoxCollider[] colliders;
   private Material atomMaterial;
   private int atomBondsAllowed;
@@ -21,9 +23,8 @@ public class BoxAtoms : MonoBehaviour {
 
   //animator
   private Animator animator;
-  private bool moving,isUp;
+  private bool moving, isUp;
 
-  //testing variables
   private Vector3 spawnPoint;
   private bool leftPinched;
   private bool leftClosest;
@@ -32,39 +33,44 @@ public class BoxAtoms : MonoBehaviour {
   private bool resumeUpdate;
   public GameObject atom;
 
-	// Use this for initialization
-	void Start () {
-    spawnPoint =  new Vector3(transform.position.x,transform.position.y + .1f,transform.position.z);//new Vector3(platformPosition.x, platformPosition.y + 0.1f, platformPosition.z);
+  // Use this for initialization
+  void Start()
+  {
+    spawnPoint = new Vector3(transform.position.x, transform.position.y + .1f, transform.position.z);//new Vector3(platformPosition.x, platformPosition.y + 0.1f, platformPosition.z);
     canPickNewAtom = true;
     resumeUpdate = true;
     spawnNewAtom = true;
     moving = false;
     isUp = true;
+    setupAtom = true;
     handController = GameObject.FindGameObjectWithTag("HandController");
     colliders = GetComponents<BoxCollider>();
     Settings = GameObject.Find("GameManager").GetComponent<Settings>();
     animator = transform.parent.GetComponent<Animator>();
     GM = GameObject.Find("GameManager").GetComponent<GameManager>();
   }
-	
-	// Update is called once per frame
-	void Update () {
 
-
-      spawnNewAtom = false;
-      Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.01f);
-      if (hitColliders.Length < 1 && !moving && isUp)
-        spawnNewAtom = true;
-      if (spawnNewAtom)
+  // Update is called once per frame
+  void Update()
+  {
+    spawnNewAtom = false;
+    Collider[] hitColliders = Physics.OverlapSphere(spawnPoint, 0.01f);
+    if (hitColliders.Length < 1 && !moving && isUp)
+      spawnNewAtom = true;
+    if (spawnNewAtom)
+    {
+      GetMaterial();
+      GameObject newAtom = Instantiate(atom, spawnPoint, Quaternion.identity);
+      newAtom.GetComponent<Atom>().handController = handController;
+      newAtom.GetComponent<Atom>().manager = manager;
+      newAtom.GetComponent<Atom>().SetProperties(atomType, atomMaterial, atomBondsAllowed);
+      if (!setupAtom)
       {
-        GetMaterial();
-        GameObject newAtom = Instantiate(atom, spawnPoint, Quaternion.identity);
-        newAtom.GetComponent<Atom>().handController = handController;
-        newAtom.GetComponent<Atom>().manager = manager;
-        newAtom.GetComponent<Atom>().SetProperties(atomType, atomMaterial, atomBondsAllowed);
         GM.UpdatePointSystem();
+      }
+      setupAtom = false;
     }
-    
+
   }
 
   void CheckCollider()
@@ -196,6 +202,7 @@ public class BoxAtoms : MonoBehaviour {
     animator.SetBool("move", true);
     Invoke("Reset", .5f);
     moving = true;
+    setupAtom = true;
     UpdateAtom();
   }
 
@@ -206,7 +213,7 @@ public class BoxAtoms : MonoBehaviour {
     {
       Destroy(hitColliders[0].gameObject);
     }
-    
+
   }
 
   void Reset()

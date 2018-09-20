@@ -5,7 +5,7 @@ using UnityEngine;
 public class ClearButton : MonoBehaviour {
 
   private Animator animator;
-  private bool canPlay;
+  private bool canPress, canUpdate;
   private MoleculeManager MM;
   private GameManager GM;
 
@@ -13,7 +13,8 @@ public class ClearButton : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-    canPlay = true;
+    canPress = true;
+    canUpdate = true;
     animator = GetComponent<Animator>();
     MM = GameObject.Find("GameManager").GetComponent<MoleculeManager>();
     GM = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -27,33 +28,47 @@ public class ClearButton : MonoBehaviour {
 
   private void CheckCollision ()
   {
+    bool cleared = false;
     Collider[] colliders = Physics.OverlapBox (transform.position, transform.localScale / 5);
-    if (colliders.Length > 1) {
-      for (int i = 0; i < colliders.Length; i++) {
-        if (colliders [i].transform.name.Split (' ') [0] == "Contact") {
+    if (colliders.Length > 1)
+    {
+      for (int i = 0; i < colliders.Length; i++)
+      {
+        if (colliders[i].transform.name.Split(' ')[0] == "Contact" && canPress)
+        {
 
-          if (obj.ToLower () == "molecule") {
-            GameObject[] molecules = GameObject.FindGameObjectsWithTag ("Molecule");
-            for (int j = 0; j < molecules.Length; j++) {
-              if (molecules [j].name.Split ('_') [0] != "Mini")
-                Destroy (molecules [j]);
+          if (obj.ToLower() == "molecule")
+          {
+            GameObject[] molecules = GameObject.FindGameObjectsWithTag("Molecule");
+            for (int j = 0; j < molecules.Length; j++)
+            {
+              if (molecules[j].name.Split('_')[0] != "Mini")
+                Destroy(molecules[j]);
             }
-            GM.UpdatePointSystem();
+            cleared = true;
             MM.Clear();
-          } else if (obj.ToLower () == "atom") {
-            GameObject[] atoms = GameObject.FindGameObjectsWithTag ("Interactable");
-            for (int j = 0; j < atoms.Length; j++) {
-              if (atoms [j].transform.parent == null)
-                Destroy (atoms [j]);
-            }
-            GM.UpdatePointSystem();
           }
-          if (canPlay)
+          else if (obj.ToLower() == "atom")
+          {
+            GameObject[] atoms = GameObject.FindGameObjectsWithTag("Interactable");
+            for (int j = 0; j < atoms.Length; j++)
+            {
+              if (atoms[j].transform.parent == null)
+                Destroy(atoms[j]);
+            }
+            cleared = true;
+          }
+          if (canPress)
           {
             SoundEffectsManager.PlaySound("button");
-            canPlay = false;
+            canPress = false;
+            if (cleared)
+            {
+              GM.RestorePartial();
+              GM.UpdatePointSystem();
+            }
           }
-          animator.SetBool("pushed",true);
+          animator.SetBool("pushed", true);
           Invoke("Reset", .5f);
           break;
         }
@@ -69,6 +84,6 @@ public class ClearButton : MonoBehaviour {
   void Reset()
   {
     animator.SetBool("pushed", false);
-    canPlay = true;
+    canPress = true;
   }
 }

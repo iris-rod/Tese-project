@@ -1,18 +1,17 @@
-﻿1 : multiple choice > Que molécula é esta? > eteno > b
+﻿1 : build > CH4
+	_multiple choice > Qual é o nome desta molécula? > dimetilbutano > a
+	>a.2,2-dimetilbutano
+	>b.2-etilpropano
+	>c.2-etil-2-metilpropano;  
+2 : complete > dimetilbutanoEstrutura 
+	_build > CH3COOHEstrutura;
+
+3 : complete > alcool
+	_transform > haloalcano > etanal;
+
+4 : transform > 3-metilpentano > butano
+   	_multiple choice > Que molécula é esta? > eteno > b
 	>a.Etano
 	>b.Eteno
-	>c.Etino
-   _multiple choice > Qual é o nome desta molécula? > dimetilbutano > a
-	>a.2-etilpropano
-	>b.2,2-dimetilbutano
-	>c.2-etil-2-metilpropano;
-
-2 : transform > 3-metilpentano > butano
-   _transform > haloalcano > etanal;
-
-3 : complete > dimetilbutanoEstrutura
-   _complete > alcool;
-4 : build > CH4
-   _build > CH3COOHEstrutura;
-
+	>c.Etino;
 
