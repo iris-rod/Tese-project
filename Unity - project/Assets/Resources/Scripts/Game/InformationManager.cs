@@ -8,9 +8,11 @@ public class InformationManager : MonoBehaviour {
   private TextMeshPro levelText;
   private TextMeshPro objectivesText;
   private TextMeshPro pointsText;
+  private TextMeshPro controlText;
   private GameObject check;
   private string currentDisplay;
   private string updatedDisplay;
+  private int currentPoints;
 
   //multiple choice question
   private string correctAnswer;
@@ -18,18 +20,21 @@ public class InformationManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
     levelText = transform.GetChild(0).GetComponent<TextMeshPro>();
-    pointsText = transform.GetChild(1).GetComponent<TextMeshPro>();
-    objectivesText = transform.GetChild(2).GetComponent<TextMeshPro>();
+    pointsText = transform.GetChild(2).GetComponent<TextMeshPro>();
+    controlText = transform.GetChild(1).GetComponent<TextMeshPro>();
+    objectivesText = transform.GetChild(3).GetComponent<TextMeshPro>();
     check = transform.GetChild(3).gameObject;
     check.SetActive(false);
 	}
 	
-  public void UpdateDisplay(string newObj, bool newLevel)
+  public void UpdateDisplay(string newObj, bool newLevel, int points)
   {
     if (!newLevel)
     {
       check.SetActive(true);
       updatedDisplay = GetDisplayText(newObj);
+      currentPoints = points;
+      UpdatePoints();
       Invoke("NewDisplay", 1f);
     }
     else
@@ -50,18 +55,26 @@ public class InformationManager : MonoBehaviour {
 
   public void UpdateTimer(float min, float sec)
   {
-    pointsText.text = "Tempo: " + min + ":" + sec;
+    controlText.text = "Tempo: " + min + ":" + sec;
   }
 
   public void UpdateMoves(int moves)
   {
-    pointsText.text = "Movimentos: " + moves;
+    controlText.text = "Movimentos: " + moves;
   }
 
-  public void SetFinalDisplay()
+  public void SetFinalDisplay(int points)
   {
     levelText.text = "COMPLETO!";
-    pointsText.text = "";
+    pointsText.text = "Pontuação: " + points.ToString();
+  }
+
+  private void UpdatePoints()
+  {
+    int lastPoints = int.Parse(pointsText.text.Split(':')[1].Trim());
+    int diff = currentPoints - lastPoints;
+    pointsText.text = "Recebeste " + diff.ToString() + " pontos!";
+    controlText.text = "";
   }
 
   //raw -> build-H2O ou place-H2O ou save-
@@ -210,6 +223,7 @@ public class InformationManager : MonoBehaviour {
   {
     check.SetActive(false);
     objectivesText.text = updatedDisplay;
+    pointsText.text = "Pontuação: " + currentPoints.ToString();
   }
 
 

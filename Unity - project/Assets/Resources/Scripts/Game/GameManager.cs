@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
       }
       else
       {
-        IM.SetFinalDisplay();
+        IM.SetFinalDisplay(PS.GetPoints());
         string moves = PS.GetMoves().ToString();
         string time = PS.GetTime();
         string[] info = new string[4] { level.ToString(), currentTask, moves, time };
@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour
   void NextLevelDisplay()
   {
     IM.UpdateLevel(LM.GetLevel());
-    IM.UpdateDisplay(LM.GetNextObjective(),true);
+    IM.UpdateDisplay(LM.GetNextObjective(),true, PS.GetPoints());
     SetupNextObjective();
     //if the next task is multiple choice, the correct answer is fetched from the info to compare when the player choses an answer
     if (getAnswer)
@@ -429,7 +429,7 @@ public class GameManager : MonoBehaviour
       string[] info = new string[4] { level.ToString(), currentTask, moves, time };
       Logs.EndTask("teste", info);
     }
-    IM.UpdateDisplay(LM.GetNextObjective(),false);
+    IM.UpdateDisplay(LM.GetNextObjective(),false, PS.GetPoints());
     if (getAnswer)
       correctAnswerMC = IM.GetCorrectAnswer();
     return levelComplete;
