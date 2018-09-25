@@ -70,7 +70,7 @@ public class InformationManager : MonoBehaviour {
   public void SetFinalDisplay(int points)
   {
     levelText.text = "COMPLETO!";
-    pointsText.text = GetSpecialCharacters("Pontuação final: " + points.ToString());
+    pointsText.text = GetSpecialCharacters("Pontos finais: " + points.ToString());
     objectivesText.text = "";
     controlText.text = "";
   }
@@ -220,7 +220,7 @@ public class InformationManager : MonoBehaviour {
   void NewDisplay()
   {
     check.SetActive(false);
-    pointsText.text = GetSpecialCharacters("Pontuação: " + currentPoints.ToString());
+    pointsText.text = GetSpecialCharacters("Pontos: " + currentPoints.ToString());
     controlText.text = nextControlText;
     objectivesText.text = updatedDisplay;
   }
