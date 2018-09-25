@@ -11,6 +11,7 @@ public class PointSystem : MonoBehaviour {
   private int timeStep1;
   private int timeStep2;
   private int timeStep3;
+  private int tries; //at which try did the player chose the right answer for the multiple choice task (used in time)
 
   //variables to count moves
   private int moves;
@@ -30,10 +31,9 @@ public class PointSystem : MonoBehaviour {
     countingTimer = false;
     countingMoves = false;
     IM = GameObject.FindGameObjectWithTag("Board").transform.GetChild(0).GetComponent<InformationManager>();
-    timeStep1 = 5;
-    timeStep2 = 15;
-    timeStep3 = 30;
-
+    timeStep1 = 1;
+    timeStep2 = 2;
+    timeStep3 = 3;
   }
 	
 	// Update is called once per frame
@@ -107,6 +107,11 @@ public class PointSystem : MonoBehaviour {
     return min + ":" + sec;
   }
 
+  public void UpdateTries()
+  {
+    tries++;
+  }
+
   public int GetPoints()
   {
     return points;
@@ -116,6 +121,7 @@ public class PointSystem : MonoBehaviour {
   {
     if (countingMoves)
     {
+      Debug.Log("moves: " + moves);
       if (moves == movesStep1)
         points += 4;
       else if (moves > movesStep1 && moves <= movesStep2)
@@ -127,15 +133,16 @@ public class PointSystem : MonoBehaviour {
     }
     else if (countingTimer)
     {
-      if (sec <= timeStep1)
-        points += 4;
-      else if (sec > timeStep1 && sec <= timeStep2)
+      if (tries == timeStep1)
         points += 3;
-      else if (sec > timeStep2 && sec <= timeStep3)
+      else if (tries == timeStep2)
         points += 2;
-      else if (sec > timeStep3)
+      else if (tries == timeStep3)
         points += 1;
+
     }
+    Debug.Log("after setting: " + points);
+    tries = 0;
    }
   }
 

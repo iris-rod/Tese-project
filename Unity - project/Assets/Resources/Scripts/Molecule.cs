@@ -453,7 +453,6 @@ public class Molecule : MonoBehaviour
       bondType = -1;
       return;
     }
-    Debug.Log("define bond: " + bondType);
     //define the gameobject of the bond to instantiate
     switch (bondType) {
       case 1:
@@ -469,7 +468,6 @@ public class Molecule : MonoBehaviour
         bond = quadrupleBond;
         break;  
     }
-    GM.UpdatePointSystem();
   }
 
   public void UpdateBondType(int value)
@@ -531,6 +529,7 @@ public class Molecule : MonoBehaviour
       bondingAtoms = false;
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
       SoundEffectsManager.PlaySound("atomsBonded");
+      GM.UpdatePointSystem();
     } else {
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
       SoundEffectsManager.PlaySound("bondBreak");
@@ -551,11 +550,12 @@ public class Molecule : MonoBehaviour
       Destroy(gameObject);
       return;
     }
-
+    //if the number of children is different, it always changes at least in two numbers, because to lose an atom it means to lose a bond
     if(lastChildCount != transform.childCount)
     {
       MM.UpdateMolecule(transform.gameObject);
       lastChildCount = transform.childCount;
+      GM.UpdatePointSystem();
     }
 
     //update pivot position according to the positions of the existent atoms in the molecule

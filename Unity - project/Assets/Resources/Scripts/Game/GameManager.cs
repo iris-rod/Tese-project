@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
 
   private bool getAnswer;
   private bool correctMolLoaded;
+  private float startTimerWait = 2f;
 
   private string path = "";
 
@@ -130,7 +131,7 @@ public class GameManager : MonoBehaviour
         LM.SetLevelId(level);
         LM.SetObjective(objs);
         CheckNextObjectiveSetup(LM.GetNextObjective());
-        Invoke("NextLevelDisplay", 2f);
+        Invoke("NextLevelDisplay", 3f);
         newLevel = false;
         //log
         string[] info = new string[4] { level.ToString(), currentTask, moves, time };
@@ -156,9 +157,28 @@ public class GameManager : MonoBehaviour
     SetupNextObjective();
     //if the next task is multiple choice, the correct answer is fetched from the info to compare when the player choses an answer
     if (getAnswer)
+    {
+      Invoke("StartTimer", startTimerWait); //start timer after the information about points is removed
       correctAnswerMC = IM.GetCorrectAnswer();
+    }
   }
 
+  private void NewTaskDisplay()
+  {
+    IM.UpdateDisplay(LM.GetNextObjective(), false, PS.GetPoints());
+    if (getAnswer)
+    {
+      Invoke("StartTimer", startTimerWait); //start timer after the information about points is removed
+      correctAnswerMC = IM.GetCorrectAnswer();
+    }
+  }
+
+
+  private void StartTimer()
+  {
+    PS.StartTimer();
+  }
+  
   private void PlacePartialMolecule()
   {
     if (partialCreated && partialGO == null)
@@ -228,9 +248,11 @@ public class GameManager : MonoBehaviour
         if (pressedAnswer.ToLower().Trim() == correctAnswerMC.ToLower().Trim())
         {
           completed = true;
+          PS.UpdateTries();
           PS.StopTimer();
           RemoveAllMolecules();
         }
+        PS.UpdateTries();
         break;
     }
     return completed;
@@ -255,6 +277,7 @@ public class GameManager : MonoBehaviour
     {
       case "build":
         partialCreated = false;
+        getAnswer = false;
         SM.LevelChecking(false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
@@ -262,6 +285,7 @@ public class GameManager : MonoBehaviour
         break;
       case "complete":
         partialCreated = true;
+        getAnswer = false;
         SM.LevelChecking(false);
         partialName = GetPartialMolecule(objSplit[1].Trim());
         //partialGO = manager.LoadMolecule(partialName, false);
@@ -271,6 +295,7 @@ public class GameManager : MonoBehaviour
         break;
       case "transform":
         partialCreated = true;
+        getAnswer = false;
         SM.LevelChecking(false);
         partialName = objSplit[2].Trim();
         //partialGO = manager.LoadMolecule(objSplit[2].Trim(), false);
@@ -300,11 +325,9 @@ public class GameManager : MonoBehaviour
         partialName = objSplit[2].Trim();
         //partialGO = manager.LoadMolecule(partialName, false);
         SM.LevelChecking(false);
-        PS.StartTimer();
         APSingle.Disappear();
         APMultiple.Appear(); //make control panel with buttons appear
         getAnswer = true;
-        PS.StartTimer();
         break;
     }
   }
@@ -424,16 +447,18 @@ public class GameManager : MonoBehaviour
       string moves = PS.GetMoves().ToString();
       string time = PS.GetTime();
       CheckNextObjectiveSetup(LM.GetNextObjective());
-      SetupNextObjective();
+      SetupNextObjective(); //remove all previous molecules and set the needed one for the next task
 
       string[] info = new string[4] { level.ToString(), currentTask, moves, time };
       Logs.EndTask("teste", info);
+
+      Invoke("NewTaskDisplay", 3f);
     }
-    IM.UpdateDisplay(LM.GetNextObjective(),false, PS.GetPoints());
-    if (getAnswer)
-      correctAnswerMC = IM.GetCorrectAnswer();
+
+
     return levelComplete;
   }
+
 
   //when a molecule is loaded, there is a small interval to set the id (to not be the default 0) and then when the player presses
   //the check button, it will only check the bool to see if the mol was loaded

@@ -12,6 +12,7 @@ public class InformationManager : MonoBehaviour {
   private GameObject check;
   private string currentDisplay;
   private string updatedDisplay;
+  private string nextControlText;
   private int currentPoints;
 
   //multiple choice question
@@ -23,23 +24,27 @@ public class InformationManager : MonoBehaviour {
     pointsText = transform.GetChild(2).GetComponent<TextMeshPro>();
     controlText = transform.GetChild(1).GetComponent<TextMeshPro>();
     objectivesText = transform.GetChild(3).GetComponent<TextMeshPro>();
-    check = transform.GetChild(3).gameObject;
+    check = transform.GetChild(4).gameObject;
     check.SetActive(false);
 	}
 	
   public void UpdateDisplay(string newObj, bool newLevel, int points)
   {
+    currentPoints = points;
     if (!newLevel)
     {
       check.SetActive(true);
       updatedDisplay = GetDisplayText(newObj);
-      currentPoints = points;
+      nextControlText = controlText.text;
       UpdatePoints();
-      Invoke("NewDisplay", 1f);
+      Invoke("NewDisplay", 3f);
     }
     else
     {
-      objectivesText.text = GetDisplayText(newObj).ToString();
+      updatedDisplay = GetDisplayText(newObj).ToString();
+      nextControlText = controlText.text;
+      UpdatePoints();
+      Invoke("NewDisplay", 3f);
     }
   }
 
@@ -224,6 +229,7 @@ public class InformationManager : MonoBehaviour {
     check.SetActive(false);
     objectivesText.text = updatedDisplay;
     pointsText.text = "Pontuação: " + currentPoints.ToString();
+    controlText.text = nextControlText;
   }
 
 
