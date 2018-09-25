@@ -28,24 +28,13 @@ public class InformationManager : MonoBehaviour {
     check.SetActive(false);
 	}
 	
-  public void UpdateDisplay(string newObj, bool newLevel, int points)
+  public void UpdateDisplay(string newObj, int points)
   {
     currentPoints = points;
-    if (!newLevel)
-    {
-      check.SetActive(true);
-      updatedDisplay = GetDisplayText(newObj);
-      nextControlText = controlText.text;
-      UpdatePoints();
-      Invoke("NewDisplay", 3f);
-    }
-    else
-    {
-      updatedDisplay = GetDisplayText(newObj).ToString();
-      nextControlText = controlText.text;
-      UpdatePoints();
-      Invoke("NewDisplay", 3f);
-    }
+    check.SetActive(true);
+    updatedDisplay = GetDisplayText(newObj);
+    PointsDisplay();
+    Invoke("NewDisplay", 3f);
   }
 
   public void UpdateLevel(int level)
@@ -56,6 +45,16 @@ public class InformationManager : MonoBehaviour {
   public string GetCorrectAnswer()
   {
     return correctAnswer;
+  }
+
+  public void StartTimer()
+  {
+    nextControlText = "Tempo: " + 0 + ":" + 0;
+  }
+
+  public void StartMoves()
+  {
+    nextControlText = "Movimentos: " + 0;
   }
 
   public void UpdateTimer(float min, float sec)
@@ -71,14 +70,8 @@ public class InformationManager : MonoBehaviour {
   public void SetFinalDisplay(int points)
   {
     levelText.text = "COMPLETO!";
-    pointsText.text = "Pontuação: " + points.ToString();
-  }
-
-  private void UpdatePoints()
-  {
-    int lastPoints = int.Parse(pointsText.text.Split(':')[1].Trim());
-    int diff = currentPoints - lastPoints;
-    pointsText.text = "Recebeste " + diff.ToString() + " pontos!";
+    pointsText.text = GetSpecialCharacters("Pontuação final: " + points.ToString());
+    objectivesText.text = "";
     controlText.text = "";
   }
 
@@ -227,10 +220,20 @@ public class InformationManager : MonoBehaviour {
   void NewDisplay()
   {
     check.SetActive(false);
-    objectivesText.text = updatedDisplay;
-    pointsText.text = "Pontuação: " + currentPoints.ToString();
+    pointsText.text = GetSpecialCharacters("Pontuação: " + currentPoints.ToString());
     controlText.text = nextControlText;
+    objectivesText.text = updatedDisplay;
   }
 
+  private void PointsDisplay()
+  {
+    int lastPoints = int.Parse(pointsText.text.Split(':')[1].Trim());
+    int diff = currentPoints - lastPoints;
+    if(diff == 1)
+      pointsText.text = "Recebeste " + diff.ToString() + " ponto!";
+    else
+      pointsText.text = "Recebeste " + diff.ToString() + " pontos!";
+    controlText.text = "";
+  }
 
 }

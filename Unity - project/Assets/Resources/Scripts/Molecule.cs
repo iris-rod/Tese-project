@@ -200,7 +200,10 @@ public class Molecule : MonoBehaviour
   {
     SetInvisibleBond(numberOfTaps);
     if (!atom1.GetComponent<Atom>().IsBonding() && !atom2.GetComponent<Atom>().IsBonding())
+    {
       CreateBondTaps(numberOfTaps);
+      GM.UpdatePointSystem();
+    }
   }
 
   //creates the bond according to the distance to guide the user
@@ -241,6 +244,7 @@ public class Molecule : MonoBehaviour
       newBond.AddComponent(typeof(FeedbackBondController));
       newBond.GetComponent<FeedbackBondController>().SetAtoms(atom1, atom2, bondNumber);
       newBond.transform.localScale += new Vector3(bondScale, bondScale, 0);
+      newBond.GetComponent<BondController>().temp = true;
       lastInviBond = newBond;
       lastInviBondType = bondNumber;
     }
@@ -529,7 +533,6 @@ public class Molecule : MonoBehaviour
       bondingAtoms = false;
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
       SoundEffectsManager.PlaySound("atomsBonded");
-      GM.UpdatePointSystem();
     } else {
       lastInviBond.GetComponent<FeedbackBondController> ().DestroyBond (atom1, atom2);
       SoundEffectsManager.PlaySound("bondBreak");
@@ -553,9 +556,9 @@ public class Molecule : MonoBehaviour
     //if the number of children is different, it always changes at least in two numbers, because to lose an atom it means to lose a bond
     if(lastChildCount != transform.childCount)
     {
+
       MM.UpdateMolecule(transform.gameObject);
       lastChildCount = transform.childCount;
-      GM.UpdatePointSystem();
     }
 
     //update pivot position according to the positions of the existent atoms in the molecule

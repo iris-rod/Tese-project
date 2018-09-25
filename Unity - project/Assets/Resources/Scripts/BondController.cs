@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BondController : MonoBehaviour
 {
+
   Transform ballA; // drag sphereA here
   Transform ballB; // drag sphereB here
   Vector3 scale0;// initial localScale
@@ -17,15 +18,18 @@ public class BondController : MonoBehaviour
   private float doubleBond = 0.02f;
   private float tripleBond = 0.03f;
   private Material highlightGrasp;
+  private GameManager GM;
 
   private int bondType;
   public float distanceToDetach;
   public float distance; //At which they stick together
 
   private bool AMoved, BMoved;
+  public bool temp;
 
   void Start ()
   {
+    GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
     switch (bondType) {
     case 1:
       distanceToDetach = 0.26f;
@@ -103,7 +107,8 @@ public class BondController : MonoBehaviour
         ballA.GetComponent<Atom>().RemoveBond(bondType, bondId);
         SoundEffectsManager.PlaySound("bondBreak");
         Invoke("StopSound", 1.2f);
-        
+        if(!temp)
+         GM.UpdatePointSystem();
         Destroy(transform.gameObject);
       }
     }

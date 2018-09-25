@@ -48,7 +48,7 @@ public class PointSystem : MonoBehaviour {
     }
 	}
 
-  private void SetMinimumMoves(int min)
+  public void SetMinimumMoves(int min)
   {
     minimumMoves = min;
     movesStep1 = minimumMoves;
@@ -60,14 +60,14 @@ public class PointSystem : MonoBehaviour {
   {
     initTime = Time.realtimeSinceStartup;
     countingTimer = true;
-    IM.UpdateTimer(0, 0);
+    IM.StartTimer();
   }
 
   public void StartMovesCounter()
   {
     moves = 0;
     countingMoves = true;
-    IM.UpdateMoves(moves);
+    IM.StartMoves();
   }
 
   public void StopTimer()
@@ -121,7 +121,6 @@ public class PointSystem : MonoBehaviour {
   {
     if (countingMoves)
     {
-      Debug.Log("moves: " + moves);
       if (moves == movesStep1)
         points += 4;
       else if (moves > movesStep1 && moves <= movesStep2)
@@ -141,7 +140,6 @@ public class PointSystem : MonoBehaviour {
         points += 1;
 
     }
-    Debug.Log("after setting: " + points);
     tries = 0;
    }
   }

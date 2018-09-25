@@ -157,6 +157,7 @@ public class Logs : MonoBehaviour {
     string toWrite = "";
     toWrite += "Moves: " + info[2] + "\n";
     toWrite += "Time: " + info[3] + "\n";
+    toWrite += "Points " + info[4] + "\n";
     toWrite += "---------------------------------------" + "\n";
     toWrite += "Level: " + info[0]+"\n";
     toWrite += "Task: " + info[1] + "\n";
@@ -186,7 +187,8 @@ public class Logs : MonoBehaviour {
       StreamWriter writer = new StreamWriter(finalPath, true);
       toWrite += "Moves: " + info[2] + "\n";
       toWrite += "Time: " + info[3] + "\n";
-      toWrite += "Task " + info[1] + "\n";
+    toWrite += "Points " + info[4] + "\n";
+    toWrite += "Task " + info[1] + "\n";
     //Debug.Log("end task: " + toWrite);
     writer.WriteLine(toWrite);
       writer.Close();

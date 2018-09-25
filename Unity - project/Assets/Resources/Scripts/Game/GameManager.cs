@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
 
   private bool getAnswer;
   private bool correctMolLoaded;
-  private float startTimerWait = 2f;
+  private float startTimerWait = 3f;
 
   private string path = "";
 
@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
         Invoke("NextLevelDisplay", 3f);
         newLevel = false;
         //log
-        string[] info = new string[4] { level.ToString(), currentTask, moves, time };
+        string[] info = new string[5] { level.ToString(), currentTask, moves, time, PS.GetPoints().ToString() };
         Logs.EndLevel("teste", info);
       }
       else
@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour
         IM.SetFinalDisplay(PS.GetPoints());
         string moves = PS.GetMoves().ToString();
         string time = PS.GetTime();
-        string[] info = new string[4] { level.ToString(), currentTask, moves, time };
+        string[] info = new string[5] { level.ToString(), currentTask, moves, time, PS.GetPoints().ToString() };
         Logs.EndLevel("teste", info);
         newLevel = false;
       }
@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour
   void NextLevelDisplay()
   {
     IM.UpdateLevel(LM.GetLevel());
-    IM.UpdateDisplay(LM.GetNextObjective(),true, PS.GetPoints());
+    IM.UpdateDisplay(LM.GetNextObjective(), PS.GetPoints()); //true
     SetupNextObjective();
     //if the next task is multiple choice, the correct answer is fetched from the info to compare when the player choses an answer
     if (getAnswer)
@@ -165,7 +165,7 @@ public class GameManager : MonoBehaviour
 
   private void NewTaskDisplay()
   {
-    IM.UpdateDisplay(LM.GetNextObjective(), false, PS.GetPoints());
+    IM.UpdateDisplay(LM.GetNextObjective(), PS.GetPoints()); //false
     if (getAnswer)
     {
       Invoke("StartTimer", startTimerWait); //start timer after the information about points is removed
@@ -282,12 +282,14 @@ public class GameManager : MonoBehaviour
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
         PS.StartMovesCounter();
+        CheckMininumMoves(objSplit[1].Trim());
         break;
       case "complete":
         partialCreated = true;
         getAnswer = false;
         SM.LevelChecking(false);
         partialName = GetPartialMolecule(objSplit[1].Trim());
+        CheckMininumMoves(objSplit[1].Trim());
         //partialGO = manager.LoadMolecule(partialName, false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
@@ -301,6 +303,7 @@ public class GameManager : MonoBehaviour
         //partialGO = manager.LoadMolecule(objSplit[2].Trim(), false);
         APMultiple.Disappear();
         APSingle.Appear(); //make control panel with buttons appear
+        CheckMininumMoves(objSplit[1].Trim());
         PS.StartMovesCounter();
         break;
       case "load":
@@ -330,6 +333,23 @@ public class GameManager : MonoBehaviour
         getAnswer = true;
         break;
     }
+  }
+
+  private void CheckMininumMoves(string molecule)
+  {
+    if (molecule == "CH4")
+      PS.SetMinimumMoves(9);
+    else if (molecule == "dimetilbutanoEstrutura")
+      PS.SetMinimumMoves(24);
+    else if (molecule == "CH3COOHEstrutura")
+      PS.SetMinimumMoves(15);
+    else if (molecule == "alcool")
+      PS.SetMinimumMoves(6);
+    else if (molecule == "haloalcano")
+      PS.SetMinimumMoves(6);
+    else if (molecule == "3 - metilpentano")
+      PS.SetMinimumMoves(16);
+    
   }
 
   //for tasks that require a partial molecule to be displayed, that partial has to be loaded
@@ -449,7 +469,7 @@ public class GameManager : MonoBehaviour
       CheckNextObjectiveSetup(LM.GetNextObjective());
       SetupNextObjective(); //remove all previous molecules and set the needed one for the next task
 
-      string[] info = new string[4] { level.ToString(), currentTask, moves, time };
+      string[] info = new string[5] { level.ToString(), currentTask, moves, time, PS.GetPoints().ToString() };
       Logs.EndTask("teste", info);
 
       Invoke("NewTaskDisplay", 3f);
