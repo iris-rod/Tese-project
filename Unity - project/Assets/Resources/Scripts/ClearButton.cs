@@ -47,6 +47,12 @@ public class ClearButton : MonoBehaviour {
             }
             cleared = true;
             MM.Clear();
+            GameObject[] bonds = GameObject.FindGameObjectsWithTag("Bond");
+            for (int k = 0; k < bonds.Length; k++)
+            {
+              if (bonds[k].transform.parent == null)
+                Destroy(bonds[k]);
+            }
           }
           else if (obj.ToLower() == "atom")
           {
@@ -75,6 +81,7 @@ public class ClearButton : MonoBehaviour {
       }
     }
   }
+
 
   void ResetTask()
   {

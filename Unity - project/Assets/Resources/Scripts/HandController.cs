@@ -42,10 +42,12 @@ public class HandController : MonoBehaviour
   private bool rightHandGrabbingPivot;
 
   private string Scene;
+  private bool canClean;
 
   // Use this for initialization
   void Start()
   {
+    canClean = true;
     lastHandRight = false;
     canDetect = true;
     interval = 0.90f;
@@ -101,6 +103,7 @@ public class HandController : MonoBehaviour
         rightHand = leapHand;
       }
     }
+
   }
 
   void Update()
@@ -140,11 +143,28 @@ public class HandController : MonoBehaviour
         TutorialManager.SetGrabbedAtoms(grabbedAtoms);
         GrabbedAtoms = grabbedAtoms;
       }
+      if (canClean)
+      {
+        //Invoke("CleanScene", 10f);
+        canClean = false;
+      }
     }
 
     
   }
   
+  void CleanScene()
+  {
+    GameObject[] bonds = GameObject.FindGameObjectsWithTag("Bond");
+    for(int i = 0; i < bonds.Length; i++)
+    {
+      Debug.Log(bonds[i].transform.parent);
+      if (bonds[i].transform.parent == null)
+        Destroy(bonds[i]);
+    }
+    canClean = true;
+  }
+
   void UpdatePivots ()
   {
   

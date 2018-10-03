@@ -44,7 +44,6 @@ public static class SoundEffectsManager
     {
       case "bondBreak":
         sound = BondBreak;
-        
         break;
       case "atomsTouch":
         sound = AtomsTouch;
@@ -54,6 +53,7 @@ public static class SoundEffectsManager
         break;
       case "atomsBonded":
         sound = AtomsBonded;
+        sourceAtoms.time = 1f;
         break;
       case "button":
         sound = DefaultButton;
@@ -81,5 +81,10 @@ public static class SoundEffectsManager
   public static void StopAudio()
   {
     sourceAtoms.Stop();
+  }
+
+  public static void SetLoop(bool value)
+  {
+    sourceAtoms.loop = value;
   }
 }

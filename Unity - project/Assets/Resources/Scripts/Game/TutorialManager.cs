@@ -11,22 +11,26 @@ public static class TutorialManager {
   private static bool bondCreated, bondBroken;
   private static bool pivotGrabbed;
   private static bool moleculeRotated;
+  private static bool final;
   private static int atomsGrabbed;
 
   private static Dictionary<int, List<string>> phasesObjectives;
   private static Dictionary<int, List<string>> phasesObjectivesBoard;
   private static BlackBoardManager BBM;
   private static HandController HC;
+  private static AnswerPanel APSingle;
 
   // Use this for initialization
   public static void Start () {
     BBM = GameObject.Find("FrontBoard").GetComponent<BlackBoardManager>();
     HC = GameObject.Find("LeapHandController").GetComponent<HandController>();
 
+
     atomsTouched = false;
     moleculeRotated = false;
     pivotGrabbed = false;
     bondBroken = false;
+    final = true;
     atomsGrabbed = 0;
     phase = 1;
     objective = 0;
@@ -47,7 +51,6 @@ public static class TutorialManager {
   {
     string obj = phasesObjectives[phase][objective];
     string[] objSplit = obj.Split(' ');
-    Debug.Log("grabbed: " + atomsGrabbed);
     switch (objSplit[0])
     {
       case "grab":
@@ -108,10 +111,13 @@ public static class TutorialManager {
     if (moleculeRotated) moleculeRotated = false;
     if (bondBroken) bondBroken = false;
 
-    if (phase > phasesObjectives.Count) {
+    if (phase > phasesObjectives.Count && final) {
 
       string space = "\n" + "\n" + "\n";
       BBM.UpdateText(space + "Parabéns, terminaste o tutorial com sucesso!" + "\n" + "Carrega no botão que está em cima da mesa no lado esquerdo para voltares ao menu principal");
+      APSingle = GameObject.Find("ControlPanelAnswer").GetComponent<AnswerPanel>();
+      APSingle.Appear();
+      final = false;
     }
     else
       UpdateBoard();
@@ -121,12 +127,12 @@ public static class TutorialManager {
   private static void UpdateBoard()
   {
     string space = "\n" + "\n" + "\n";
-    string title = "Criar molécula " + (objective + 1) + "\\" + phasesObjectivesBoard[phase].Count ;
+    string title = "Criar molécula   " + (objective + 1) + "/" + phasesObjectivesBoard[phase].Count ;
     if (phase == 2)
-      title = "Rodar molécula";
+      title = "Rodar molécula" + (objective + 1) + "/" + phasesObjectivesBoard[phase].Count;
     else if (phase == 3)
-      title = "Quebrar ligação";
-    BBM.UpdateText(space + title + "\n"+ (objective + 1) + " - " + phasesObjectivesBoard[phase][objective]);
+      title = "Quebrar ligação" + (objective + 1) + "/" + phasesObjectivesBoard[phase].Count;
+    BBM.UpdateText(space + title+ "\n"+ (objective + 1) + " - " + phasesObjectivesBoard[phase][objective]);
   }
 
   public static void SetAtomsTouched(bool touched)

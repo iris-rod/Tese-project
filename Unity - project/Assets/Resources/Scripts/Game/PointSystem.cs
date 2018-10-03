@@ -8,14 +8,16 @@ public class PointSystem : MonoBehaviour {
   private int movesStep1;
   private int movesStep2;
   private int movesStep3;
-  private int timeStep1;
-  private int timeStep2;
-  private int timeStep3;
+  private int answerStep1;
+  private int answerStep2;
+  private int answerStep3;
   private int tries; //at which try did the player chose the right answer for the multiple choice task (used in time)
 
   //variables to count moves
   private int moves;
+  private int wrongAnswers;
   private bool countingMoves;
+  private bool countingAnswers;
   private int minimumMoves;
 
   //variables to count time
@@ -31,9 +33,9 @@ public class PointSystem : MonoBehaviour {
     countingTimer = false;
     countingMoves = false;
     IM = GameObject.FindGameObjectWithTag("Board").transform.GetChild(0).GetComponent<InformationManager>();
-    timeStep1 = 1;
-    timeStep2 = 2;
-    timeStep3 = 3;
+    answerStep1 = 1;
+    answerStep2 = 2;
+    answerStep3 = 3;
   }
 	
 	// Update is called once per frame
@@ -63,6 +65,13 @@ public class PointSystem : MonoBehaviour {
     IM.StartTimer();
   }
 
+  public void StartAnswersCounter()
+  {
+    wrongAnswers = 0;
+    countingAnswers = true;
+    IM.StartAnswersCounter();
+  }
+
   public void StartMovesCounter()
   {
     moves = 0;
@@ -82,6 +91,12 @@ public class PointSystem : MonoBehaviour {
     countingMoves = false;
   }
 
+  public void StopAnswersCounter()
+  {
+    SetPoints();
+    countingAnswers = false;
+  }
+
   public void UpdateMoves()
   {
     if (countingMoves)
@@ -91,15 +106,30 @@ public class PointSystem : MonoBehaviour {
     }
   }
 
+  public void UpdateAnswers()
+  {
+    if (countingAnswers)
+    {
+      wrongAnswers++;
+      IM.UpdateAnswersCounter(wrongAnswers);
+    }
+  }
+
   public void StopAll()
   {
     StopMovesCounter();
     StopTimer();
+    StopAnswersCounter();
   }
 
   public int GetMoves()
   {
     return moves;
+  }
+
+  public int GetWrongAnswers()
+  {
+    return wrongAnswers;
   }
 
   public string GetTime()
@@ -130,17 +160,17 @@ public class PointSystem : MonoBehaviour {
       else if (moves > movesStep3)
         points += 1;
     }
-    else if (countingTimer)
+    else if (countingAnswers)
     {
-      if (tries == timeStep1)
+      if (wrongAnswers <= answerStep1)
         points += 3;
-      else if (tries == timeStep2)
+      else if (wrongAnswers == answerStep2)
         points += 2;
-      else if (tries == timeStep3)
+      else if (wrongAnswers >= answerStep3)
         points += 1;
 
     }
-    tries = 0;
+    //wrongAnswers = 0;
    }
   }
 

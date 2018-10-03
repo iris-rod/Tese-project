@@ -41,10 +41,14 @@ public class MainMenuManager : MonoBehaviour {
   public void ChangeToMainMenu()
   {
     SceneManager.LoadScene("MainMenu");
-    GameManager.GetComponent<GameManager>().SetLevels("");
-    GameManager.SetActive(false);
-    GameObject.Find("LeapHandController").GetComponent<HandController>().SetScene("MainMenu");
-    FrontBoard.GetComponent<BlackBoardManager>().SetScene("MainMenu");
+    Destroy(transform.gameObject);
+    Destroy(GameObject.FindGameObjectWithTag("headset"));
+    Destroy(GameManager);
+    Destroy(FrontBoard);
+    Destroy(GameObject.Find("MenuBoard_simple"));
+    Destroy(transform.gameObject);
+    //GameObject.Find("LeapHandController").GetComponent<HandController>().SetScene("MainMenu");
+    //FrontBoard.GetComponent<BlackBoardManager>().SetScene("MainMenu");
   }
 
   void SetUpScene()

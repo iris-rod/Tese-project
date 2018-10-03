@@ -279,8 +279,12 @@ public class Molecule : MonoBehaviour
         }
         else if (rotationType == 3)
         {
+          if (!isRotating)
+          {
+            SoundEffectsManager.PlaySound("rotation");
+            SoundEffectsManager.SetLoop(true);
+          }
           isRotating = true;
-          SoundEffectsManager.PlaySound("rotation");
           //UpdateValueRotation();
           child.GetComponent<Atom>().SetRotating(true);
           
@@ -292,6 +296,7 @@ public class Molecule : MonoBehaviour
           child.GetComponent<Atom> ().SetRotating (false);
           child.RotateAround(center, axis, 0);
           isRotating = false;
+          SoundEffectsManager.SetLoop(false);
         }
       }
     }
@@ -480,12 +485,14 @@ public class Molecule : MonoBehaviour
     {
       numberOfTaps += value;
       SoundEffectsManager.PlaySound("atomsTouch");
-      if (numberOfTaps > 4)
+      if (numberOfTaps > 3)
         numberOfTaps = 1;
       canUpdateTap = false;
       Invoke("ResetTap",.3f);
     }
   }
+
+
 
   private void ResetTap()
   {
@@ -519,6 +526,8 @@ public class Molecule : MonoBehaviour
     }
   }
 
+
+
   private void CreateBondTaps (int taps)
   {
     DefineBondTypeTaps (atom1, atom2, taps);
@@ -538,11 +547,21 @@ public class Molecule : MonoBehaviour
       SoundEffectsManager.PlaySound("bondBreak");
       bondingAtoms = false;
     }
+    RemoveAllBondsNotAttached();
     bondType = 0;
     numberOfTaps = 0;
     lastInviBondType = 0;
   }
 
+  void RemoveAllBondsNotAttached()
+  {
+    GameObject[] bonds = GameObject.FindGameObjectsWithTag("Bond");
+    for (int k = 0; k < bonds.Length; k++)
+    {
+      if (bonds[k].transform.parent == null)
+        Destroy(bonds[k]);
+    }
+  }
 
   //Destroy the molecule once there is no atoms bonded
   void UpdateStructure()

@@ -8,7 +8,7 @@ public class CompleteLevelButton : MonoBehaviour {
   private GameManager GM;
   private MainMenuManager MM;
   private Animator animator;
-  private bool canPush;
+  private bool canPush, canPlay;
 
   private string Scene;
 
@@ -18,6 +18,7 @@ public class CompleteLevelButton : MonoBehaviour {
     MM = GameObject.Find("MainMenuManager").GetComponent<MainMenuManager>();
     animator = GetComponent<Animator>();
     canPush=true;
+    canPlay = true;
   }
 	
 	// Update is called once per frame
@@ -41,7 +42,11 @@ public class CompleteLevelButton : MonoBehaviour {
           canPush = false;
           animator.SetBool("pushed", true);
           Invoke("Reset", .5f);
-
+          if (canPlay)
+          {
+            SoundEffectsManager.PlaySound("button");
+            canPlay = false;
+          }
 
 
           GM.UpdateLevel();
@@ -63,6 +68,7 @@ public class CompleteLevelButton : MonoBehaviour {
   void Reset()
   {
     canPush = true;
+    canPlay = true;
     animator.SetBool("pushed", false);
   }
 

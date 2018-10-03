@@ -66,6 +66,17 @@ public class Atom : MonoBehaviour {
     else if(type == "Oxygen") radiusCollision = 0.048f;
   }
 
+  public void StopSound()
+  {
+
+    Invoke("StopBondBreakSound", 1.5f);
+  }
+
+  private void StopBondBreakSound()
+  {
+    SoundEffectsManager.StopAudio();
+  }
+
   // Update is called once per frame
   void Update ()
   {
@@ -169,10 +180,10 @@ public class Atom : MonoBehaviour {
   {
     transform.RotateAround(point, axis, angle);    
   }
-
+  
   void Rotate()
   {
-    if(totalDist >= 60)
+    if(totalDist >= 20)
       TutorialManager.SetMoleculeRotated(true);
     grabbedPos = transform.parent.GetComponent<Molecule>().GetGrabbedAtom().position;
     float dist = Vector3.Distance(grabbedPos, transform.position);
@@ -329,6 +340,7 @@ public class Atom : MonoBehaviour {
 
   void StickToMolecule (GameObject obj)
   {
+    GameObject otherMolecule = null;
     if (obj.transform.parent == null && transform.parent == null) {
         Vector3 platePos = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
         GameObject mole = Instantiate (molecule, platePos, transform.rotation);
@@ -340,12 +352,15 @@ public class Atom : MonoBehaviour {
         } else if (obj.transform.parent == null) {
           obj.transform.parent = transform.parent;
         }
-        else if(transform.parent != null && obj.transform.parent != null)
-        {
-         //switch all to the same molecule
-        }
-        transform.parent.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject, false, 0);
+      if (transform.parent != null && obj.transform.parent != null)
+      {
+        //SplitMolecule.JoinMolecules(transform.parent.gameObject, otherMolecule);
       }
+      transform.parent.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject, false, 0);
+      //if (otherMolecule != null) { }
+
+
+    }
   }
 
 

@@ -47,4 +47,22 @@ public static class SplitMolecule  {
     }
   }
 
+  public static void JoinMolecules(GameObject moleculeA, GameObject moleculeB)
+  {
+    for(int i = 0; i < moleculeB.transform.childCount; i++)
+    {
+      Transform child = moleculeB.transform.GetChild(i);
+      Debug.Log(child.tag);
+      if (child.CompareTag("Bond"))
+      {
+        Debug.Log("here");
+        moleculeA.GetComponent<Molecule>().AddExistingBond(child.gameObject);
+      }
+    }
+
+    //GameObject.Destroy(moleculeA);
+  }
+
+
+
 }

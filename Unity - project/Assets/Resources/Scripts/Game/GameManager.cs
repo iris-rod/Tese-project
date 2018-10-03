@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
 
   //teste
   private string currentTask;
+  private string fileName = "teste19";
 
   // Use this for initialization
   void Start()
@@ -64,7 +65,7 @@ public class GameManager : MonoBehaviour
     restore = false;
     level = 1;
     string[] info = new string[2] {"1","multiple choice" };
-    Logs.BeginFile("teste", info);
+    Logs.BeginFile(fileName, info);
     SoundEffectsManager.SetUp();
   }
 
@@ -98,6 +99,8 @@ public class GameManager : MonoBehaviour
       restore = false;
     }
 
+    
+
   }
 
   private void SetLevel()
@@ -128,22 +131,24 @@ public class GameManager : MonoBehaviour
       {
         string moves = PS.GetMoves().ToString();
         string time = PS.GetTime();
+        string wrongAnswers = PS.GetWrongAnswers().ToString();
         LM.SetLevelId(level);
         LM.SetObjective(objs);
         CheckNextObjectiveSetup(LM.GetNextObjective());
         Invoke("NextLevelDisplay", 3f);
         newLevel = false;
         //log
-        string[] info = new string[5] { level.ToString(), currentTask, moves, time, PS.GetPoints().ToString() };
-        Logs.EndLevel("teste", info);
+        string[] info = new string[6] { level.ToString(), currentTask, moves, time, wrongAnswers, PS.GetPoints().ToString() };
+        Logs.EndLevel(fileName, info);
       }
       else
       {
         IM.SetFinalDisplay(PS.GetPoints());
         string moves = PS.GetMoves().ToString();
         string time = PS.GetTime();
-        string[] info = new string[5] { level.ToString(), currentTask, moves, time, PS.GetPoints().ToString() };
-        Logs.EndLevel("teste", info);
+        string wrongAnswers = PS.GetWrongAnswers().ToString();
+        string[] info = new string[6] { level.ToString(), currentTask, moves, time, wrongAnswers, PS.GetPoints().ToString() };
+        Logs.EndLevel(fileName, info);
         newLevel = false;
       }
     }
@@ -158,7 +163,8 @@ public class GameManager : MonoBehaviour
     //if the next task is multiple choice, the correct answer is fetched from the info to compare when the player choses an answer
     if (getAnswer)
     {
-      Invoke("StartTimer", startTimerWait); //start timer after the information about points is removed
+      Debug.Log("here");
+      //Invoke("StartAnswersCounter", startTimerWait); //start timer after the information about points is removed
       correctAnswerMC = IM.GetCorrectAnswer();
     }
   }
@@ -168,7 +174,8 @@ public class GameManager : MonoBehaviour
     IM.UpdateDisplay(LM.GetNextObjective(), PS.GetPoints()); //false
     if (getAnswer)
     {
-      Invoke("StartTimer", startTimerWait); //start timer after the information about points is removed
+      Debug.Log("here");
+      //Invoke("StartAnswersCounter", startTimerWait); //start timer after the information about points is removed
       correctAnswerMC = IM.GetCorrectAnswer();
     }
   }
@@ -178,7 +185,7 @@ public class GameManager : MonoBehaviour
   {
     PS.StartTimer();
   }
-  
+
   private void PlacePartialMolecule()
   {
     if (partialCreated && partialGO == null)
@@ -245,14 +252,16 @@ public class GameManager : MonoBehaviour
         }
         break;
       case "multiple choice":
+        Debug.Log(pressedAnswer);
+        Debug.Log(correctAnswerMC);
         if (pressedAnswer.ToLower().Trim() == correctAnswerMC.ToLower().Trim())
         {
           completed = true;
-          PS.UpdateTries();
-          PS.StopTimer();
+          PS.UpdateAnswers();
+          PS.StopAnswersCounter();
           RemoveAllMolecules();
         }
-        PS.UpdateTries();
+        PS.UpdateAnswers();
         break;
     }
     return completed;
@@ -330,6 +339,7 @@ public class GameManager : MonoBehaviour
         SM.LevelChecking(false);
         APSingle.Disappear();
         APMultiple.Appear(); //make control panel with buttons appear
+        PS.StartAnswersCounter();
         getAnswer = true;
         break;
     }
@@ -347,8 +357,10 @@ public class GameManager : MonoBehaviour
       PS.SetMinimumMoves(6);
     else if (molecule == "haloalcano")
       PS.SetMinimumMoves(6);
-    else if (molecule == "3 - metilpentano")
+    else if (molecule == "3-metilpentano")
+    {
       PS.SetMinimumMoves(16);
+    }
     
   }
 
@@ -466,11 +478,12 @@ public class GameManager : MonoBehaviour
     {
       string moves = PS.GetMoves().ToString();
       string time = PS.GetTime();
+      string wrongAnswers = PS.GetWrongAnswers().ToString();
       CheckNextObjectiveSetup(LM.GetNextObjective());
       SetupNextObjective(); //remove all previous molecules and set the needed one for the next task
 
-      string[] info = new string[5] { level.ToString(), currentTask, moves, time, PS.GetPoints().ToString() };
-      Logs.EndTask("teste", info);
+      string[] info = new string[6] { level.ToString(), currentTask, moves, time, wrongAnswers, PS.GetPoints().ToString() };
+      Logs.EndTask(fileName, info);
 
       Invoke("NewTaskDisplay", 3f);
     }

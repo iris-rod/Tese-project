@@ -6,7 +6,7 @@ public class AnswerButton : MonoBehaviour {
   private Animator animator;
 
   private GameManager GM;
-  private bool panelIsActive, canPush;
+  private bool panelIsActive, canPush, canPlay;
 
   public string Button;
 
@@ -17,6 +17,7 @@ public class AnswerButton : MonoBehaviour {
     GM = GameObject.Find("GameManager").GetComponent<GameManager>();
     panelIsActive = transform.parent.transform.parent.GetComponent<AnswerPanel>().IsPanelActive();
     canPush = true;
+    canPlay = true;
   }
 
   // Update is called once per frame
@@ -40,6 +41,11 @@ public class AnswerButton : MonoBehaviour {
           GM.SetPressedAnswer(Button);
           GM.UpdateLevel();
           animator.SetBool("pushed", true);
+          if (canPlay)
+          {
+            SoundEffectsManager.PlaySound("button");
+            canPlay = false;
+          }
           Invoke("Reset", 1f);
           break;
         }
@@ -50,6 +56,7 @@ public class AnswerButton : MonoBehaviour {
   void Reset()
   {
     canPush = true;
+    canPlay = true;
     animator.SetBool("pushed", false);
   }
 }

@@ -1,3 +1,5 @@
+Level: 1
+Task: multiple choice
 
 Level: 1
 Task: multiple choice
@@ -9,49 +11,49 @@ Points 0
 Level: 1
 Task: build
 
-Moves: 17
+Moves: 11
 Time: 0:0
-Points 1
+Points 3
 Task multiple choice
 
-Moves: 17
-Time: 0:7
-Points 3
+Moves: 11
+Time: 0:57
+Points 4
 ---------------------------------------
 Level: 2
 Task: complete
 
 Moves: 24
-Time: 0:7
-Points 7
+Time: 0:57
+Points 8
 Task build
 
-Moves: 25
-Time: 0:7
-Points 8
+Moves: 17
+Time: 0:57
+Points 11
 ---------------------------------------
 Level: 3
 Task: complete
 
-Moves: 8
-Time: 0:7
+Moves: 4
+Time: 0:57
 Points 11
 Task transform
 
-Moves: 5
-Time: 0:7
+Moves: 4
+Time: 0:57
 Points 11
 ---------------------------------------
 Level: 4
 Task: transform
 
-Moves: 15
-Time: 0:7
+Moves: 40
+Time: 0:57
 Points 12
 Task multiple choice
 
-Moves: 15
-Time: 0:2
+Moves: 40
+Time: 0:5
 Points 15
 ---------------------------------------
 Level: 5

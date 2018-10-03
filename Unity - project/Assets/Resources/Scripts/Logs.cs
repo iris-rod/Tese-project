@@ -155,9 +155,10 @@ public class Logs : MonoBehaviour {
     //Write some text to the test.txt file
     StreamWriter writer = new StreamWriter(finalPath, true);
     string toWrite = "";
+    toWrite += "Attemps: " + info[4] + "\n";
     toWrite += "Moves: " + info[2] + "\n";
     toWrite += "Time: " + info[3] + "\n";
-    toWrite += "Points " + info[4] + "\n";
+    toWrite += "Points " + info[5] + "\n";
     toWrite += "---------------------------------------" + "\n";
     toWrite += "Level: " + info[0]+"\n";
     toWrite += "Task: " + info[1] + "\n";
@@ -185,9 +186,10 @@ public class Logs : MonoBehaviour {
     string toWrite = "";
 
       StreamWriter writer = new StreamWriter(finalPath, true);
-      toWrite += "Moves: " + info[2] + "\n";
+    toWrite += "Attemps: " + info[4] + "\n";
+    toWrite += "Moves: " + info[2] + "\n";
       toWrite += "Time: " + info[3] + "\n";
-    toWrite += "Points " + info[4] + "\n";
+    toWrite += "Points " + info[5] + "\n";
     toWrite += "Task " + info[1] + "\n";
     //Debug.Log("end task: " + toWrite);
     writer.WriteLine(toWrite);

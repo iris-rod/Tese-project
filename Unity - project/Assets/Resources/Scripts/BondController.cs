@@ -106,8 +106,8 @@ public class BondController : MonoBehaviour
         ballB.GetComponent<Atom>().RemoveBond(bondType, bondId);
         ballA.GetComponent<Atom>().RemoveBond(bondType, bondId);
         SoundEffectsManager.PlaySound("bondBreak");
-        Invoke("StopSound", 1.2f);
-        if(!temp)
+        ballA.GetComponent<Atom>().StopSound();
+        if (!temp)
          GM.UpdatePointSystem();
         Destroy(transform.gameObject);
       }
@@ -128,11 +128,6 @@ public class BondController : MonoBehaviour
     transform.localScale = scale;
 
     
-  }
-
-  void StopSound()
-  {
-    SoundEffectsManager.StopAudio();
   }
 
   private void SetDistance()

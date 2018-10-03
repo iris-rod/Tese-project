@@ -6,8 +6,8 @@
 2 : complete > dimetilbutanoEstrutura 
 	_build > CH3COOHEstrutura;
 
-3 : complete > alcool
-	_transform > haloalcano > etanal;
+3 : transform > haloalcano > etanal
+	_complete > alcool;
 
 4 : transform > 3-metilpentano > butano
    	_multiple choice > Que molécula é esta? > eteno > b

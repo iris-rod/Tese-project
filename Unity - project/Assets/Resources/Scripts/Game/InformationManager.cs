@@ -52,6 +52,11 @@ public class InformationManager : MonoBehaviour {
     nextControlText = "Tempo: " + 0 + ":" + 0;
   }
 
+  public void StartAnswersCounter()
+  {
+    nextControlText = "Tentativas: " + 0;
+  }
+
   public void StartMoves()
   {
     nextControlText = "Movimentos: " + 0;
@@ -65,6 +70,11 @@ public class InformationManager : MonoBehaviour {
   public void UpdateMoves(int moves)
   {
     controlText.text = "Movimentos: " + moves;
+  }
+
+  public void UpdateAnswersCounter(int wrongAnswers)
+  {
+    controlText.text = "Tentativas: " + wrongAnswers;
   }
 
   public void SetFinalDisplay(int points)
