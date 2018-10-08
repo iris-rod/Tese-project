@@ -341,6 +341,10 @@ public class Atom : MonoBehaviour {
   void StickToMolecule (GameObject obj)
   {
     GameObject otherMolecule = null;
+    if (transform.parent != null && obj.transform.parent != null)
+    {
+      return;
+    }
     if (obj.transform.parent == null && transform.parent == null) {
         Vector3 platePos = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
         GameObject mole = Instantiate (molecule, platePos, transform.rotation);
@@ -352,10 +356,7 @@ public class Atom : MonoBehaviour {
         } else if (obj.transform.parent == null) {
           obj.transform.parent = transform.parent;
         }
-      if (transform.parent != null && obj.transform.parent != null)
-      {
-        //SplitMolecule.JoinMolecules(transform.parent.gameObject, otherMolecule);
-      }
+
       transform.parent.GetComponent<Molecule> ().CreateBond (obj, transform.gameObject, false, 0);
       //if (otherMolecule != null) { }
 
