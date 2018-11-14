@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
   //teste
   private string currentTask;
-  private string fileName = "teste24";
+  private string fileName = "blablabla";
 
   // Use this for initialization
   void Start()
@@ -174,7 +174,6 @@ public class GameManager : MonoBehaviour
     IM.UpdateDisplay(LM.GetNextObjective(), PS.GetPoints()); //false
     if (getAnswer)
     {
-      Debug.Log("here");
       //Invoke("StartAnswersCounter", startTimerWait); //start timer after the information about points is removed
       correctAnswerMC = IM.GetCorrectAnswer();
     }
